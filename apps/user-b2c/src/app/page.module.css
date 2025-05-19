@@ -1,0 +1,15 @@
+.main {
+  color: blue;
+}
+
+.selected {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+    background: lightcoral;
+}
+
+.selectedItem {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
