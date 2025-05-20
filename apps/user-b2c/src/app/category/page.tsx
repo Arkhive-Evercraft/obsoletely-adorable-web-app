@@ -1,7 +1,3 @@
-export default function Categories() {
-  return (
-    <div>
-     
-    </div>
-  );
+export default async function Page() {
+
 }
