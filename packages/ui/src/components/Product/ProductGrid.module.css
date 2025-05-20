@@ -1,0 +1,239 @@
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .productGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .productGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .productGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.productGridItem {
+  height: 100%;
+  display: flex;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.productGridItem:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.productGridLoading {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .productGridLoading {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .productGridLoading {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.skeletonCard {
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonImage {
+  height: 200px;
+  background-color: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonImage::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.skeletonContent {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeletonTitle {
+  height: 1.5rem;
+  background-color: var(--bg-primary);
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  width: 70%;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonTitle::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.skeletonPrice {
+  height: 1.25rem;
+  background-color: var(--bg-primary);
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  width: 30%;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonPrice::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.skeletonDescription {
+  height: 3rem;
+  background-color: var(--bg-primary);
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+}
+
+.skeletonDescription::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.skeletonActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.skeletonButton {
+  height: 2rem;
+  background-color: var(--bg-primary);
+  border-radius: 0.25rem;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonButton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.emptyStateIcon {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.emptyStateText {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}

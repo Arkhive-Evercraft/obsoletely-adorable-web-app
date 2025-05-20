@@ -186,6 +186,20 @@
   gap: 1rem;
 }
 
+.themeToggleWrapper {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .themeToggleWrapper {
+    display: block;
+  }
+}
+
+.cartPreviewWrapper {
+  position: relative;
+}
+
 .themeToggle,
 .cartLink,
 .accountLink {

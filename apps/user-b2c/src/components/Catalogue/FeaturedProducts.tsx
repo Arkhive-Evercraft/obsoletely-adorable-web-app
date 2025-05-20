@@ -2,7 +2,7 @@
 
 import React from 'react';
 import styles from './FeaturedProducts.module.css';
-import { ProductCard, Product } from '@/components/Card/ProductCard';
+import { NextProductCard as ProductCard, Product } from '@/components/Product/NextProductCard';
 import Link from 'next/link';
 
 interface FeaturedProductsProps {

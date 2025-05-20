@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './CheckoutForm.module.css';
-import { useCart } from '../Layout/AppLayout';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/contexts/ToastContext';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface CheckoutFormData {
@@ -24,6 +26,9 @@ interface FormErrors {
 
 export function CheckoutForm() {
   const { cartItems, clearCart } = useCart();
+  const { showToast } = useToast();
+  const router = useRouter();
+  
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = totalPrice * 0.1;
   const orderTotal = totalPrice + tax;
@@ -112,8 +117,10 @@ export function CheckoutForm() {
       // Simulate API call to process order
       setTimeout(() => {
         setIsSubmitting(false);
-        setIsOrderPlaced(true);
-        clearCart();
+        
+        // Instead of showing success content in the same component,
+        // redirect to a dedicated success page
+        router.push('/checkout/success');
       }, 1500);
     }
   };

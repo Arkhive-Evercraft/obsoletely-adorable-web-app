@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ProductCard, Product } from '../Card/ProductCard';
+import { NextProductCard as ProductCard, Product } from '@/components/Product/NextProductCard';
 import styles from './ProductGrid.module.css';
-import { useCart } from '../Layout/AppLayout';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductGridProps {
   initialProducts: Product[];

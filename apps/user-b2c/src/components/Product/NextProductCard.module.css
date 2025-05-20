@@ -1,0 +1,57 @@
+/* Styles for Next.js specific ProductCard */
+.nextProductCard {
+  height: 100%;
+}
+
+/* Name link styling */
+.name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.nameLink {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nameLink:hover {
+  color: var(--accent-secondary);
+}
+
+/* Quick action buttons */
+.viewButton,
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition-property: color, background-color;
+  transition-duration: 200ms;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.viewButton {
+  background-color: white;
+  color: var(--text-primary);
+}
+
+.viewButton:hover {
+  background-color: #f3f4f6;
+}
+
+.addButton {
+  background-color: var(--accent-secondary);
+  color: white;
+  border: none;
+}
+
+.addButton:hover {
+  background-color: var(--accent-primary);
+}

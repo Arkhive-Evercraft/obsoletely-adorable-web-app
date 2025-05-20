@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Cart.module.css';
-import { useCart } from '../Layout/AppLayout';
+import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
 
 export function Cart() {

@@ -1,0 +1,155 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+}
+
+.successCard {
+  background-color: var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+}
+
+.iconContainer {
+  margin-bottom: 1.5rem;
+  color: var(--color-success);
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-heading);
+}
+
+.message {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: var(--color-text);
+}
+
+.orderInfo {
+  margin: 2rem 0;
+  text-align: left;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.stepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step h4 {
+  margin: 0 0 0.5rem;
+  color: var(--color-heading);
+}
+
+.step p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.primaryButton:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.secondaryButton:hover {
+  background-color: var(--color-primary-lightest);
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .successCard {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .successCard {
+    padding: 1.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}
