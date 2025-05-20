@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "exports": {
+    ".": "./src/index.tsx",
     "./styles.css": "./dist/index.css",
-    "./button": "./src/button.tsx",
+    "./components": "./src/components/index.ts",
     "./data": "./src/data.ts"
   },
   "scripts": {
-    "build": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "build": "tsc && tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/index.css",
+    "build:ts": "tsc",
     "dev": "tailwindcss -i ./src/styles.css -o ./dist/index.css --watch --optimize",
     "lint": "eslint . --max-warnings 0",
     "generate:component": "turbo gen react-component",

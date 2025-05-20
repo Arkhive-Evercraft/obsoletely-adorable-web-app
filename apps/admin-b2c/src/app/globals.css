@@ -5,23 +5,41 @@
 @config "../../tailwind.config.ts";
 
 :root {
-  --background: white;
+  --background: #f0efef;
   --foreground: #0a0a0a;
-  --text: theme("colors.gray.900");
-  --textHover: theme("colors.gray.700");
+  --text-primary: theme("colors.gray.900");
   --text-secondary: theme("colors.gray.600");
-  --text-secondaryHover: theme("colors.gray.400");
-  --wsu: #a31631;
-  --wsu-light: #853846;
+  --bg-primary: #f0efef;
+  --bg-secondary: #ddeedd;
+  --accent-primary: #c2d4dd;
+  --accent-secondary: #b0aac0;
+  
+  /* Bootstrap overrides */
+  --bs-primary: #b0aac0;
+  --bs-secondary: #c2d4dd;
+  --bs-success: #6bb187;
+  --bs-info: #c2d4dd;
+  --bs-warning: #e2c98b;
+  --bs-danger: #d16b6b;
 }
 
 html[data-theme="dark"] {
-  --background: theme("colors.gray.900");
+  --background: #2d2d34;
   --foreground: #ededed;
-  --text: theme("colors.gray.50");
-  --textHover: theme("colors.gray.300");
+  --text-primary: theme("colors.gray.50");
   --text-secondary: theme("colors.gray.400");
-  --text-secondaryHover: theme("colors.gray.500");
+  --bg-primary: #2d2d34;
+  --bg-secondary: #3a3a47;
+  --accent-primary: #5e5c71;
+  --accent-secondary: #7c7798;
+  
+  /* Bootstrap overrides */
+  --bs-primary: #7c7798;
+  --bs-secondary: #5e5c71;
+  --bs-success: #5c9977;
+  --bs-info: #5e5c71;
+  --bs-warning: #c4ad70;
+  --bs-danger: #b35a5a;
 }
 
 html {
