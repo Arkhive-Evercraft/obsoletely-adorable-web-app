@@ -1,4 +1,3 @@
-import { Post } from "@repo/db/data";
 import { Hero } from "@/components/Layout/Hero"
 
 export function Main({
