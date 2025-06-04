@@ -10,8 +10,8 @@ export type Product = {
   price: number;
   description?: string;
   imageUrl: string;
-  inStock?: boolean;
-  featured?: boolean;
+  inStock: boolean;
+  featured: boolean;
   categoryName: string;
 }
 
@@ -61,6 +61,7 @@ export const products: Product[] = [
     description: "Comfortable cotton t-shirt",
     imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
     inStock: true,
+    featured: false,
     categoryName: "Clothing"
   },
   {
@@ -69,7 +70,8 @@ export const products: Product[] = [
     price: 4999,
     description: "Classic denim jeans",
     imageUrl: "https://images.unsplash.com/photo-1542272604-787c3835535d",
-    inStock: true,
+    inStock: true,    
+    featured: false,
     categoryName: "Clothing"
   },
   {
@@ -79,6 +81,7 @@ export const products: Product[] = [
     description: "Decorative pot for indoor plants",
     imageUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
     inStock: true,
+    featured: false,
     categoryName: "Home & Garden"
   },
   {
@@ -88,6 +91,7 @@ export const products: Product[] = [
     description: "Modern desk lamp with adjustable brightness",
     imageUrl: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
     inStock: false,
+    featured: false,
     categoryName: "Home & Garden"
   }
 ];
