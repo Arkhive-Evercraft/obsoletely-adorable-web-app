@@ -10,21 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id     Int      @id @default(autoincrement())
-  urlId  String   @unique
-  title  String
-  date   DateTime @default(now())
-  views  Int      @default(0)
-  active Boolean  @default(true)
-  Likes  Like[]
-  // Incomplete
+model Category {
+  name        String       @id
+  description String
+  imageUrl    String
+  items       Product[]    // One Category can have many Items
 }
 
-model Like {
-  postId Int
-  userIP String
-  Post   Post   @relation(fields: [postId], references: [id])
+model Product {
+  id          Int           @id @default(autoincrement())
+  name        String
+  price       Int           // store in cents
+  description String
+  imageUrl    String
+  categoryName String
+  category    Category      @relation(fields: [categoryName], references: [name])
+  sales       ProductSale[]
+  inStock     Boolean       @default(true)
+  featured    Boolean       @default(false)
+}
 
-  @@id([postId, userIP])
+model Sale {
+  id        Int        @id @default(autoincrement())
+  date      DateTime   @default(now())
+  items     ProductSale[]
+  total     Int        @default(0)  // Store in cents
+}
+
+model ProductSale {
+  sale      Sale     @relation(fields: [saleId], references: [id])
+  saleId    Int
+  item      Product     @relation(fields: [itemId], references: [id])
+  itemId    Int
+  quantity  Int      @default(1)
+  priceAtSale Int    // Store price at time of sale in cents
+
+  @@id([saleId, itemId])
 }

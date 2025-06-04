@@ -1,140 +1,93 @@
-export type Post = {
-  id: number;
-  urlId: string;
-  title: string;
-  content: string;
+export type Category = {
+  name: string;
   description: string;
   imageUrl: string;
-  date: Date;
-  category: string;
-  views: number;
-  likes: number;
-  tags: string;
-  active: boolean;
-};
+}
 
-const content = `
-  # Title 1
+export type Product = {
+  id: number;
+  name: string;
+  price: number;
+  description?: string;
+  imageUrl: string;
+  inStock?: boolean;
+  featured?: boolean;
+  categoryName: string;
+}
 
-  Illo **sint voluptas**. Error voluptates culpa eligendi. 
-  Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-  Sed exercitationem placeat consectetur nulla deserunt vel 
-  iusto corrupti dicta laboris incididunt.
+export const categories: Category[] = [
+  {
+    name: "Electronics",
+    description: "Electronic devices and accessories",
+    imageUrl: "https://images.unsplash.com/photo-1526406915894-7bcd65f60845"
+  },
+  {
+    name: "Clothing",
+    description: "Apparel and fashion items",
+    imageUrl: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5"
+  },
+  {
+    name: "Home & Garden",
+    description: "Items for your home and garden",
+    imageUrl: "https://images.unsplash.com/photo-1501183638710-841dd1904471"
+  }
+];
 
-  ## Subtitle 1
-
-  Illo sint *voluptas*. Error voluptates culpa eligendi. 
-  Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-  Sed exercitationem placeat consectetur nulla deserunt vel 
-  iusto corrupti dicta laboris incididunt.
-`;
-
-const description = `Illo sint voluptas. Error voluptates culpa eligendi. 
-Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-Sed exercitationem placeat consectetur nulla deserunt vel 
-iusto corrupti dicta laboris incididunt.`;
-
-export const posts: Post[] = [
+export const products: Product[] = [
   {
     id: 1,
-    title: "Boost your conversion rate",
-    urlId: "boost-your-conversion-rate",
-    description,
-    content: content + " ... post1",
-    imageUrl:
-      "https://images.unsplash.com/photo-1496128858413-b36217c2ce36",
-    date: new Date("Apr 18, 2022"),
-    category: "Node",
-    tags: "Back-End,Databases",
-    views: 320,
-    likes: 3,
-    active: true,
+    name: "Smartphone",
+    price: 79999,
+    description: "Latest smartphone with amazing features",
+    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02ff9",
+    inStock: true,
+    featured: true,
+    categoryName: "Electronics"
   },
   {
     id: 2,
-    title: "Better front ends with Fatboy Slim",
-    urlId: "better-front-ends-with-fatboy-slim",
-    description: `Illo sint voluptas. Error voluptates culpa eligendi. 
-       Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-       Sed exercitationem placeat consectetur nulla deserunt vel 
-       iusto corrupti dicta laboris incididunt.`,
-    content: content + " ... post2",
-    imageUrl:
-      "https://plus.unsplash.com/premium_photo-1661342428515-5ca8cee4385a",
-    date: new Date("Mar 16, 2020"),
-    category: "React",
-    tags: "Front-End,Optimisation",
-    views: 10,
-    likes: 1,
-    active: true,
+    name: "Laptop",
+    price: 129999,
+    description: "Powerful laptop for work and gaming",
+    imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
+    inStock: true,
+    featured: true,
+    categoryName: "Electronics"
   },
   {
     id: 3,
-    title: "No front end framework is the best",
-    urlId: "no-front-end-framework-is-the-best",
-    description: `Illo sint voluptas. Error voluptates culpa eligendi. 
-       Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-       Sed exercitationem placeat consectetur nulla deserunt vel 
-       iusto corrupti dicta laboris incididunt.`,
-    content: content + " ... post3",
-    imageUrl:
-      "https://plus.unsplash.com/premium_photo-1661517706036-a48d5fc8f2f5",
-    date: new Date("Dec 16, 2024"),
-    category: "React",
-    tags: "Front-End,Dev Tools",
-    views: 22,
-    likes: 2,
-    active: true,
+    name: "T-shirt",
+    price: 1999,
+    description: "Comfortable cotton t-shirt",
+    imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+    inStock: true,
+    categoryName: "Clothing"
   },
   {
     id: 4,
-    title: "Visual Basic is the future",
-    urlId: "visual-basic-is-the-future",
-    description: `Illo sint voluptas. Error voluptates culpa eligendi. 
-       Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-       Sed exercitationem placeat consectetur nulla deserunt vel 
-       iusto corrupti dicta laboris incididunt.`,
-    content: content + " ... post4",
-    imageUrl: "https://m.media-amazon.com/images/I/51NqEfmmBTL.jpg",
-    date: new Date("Dec 16, 2012"),
-    category: "React",
-    tags: "Programming,Mainframes",
-    views: 22,
-    likes: 1,
-    active: false,
+    name: "Jeans",
+    price: 4999,
+    description: "Classic denim jeans",
+    imageUrl: "https://images.unsplash.com/photo-1542272604-787c3835535d",
+    inStock: true,
+    categoryName: "Clothing"
   },
   {
     id: 5,
-    title: "Mongo: The NoSQL Revolution",
-    urlId: "mongo-the-nosql-revolution",
-    description: `Illo sint voluptas. Error voluptates culpa eligendi. 
-       Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-       Sed exercitationem placeat consectetur nulla deserunt vel 
-       iusto corrupti dicta laboris incididunt.`,
-    content: content + " ... post5",
-    imageUrl: "https://plus.unsplash.com/premium_photo-1661517706036-a48d5fc8f2f5",
-    date: new Date("Mar 31, 2022"),
-    category: "Mongo",
-    tags: "MongoDB,NoSQL,Databases",
-    views: 45,
-    likes: 3,
-    active: false,
+    name: "Plant Pot",
+    price: 1599,
+    description: "Decorative pot for indoor plants",
+    imageUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
+    inStock: true,
+    categoryName: "Home & Garden"
   },
   {
     id: 6,
-    title: "DevOps: Bridging Development and Operations",
-    urlId: "devops-bridging-dev-and-ops",
-    description: `Illo sint voluptas. Error voluptates culpa eligendi. 
-       Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. 
-       Sed exercitationem placeat consectetur nulla deserunt vel 
-       iusto corrupti dicta laboris incididunt.`,
-    content: content + " ... post6",
-    imageUrl: "https://plus.unsplash.com/premium_photo-1661517706036-a48d5fc8f2f5",
-    date: new Date("Mar 31, 2023"),
-    category: "DevOps",
-    tags: "DevOps,CI/CD,Automation",
-    views: 67,
-    likes: 5,
-    active: false,
-  },
+    name: "Table Lamp",
+    price: 2499,
+    description: "Modern desk lamp with adjustable brightness",
+    imageUrl: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+    inStock: false,
+    categoryName: "Home & Garden"
+  }
 ];
