@@ -1,0 +1,243 @@
+.searchFilterContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .searchFilterContainer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.searchFilter {
+  flex: 1;
+}
+
+.filterControls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.advancedFiltersButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.advancedFiltersButton:hover {
+  background-color: var(--hover);
+}
+
+.advancedFiltersButton.active {
+  background-color: var(--surface-variant);
+  border-color: var(--border-active);
+  color: var(--text-primary);
+}
+
+.filterCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent-secondary);
+  color: white;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  height: 1.25rem;
+  min-width: 1.25rem;
+  padding: 0 0.35rem;
+}
+
+.resetFiltersButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.resetFiltersButton:hover {
+  background-color: var(--danger-light);
+  border-color: var(--danger);
+}
+
+.resetFiltersButton svg {
+  color: var(--danger);
+}
+
+.chevron {
+  transition: transform 0.2s;
+}
+
+.advancedFiltersButton.active .chevron {
+  transform: rotate(180deg);
+}
+
+.advancedFilters {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--surface-variant);
+  border-radius: 0.375rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .advancedFilters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filterGroupTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.radioInput {
+  cursor: pointer;
+}
+
+.priceRangeInputs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.inputLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.currencySymbol {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.priceInput {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  padding-left: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background-color: var(--surface);
+  color: var(--text-primary);
+}
+
+.priceInput:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.activeFilters {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--surface-variant);
+  border-radius: 0.375rem;
+}
+
+.activeFiltersHeader {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.filterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filterTag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-light);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+.removeFilterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.125rem;
+  border-radius: 0.125rem;
+}
+
+.removeFilterButton:hover {
+  color: var(--danger);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .radioGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .filterControls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

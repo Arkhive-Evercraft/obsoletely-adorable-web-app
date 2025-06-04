@@ -2,6 +2,9 @@ import React from 'react';
 import styles from './SearchFilterSort.module.css';
 
 interface SearchFilterSortProps {
+  searchTerm?: string;
+  selectedCategory?: string;
+  sortOption?: string;
   onSearch: (searchTerm: string) => void;
   onFilter: (category: string) => void;
   onSort: (sortBy: string) => void;
@@ -11,6 +14,9 @@ interface SearchFilterSortProps {
 }
 
 export function SearchFilterSort({
+  searchTerm = '',
+  selectedCategory = '',
+  sortOption = '',
   onSearch,
   onFilter,
   onSort,
@@ -24,6 +30,7 @@ export function SearchFilterSort({
         <input
           type="text"
           placeholder="Search products..."
+          value={searchTerm}
           onChange={(e) => onSearch(e.target.value)}
           className={styles.searchInput}
         />
@@ -34,9 +41,9 @@ export function SearchFilterSort({
 
       <div className={styles.filterWrapper}>
         <select
+          value={selectedCategory}
           onChange={(e) => onFilter(e.target.value)}
           className={styles.filterSelect}
-          defaultValue=""
         >
           <option value="">All Categories</option>
           {categories.map((category) => (
@@ -49,9 +56,9 @@ export function SearchFilterSort({
 
       <div className={styles.sortWrapper}>
         <select
+          value={sortOption || sortOptions[0]?.value || ''}
           onChange={(e) => onSort(e.target.value)}
           className={styles.sortSelect}
-          defaultValue={sortOptions[0]?.value || ''}
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>
