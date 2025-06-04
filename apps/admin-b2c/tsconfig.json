@@ -7,7 +7,9 @@
       }
     ],
     "paths": {
-      "@/components/*": ["src/components/*"]
+      "@/components/*": ["src/components/*"],
+      "@/api/*": ["src/app/api/*"],
+      "@/utils/*": ["src/utils/*"]
     },
     "baseUrl": "."
   },

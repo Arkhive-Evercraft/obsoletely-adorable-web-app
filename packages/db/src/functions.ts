@@ -1,5 +1,5 @@
+import { client } from "@repo/db/client"
 import { Product, Category, Sale, ProductSale } from "@prisma/client";
-import { client } from "../src/client"
 
 // Get all products from the database
 export async function getProducts(): Promise<Product[]> {

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { env } from "@repo/env/web";
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -10,17 +9,18 @@ export const createClient = () => {
     return global.prisma;
   }
 
-  const URL = env.DATABASE_URL;
+  // Only create Prisma client on the server side
+  if (typeof window === "undefined") {
+    const prisma = new PrismaClient();
+    console.log("Connected to database");
 
-  const prisma = new PrismaClient({
-    datasourceUrl: URL,
-  });
+    global.prisma = prisma;
+    return prisma;
+  }
 
-  console.log("Connected to database");
-  console.log(URL);
-
-  global.prisma = prisma;
-  return prisma;
+  throw new Error(
+    "Database client cannot be accessed on the client side. Use server components or server actions to access the database."
+  );
 };
 
 export const client = {
