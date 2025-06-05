@@ -1,6 +1,21 @@
 .productsPage {
+  height: 100%;
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1.5rem;
+}
+
+.productsContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.productsHeader {
+  margin-bottom: 1rem;
+}
+
+.productsTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
 }
