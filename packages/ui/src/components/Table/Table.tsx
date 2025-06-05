@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { TableProps, TableColumn, TableAction } from './types';
-import { TableSearch, TableFilter } from '@/components/Table';
+import { TableSearch, TableFilter, TableSelectFilter } from '@/components/Table';
 import styles from './Table.module.css';
 
 export function Table<T extends Record<string, any>>({
@@ -21,15 +21,23 @@ export function Table<T extends Record<string, any>>({
   // Search and filter props
   searchTerm = '',
   selectedCategory = '',
+  selectedStatus = '',
+  selectedDateRange = '',
   sortOption = '',
   categories = [],
+  statusOptions = [],
+  dateRangeOptions = [],
   sortOptions = [],
   onSearch = () => {},
   onFilter = () => {},
+  onStatusFilter = () => {},
+  onDateFilter = () => {},
   onSort = () => {},
 }: TableProps<T>) {
   const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
   const [internalSelectedCategory, setInternalSelectedCategory] = useState(selectedCategory);
+  const [internalSelectedStatus, setInternalSelectedStatus] = useState(selectedStatus);
+  const [internalSelectedDateRange, setInternalSelectedDateRange] = useState(selectedDateRange);
   const [sortBy, setSortBy] = useState(sortOption);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
@@ -55,6 +63,45 @@ export function Table<T extends Record<string, any>>({
       );
     }
 
+    // Apply status filter
+    const statusFilter = selectedStatus || internalSelectedStatus;
+    if (statusFilter && statusFilter !== '') {
+      filtered = filtered.filter(item => {
+        if (statusFilter === 'In Stock') {
+          return item.inStock === true;
+        } else if (statusFilter === 'Out of Stock') {
+          return item.inStock === false;
+        }
+        return true;
+      });
+    }
+
+    // Apply date range filter
+    const dateRangeFilter = selectedDateRange || internalSelectedDateRange;
+    if (dateRangeFilter && dateRangeFilter !== '') {
+      const now = new Date();
+      filtered = filtered.filter(item => {
+        const itemDate = new Date(item.dateAdded);
+        
+        switch (dateRangeFilter) {
+          case 'last7days':
+            const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            return itemDate >= last7Days;
+          case 'last30days':
+            const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            return itemDate >= last30Days;
+          case 'last90days':
+            const last90Days = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+            return itemDate >= last90Days;
+          case 'thisyear':
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            return itemDate >= startOfYear;
+          default:
+            return true;
+        }
+      });
+    }
+
     // Apply sorting
     const currentSortOption = sortOption || sortBy;
     if (currentSortOption && sortable) {
@@ -75,7 +122,7 @@ export function Table<T extends Record<string, any>>({
     }
 
     return filtered;
-  }, [data, searchTerm, internalSearchTerm, selectedCategory, internalSelectedCategory, sortOption, sortBy, sortDirection, sortable]);
+  }, [data, searchTerm, internalSearchTerm, selectedCategory, internalSelectedCategory, selectedStatus, internalSelectedStatus, selectedDateRange, internalSelectedDateRange, sortOption, sortBy, sortDirection, sortable]);
 
   const handleSearch = (term: string) => {
     setInternalSearchTerm(term);
@@ -85,6 +132,16 @@ export function Table<T extends Record<string, any>>({
   const handleFilter = (category: string) => {
     setInternalSelectedCategory(category);
     onFilter(category);
+  };
+
+  const handleStatusFilter = (status: string) => {
+    setInternalSelectedStatus(status);
+    onStatusFilter(status);
+  };
+
+  const handleDateFilter = (dateRange: string) => {
+    setInternalSelectedDateRange(dateRange);
+    onDateFilter(dateRange);
   };
 
   const handleSort = (columnKey: string) => {
@@ -150,6 +207,24 @@ export function Table<T extends Record<string, any>>({
               categories={categories}
               onFilter={handleFilter}
               className={styles.filterControl}
+            />
+          )}
+          {filterable && statusOptions.length > 0 && (
+            <TableSelectFilter
+              selectedValue={selectedStatus || internalSelectedStatus}
+              options={statusOptions}
+              onFilter={handleStatusFilter}
+              className={styles.filterControl}
+              placeholder="All Status"
+            />
+          )}
+          {filterable && dateRangeOptions.length > 0 && (
+            <TableSelectFilter
+              selectedValue={selectedDateRange || internalSelectedDateRange}
+              options={dateRangeOptions}
+              onFilter={handleDateFilter}
+              className={styles.filterControl}
+              placeholder="All Dates"
             />
           )}
         </div>

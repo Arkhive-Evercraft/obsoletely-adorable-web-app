@@ -25,17 +25,24 @@ export interface TableProps<T = any> {
   sortable?: boolean;
   compact?: boolean;
   maxHeight?: string;
+  fillHeight?: boolean;
   emptyMessage?: string;
   className?: string;
   onRowClick?: (record: T) => void;
   // Search and filter props
   searchTerm?: string;
   selectedCategory?: string;
+  selectedStatus?: string;
+  selectedDateRange?: string;
   sortOption?: string;
   categories?: string[];
+  statusOptions?: string[];
+  dateRangeOptions?: { value: string; label: string }[];
   sortOptions?: { value: string; label: string }[];
   onSearch?: (term: string) => void;
   onFilter?: (category: string) => void;
+  onStatusFilter?: (status: string) => void;
+  onDateFilter?: (dateRange: string) => void;
   onSort?: (sortBy: string) => void;
 }
 
@@ -51,4 +58,13 @@ export interface TableFilterProps {
   categories: string[];
   onFilter: (category: string) => void;
   className?: string;
+  placeholder?: string;
+}
+
+export interface TableSelectFilterProps {
+  selectedValue: string;
+  options: string[] | { value: string; label: string }[];
+  onFilter: (value: string) => void;
+  className?: string;
+  placeholder?: string;
 }

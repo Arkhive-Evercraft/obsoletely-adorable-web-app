@@ -38,8 +38,12 @@ interface ProductsTableProps {
   products: Product[];
   onSearch: (term: string) => void;
   onCategoryFilter: (category: string) => void;
+  onStatusFilter: (status: string) => void;
+  onDateFilter: (dateRange: string) => void;
   searchTerm: string;
   selectedCategory: string;
+  selectedStatus: string;
+  selectedDateRange: string;
   categories: string[];
 }
 
@@ -47,8 +51,12 @@ export function ProductsTable({
   products,
   onSearch,
   onCategoryFilter,
+  onStatusFilter,
+  onDateFilter,
   searchTerm,
   selectedCategory,
+  selectedStatus,
+  selectedDateRange,
   categories
 }: ProductsTableProps) {
   
@@ -138,6 +146,17 @@ export function ProductsTable({
     }
   ];
 
+  // Define status options for the filter
+  const statusOptions = ['In Stock', 'Out of Stock'];
+  
+  // Define date range options for the filter
+  const dateRangeOptions = [
+    { value: 'last7days', label: 'Last 7 days' },
+    { value: 'last30days', label: 'Last 30 days' },
+    { value: 'last90days', label: 'Last 90 days' },
+    { value: 'thisyear', label: 'This year' },
+  ];
+
   return (
     <Table
       data={products}
@@ -148,9 +167,15 @@ export function ProductsTable({
       sortable={true}
       searchTerm={searchTerm}
       selectedCategory={selectedCategory}
+      selectedStatus={selectedStatus}
+      selectedDateRange={selectedDateRange}
       categories={categories}
+      statusOptions={statusOptions}
+      dateRangeOptions={dateRangeOptions}
       onSearch={onSearch}
       onFilter={onCategoryFilter}
+      onStatusFilter={onStatusFilter}
+      onDateFilter={onDateFilter}
       emptyMessage="No products found"
       maxHeight="100%"
       className="h-full"
