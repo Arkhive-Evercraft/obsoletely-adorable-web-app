@@ -1,8 +1,12 @@
 import type { PropsWithChildren } from "react";
 
-export function Content({ children }: PropsWithChildren) {
+interface ContentProps {
+  className?: string;
+}
+
+export function Content({ children, className }: PropsWithChildren<ContentProps>) {
   return (
-    <div>
+    <div className={`w-full h-full ${className || ''}`}>
       {children}
     </div>
   );
