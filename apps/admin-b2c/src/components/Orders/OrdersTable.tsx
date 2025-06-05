@@ -28,19 +28,19 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'id',
       title: 'Order ID',
       sortable: true,
-      width: '120px'
+      width: '100px'
     },
     {
       key: 'customerName',
       title: 'Customer',
       sortable: true,
-      width: '180px'
+      width: '140px'
     },
     {
       key: 'customerEmail',
       title: 'Email',
       sortable: true,
-      width: '200px',
+      width: '160px',
       render: (email: string) => (
         <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
           {email}
@@ -51,7 +51,7 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'totalAmount',
       title: 'Total',
       sortable: true,
-      width: '100px',
+      width: '80px',
       align: 'center',
       render: (amount: number) => `$${amount.toFixed(2)}`
     },
@@ -59,7 +59,7 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'status',
       title: 'Status',
       sortable: true,
-      width: '120px',
+      width: '100px',
       align: 'center',
       render: (status: string) => {
         const getStatusColor = (status: string) => {
@@ -92,7 +92,7 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'orderDate',
       title: 'Order Date',
       sortable: true,
-      width: '120px',
+      width: '100px',
       align: 'center',
       render: (date: string) => new Date(date).toLocaleDateString()
     },
@@ -100,7 +100,7 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'items',
       title: 'Items',
       sortable: false,
-      width: '80px',
+      width: '60px',
       align: 'center',
       render: (items: Array<{ name: string; quantity: number; price: number }>) => (
         <span style={{ 
@@ -114,14 +114,6 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
   ];
 
   const actions: TableAction<Order>[] = [
-    {
-      label: 'View',
-      variant: 'primary',
-      onClick: (order: Order) => {
-        console.log('View order:', order.id);
-        // TODO: Implement view functionality
-      }
-    },
     {
       label: 'Update',
       variant: 'secondary',
