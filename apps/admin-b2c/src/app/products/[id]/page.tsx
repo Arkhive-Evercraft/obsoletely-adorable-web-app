@@ -34,6 +34,8 @@ export default function ProductDetailPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
 
   // Fetch product data from API
   useEffect(() => {
@@ -114,16 +116,48 @@ export default function ProductDetailPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    // TODO: Implement API call to update product
-    // For now, just simulate the save
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsEditing(false);
-    setIsSaving(false);
-    // TODO: Refresh product data after save
+    try {
+      let updatedProduct = { ...currentProduct };
+      
+      // If a new image was selected, upload it first
+      if (selectedImageFile) {
+        const uploadedImageUrl = await uploadImage(selectedImageFile);
+        updatedProduct.imageUrl = uploadedImageUrl;
+      }
+      
+      // TODO: Implement API call to update product with updatedProduct data
+      // For now, just simulate the save
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Update the original product data with the saved changes
+      setProduct(updatedProduct);
+      setCurrentProduct(updatedProduct);
+      
+      // Clean up image states
+      setSelectedImageFile(null);
+      setImagePreviewUrl('');
+      
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving product:', error);
+      // TODO: Show error message to user
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
     setCurrentProduct(product);
+    
+    // Clean up image states when canceling
+    setSelectedImageFile(null);
+    setImagePreviewUrl('');
+    
+    // Clean up any object URLs to prevent memory leaks
+    if (imagePreviewUrl) {
+      URL.revokeObjectURL(imagePreviewUrl);
+    }
+    
     setIsEditing(false);
   };
 
@@ -135,14 +169,70 @@ export default function ProductDetailPage() {
     setCurrentProduct(prev => prev ? { ...prev, [field]: value } : null);
   };
 
+  const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImageFile(file);
+      
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreviewUrl(previewUrl);
+      
+      // Update the current product with the preview URL temporarily
+      handleFieldChange('imageUrl', previewUrl);
+    }
+  };
+
+  const handleImageClick = () => {
+    if (isEditing) {
+      // Trigger file input click
+      const fileInput = document.getElementById('product-image-input') as HTMLInputElement;
+      fileInput?.click();
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    // TODO: Implement actual image upload to your storage service
+    // For now, we'll simulate the upload and return a mock URL
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // In a real implementation, you would upload to a service like AWS S3, Cloudinary, etc.
+        // and return the actual URL
+        const mockUrl = `https://example.com/uploads/${Date.now()}-${file.name}`;
+        resolve(mockUrl);
+      }, 1000);
+    });
+  };
+
   const ProductDetailContent = () => (
     <div className={styles.productDetail}>
       <div className={styles.productHeader}>
         <div className={styles.productImage}>
-          <img 
-            src={currentProduct.imageUrl} 
-            alt={currentProduct.name}
-            className={styles.image}
+          <div className={`${styles.imageContainer} ${isEditing ? styles.editable : ''}`}>
+            <img 
+              src={currentProduct.imageUrl} 
+              alt={currentProduct.name}
+              className={styles.image}
+              onClick={handleImageClick}
+            />
+            {isEditing && (
+              <div className={styles.imageOverlay}>
+                <div className={styles.imageOverlayContent}>
+                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15 12V6a1 1 0 0 0-1-1h-1.172a3 3 0 0 1-2.12-.879L9.828 3.24a1 1 0 0 0-.707-.293H6.879a1 1 0 0 0-.707.293L5.292 4.121A3 3 0 0 1 3.172 5H2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM2 4a2 2 0 0 1 2-2h1.172a2 2 0 0 1 1.414.586L7.465 3.465A1 1 0 0 0 8.172 4h1.656a1 1 0 0 0 .707-.293L11.414 2.586A2 2 0 0 1 12.828 2H14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"/>
+                    <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                  </svg>
+                  <span>Click to change image</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <input
+            id="product-image-input"
+            type="file"
+            accept="image/*"
+            onChange={handleImageFileChange}
+            className={styles.imageFileInput}
           />
           <div className={styles.metadata}>
             <div className={styles.metadataItem}>
