@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table } from '@repo/ui';
-import type { TableColumn, TableAction } from '@repo/ui';
+import type { TableColumn } from '@repo/ui';
 import { ImageModal } from './ImageModal';
 import styles from './ProductsTable.module.css';
 
@@ -260,23 +260,11 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
   ];
 
-  const actions: TableAction<Product>[] = !isEditing ? [
-    {
-      label: 'Edit',
-      variant: 'primary',
-      onClick: (product: Product) => {
-        console.log('Edit product:', product.id);
-        // TODO: Implement individual edit functionality
-      }
-    }
-  ] : [];
-
   return (
     <>
       <Table
         data={isEditing ? editableProducts : products}
         columns={columns}
-        actions={actions}
         searchable={true}
         filterable={true}
         sortable={!isEditing}
