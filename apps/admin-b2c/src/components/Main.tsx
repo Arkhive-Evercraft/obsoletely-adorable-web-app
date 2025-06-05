@@ -7,6 +7,7 @@ interface MainProps {
   pageHeading: string;
   leftColumn?: ReactNode;
   rightColumn?: ReactNode;
+  leftColumnTitle?: string; // Add optional title for left column
   rightColumnTitle?: string; // Add optional title for right column
   products?: any[]; // Add products prop for data passing
   categories?: any[]; // Add categories prop for data passing
@@ -18,6 +19,7 @@ export function Main({
   pageHeading, 
   leftColumn, 
   rightColumn, 
+  leftColumnTitle = "Products", // Default to "Products" for backward compatibility
   rightColumnTitle = "Categories", // Default to "Categories" for backward compatibility
   products,
   categories 
@@ -29,7 +31,7 @@ export function Main({
       </h2>
       
       {/* Left Column */}
-      <Column title="Products" className="col-span-3 row-span-8 row-start-2">
+      <Column title={leftColumnTitle} className="col-span-3 row-span-8 row-start-2">
         {leftColumn || children}
         {products && (
           <div className="space-y-2">

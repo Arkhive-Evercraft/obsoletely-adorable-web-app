@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
 import type { TableColumn } from '@repo/ui';
 import { ImageModal } from './ImageModal';
@@ -12,7 +13,7 @@ interface Product {
   price: number;
   description: string;
   imageUrl: string;
-  category: string;
+  categoryName: string; // Changed from 'category' to 'categoryName'
   inStock: boolean;
   inventory: number;
   dateAdded: string;
@@ -33,6 +34,7 @@ interface ProductsTableProps {
 }
 
 export function ProductsTable({ products, onFilteredDataChange, isEditing = false, onProductUpdate }: ProductsTableProps) {
+  const router = useRouter();
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     imageUrl: string;
@@ -92,6 +94,14 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     });
   };
 
+  const handleProductClick = (product: Product) => {
+    // Don't navigate if we're in editing mode
+    if (isEditing) return;
+    
+    // Navigate to the product detail page
+    router.push(`/products/${product.id}`);
+  };
+
   const handleFieldChange = (productId: string, field: keyof Product, value: any) => {
     const updatedProducts = editableProducts.map(product => 
       product.id === productId 
@@ -104,7 +114,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
 
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
     if (!isEditing) {
-      if (field === 'price') return `$${(value as number).toFixed(2)}`;
+      if (field === 'price') return `$${((value as number) / 100).toFixed(2)}`;
       if (field === 'inStock') {
         return (
           <span style={{
@@ -135,7 +145,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       );
     }
 
-    if (field === 'category') {
+    if (field === 'categoryName') {
       if (categoriesLoading) {
         return (
           <select disabled className="w-full px-2 py-1 border border-gray-300 rounded text-sm bg-gray-100">
@@ -161,11 +171,19 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
 
     if (type === 'number') {
+      // For price fields, display in dollars but store in cents
+      const displayValue = field === 'price' ? (value / 100) : value;
+      
       return (
         <input
           type="number"
-          value={value}
-          onChange={(e) => handleFieldChange(productId, field, parseFloat(e.target.value) || 0)}
+          value={displayValue}
+          onChange={(e) => {
+            const inputValue = parseFloat(e.target.value) || 0;
+            // Convert dollars back to cents for price field
+            const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
+            handleFieldChange(productId, field, storeValue);
+          }}
           className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
           step={field === 'price' ? '0.01' : '1'}
           min="0"
@@ -193,7 +211,10 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       render: (imageUrl: string, product: Product) => (
         <button
           className={styles.imageButton}
-          onClick={() => handleImageClick(imageUrl, product.name)}
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent row click when clicking image
+            handleImageClick(imageUrl, product.name);
+          }}
           aria-label={`View ${product.name} image`}
         >
           <img 
@@ -212,12 +233,12 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       render: (name: string, product: Product) => renderEditableField(name, product.id, 'name')
     },
     {
-      key: 'category',
+      key: 'categoryName',
       title: 'Category',
       sortable: true,
       width: '100px',
       align: 'center',
-      render: (category: string, product: Product) => renderEditableField(category, product.id, 'category')
+      render: (category: string, product: Product) => renderEditableField(category, product.id, 'categoryName')
     },
     {
       key: 'price',
@@ -270,7 +291,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
         sortable={!isEditing}
         autoExtractCategories={true}
         autoExtractStatuses={true}
-        categoryKey="category"
+        categoryKey="categoryName"
         statusKey="inStock"
         dateKey="dateAdded"
         emptyMessage="No products found"
@@ -279,6 +300,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
         searchDisabled={isEditing}
         filtersDisabled={isEditing}
         onFilteredDataChange={onFilteredDataChange}
+        onRowClick={!isEditing ? handleProductClick : undefined}
       />
       
       <ImageModal

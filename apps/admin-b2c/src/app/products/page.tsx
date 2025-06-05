@@ -11,7 +11,7 @@ interface Product {
   price: number;
   description: string;
   imageUrl: string;
-  category: string;
+  categoryName: string; // Changed from 'category' to 'categoryName'
   inStock: boolean;
   inventory: number;
   dateAdded: string;
@@ -39,14 +39,14 @@ export default function ProductsPage() {
         
         const data = await response.json();
         
-        // Transform database products to match the admin interface
+        // Transform API response to match the admin interface
         const transformedProducts = data.map((product: any) => ({
           id: product.id.toString(),
           name: product.name,
-          price: product.price / 100, // Convert from cents to dollars
+          price: product.price, // Price is already converted from cents to dollars by API
           description: product.description || '',
           imageUrl: product.imageUrl,
-          category: product.categoryName,
+          categoryName: product.categoryName, // Use categoryName from API response
           inStock: product.inStock,
           inventory: Math.floor(Math.random() * 50) + 1, // Mock inventory since not in schema
           dateAdded: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Mock date
@@ -103,7 +103,7 @@ export default function ProductsPage() {
               name: editedProduct.name,
               price: Math.round(editedProduct.price * 100), // Convert to cents
               description: editedProduct.description,
-              categoryName: editedProduct.category,
+              categoryName: editedProduct.categoryName, // Changed from category to categoryName
               inStock: editedProduct.inStock,
               imageUrl: editedProduct.imageUrl
             }),
@@ -136,7 +136,7 @@ export default function ProductsPage() {
       original.name !== edited.name ||
       original.price !== edited.price ||
       original.description !== edited.description ||
-      original.category !== edited.category ||
+      original.categoryName !== edited.categoryName || // Changed from category to categoryName
       original.inStock !== edited.inStock ||
       original.imageUrl !== edited.imageUrl
     );
