@@ -21,13 +21,13 @@ export function Main({
   categories 
 }: MainProps) {
   return (
-    <main className={`w-full h-full grid grid-cols-6 grid-rows-9 gap-4 p-4 ${className || ''}`}>
+    <main className={`w-full h-full grid grid-cols-4 grid-rows-9 gap-4 p-4 ${className || ''}`}>
       <h2 className="col-span-6 row-span-1 text-2xl font-bold text-gray-800 py-4 px-4 border-b border-gray-200 w-full">
         {pageHeading}
       </h2>
       
       {/* Left Column */}
-      <Column title="Products" className="col-span-4 row-span-8 row-start-2">
+      <Column title="Products" className="col-span-3 row-span-8 row-start-2">
         {leftColumn || children}
         {products && (
           <div className="space-y-2">
@@ -41,7 +41,7 @@ export function Main({
       </Column>
 
       {/* Right Column */}
-      <Column title="Categories" className="col-span-2 row-span-8 row-start-2">
+      <Column title="Categories" className="col-span-1 row-span-8 row-start-2">
         {rightColumn}
         {categories && (
           <div className="space-y-2">

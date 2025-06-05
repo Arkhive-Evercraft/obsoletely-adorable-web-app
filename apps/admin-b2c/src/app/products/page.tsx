@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { AppLayout } from '@/components/Layout/AppLayout';
+import { Main } from '@/components/Main';
 import { ProductsTable } from '@/components/Products/ProductsTable';
 import { CategoryAggregation } from '@/components/Products';
 import { adminMockProducts } from '../../mocks/admin-products';
@@ -102,29 +103,31 @@ export default function ProductsPage() {
 
   return (
     <div className={styles.productsPage}>
-      <AppLayout 
-        pageHeading="Products Management"
-        leftColumn={
-          <ProductsTable 
-            products={filteredProducts}
-            onSearch={handleSearch}
-            onCategoryFilter={handleCategoryFilter}
-            onStatusFilter={handleStatusFilter}
-            onDateFilter={handleDateFilter}
-            searchTerm={searchTerm}
-            selectedCategory={selectedCategory}
-            selectedStatus={selectedStatus}
-            selectedDateRange={selectedDateRange}
-            categories={categories}
-          />
-        }
-        rightColumn={
-          <CategoryAggregation 
-            products={adminMockProducts}
-            filteredProducts={filteredProducts}
-          />
-        }
-      />
+      <AppLayout>
+        <Main 
+          pageHeading="Products Management"
+          leftColumn={
+            <ProductsTable 
+              products={filteredProducts}
+              onSearch={handleSearch}
+              onCategoryFilter={handleCategoryFilter}
+              onStatusFilter={handleStatusFilter}
+              onDateFilter={handleDateFilter}
+              searchTerm={searchTerm}
+              selectedCategory={selectedCategory}
+              selectedStatus={selectedStatus}
+              selectedDateRange={selectedDateRange}
+              categories={categories}
+            />
+          }
+          rightColumn={
+            <CategoryAggregation 
+              products={adminMockProducts}
+              filteredProducts={filteredProducts}
+            />
+          }
+        />
+      </AppLayout>
     </div>
   );
 }
