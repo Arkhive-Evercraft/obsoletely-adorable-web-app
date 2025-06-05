@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
+import { EditableProductImage } from '@/components/Products/EditableProductImage';
 import styles from './page.module.css';
 
 interface Product {
@@ -183,6 +184,17 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleImageChange = (file: File) => {
+    setSelectedImageFile(file);
+    
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreviewUrl(previewUrl);
+    
+    // Update the current product with the preview URL temporarily
+    handleFieldChange('imageUrl', previewUrl);
+  };
+
   const handleImageClick = () => {
     if (isEditing) {
       // Trigger file input click
@@ -208,31 +220,13 @@ export default function ProductDetailPage() {
     <div className={styles.productDetail}>
       <div className={styles.productHeader}>
         <div className={styles.productImage}>
-          <div className={`${styles.imageContainer} ${isEditing ? styles.editable : ''}`}>
-            <img 
-              src={currentProduct.imageUrl} 
-              alt={currentProduct.name}
-              className={styles.image}
-              onClick={handleImageClick}
-            />
-            {isEditing && (
-              <div className={styles.imageOverlay}>
-                <div className={styles.imageOverlayContent}>
-                  <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M15 12V6a1 1 0 0 0-1-1h-1.172a3 3 0 0 1-2.12-.879L9.828 3.24a1 1 0 0 0-.707-.293H6.879a1 1 0 0 0-.707.293L5.292 4.121A3 3 0 0 1 3.172 5H2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM2 4a2 2 0 0 1 2-2h1.172a2 2 0 0 1 1.414.586L7.465 3.465A1 1 0 0 0 8.172 4h1.656a1 1 0 0 0 .707-.293L11.414 2.586A2 2 0 0 1 12.828 2H14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"/>
-                    <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-                  </svg>
-                  <span>Click to change image</span>
-                </div>
-              </div>
-            )}
-          </div>
-          <input
-            id="product-image-input"
-            type="file"
-            accept="image/*"
-            onChange={handleImageFileChange}
-            className={styles.imageFileInput}
+          <EditableProductImage
+            imageUrl={currentProduct.imageUrl}
+            alt={currentProduct.name}
+            size="large"
+            isEditing={isEditing}
+            productId={currentProduct.id.toString()}
+            onImageChange={isEditing ? handleImageChange : undefined}
           />
           <div className={styles.metadata}>
             <div className={styles.metadataItem}>

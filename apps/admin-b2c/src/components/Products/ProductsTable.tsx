@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
 import type { TableColumn } from '@repo/ui';
 import { ImageModal } from './ImageModal';
+import { EditableProductImage } from './EditableProductImage';
 import styles from './ProductsTable.module.css';
 
 interface Product {
@@ -112,6 +113,17 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     onProductUpdate?.(updatedProducts);
   };
 
+  const handleImageChange = (productId: string, file: File) => {
+    // Create preview URL for immediate display
+    const previewUrl = URL.createObjectURL(file);
+    
+    // Update the product with the preview URL
+    handleFieldChange(productId, 'imageUrl', previewUrl);
+    
+    // TODO: In a real implementation, you would upload the file here
+    // and then update with the actual URL
+  };
+
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
     if (!isEditing) {
       if (field === 'price') return `$${((value as number) / 100).toFixed(2)}`;
@@ -209,20 +221,15 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       width: '60px',
       align: 'center',
       render: (imageUrl: string, product: Product) => (
-        <button
-          className={styles.imageButton}
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent row click when clicking image
-            handleImageClick(imageUrl, product.name);
-          }}
-          aria-label={`View ${product.name} image`}
-        >
-          <img 
-            src={imageUrl} 
-            alt={product.name}
-            className={styles.thumbnail}
-          />
-        </button>
+        <EditableProductImage
+          imageUrl={imageUrl}
+          alt={product.name}
+          size="small"
+          isEditing={isEditing}
+          productId={product.id}
+          onImageChange={isEditing ? (file) => handleImageChange(product.id, file) : undefined}
+          onImageClick={!isEditing ? () => handleImageClick(imageUrl, product.name) : undefined}
+        />
       )
     },
     {
