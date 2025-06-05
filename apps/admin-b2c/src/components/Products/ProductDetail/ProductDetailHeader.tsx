@@ -1,10 +1,9 @@
 "use client";
 
 import React from 'react';
-import { EditableProductImage } from './EditableProductImage';
+import { EditableProductImage } from '../EditableProductImage';
 import { ProductMetadata } from './ProductMetadata';
-import styles from './ProductDetailHeader.module.css';
-import sharedStyles from './shared.module.css';
+import styles from './ProductDetail.module.css';
 
 interface Product {
   id: number;
@@ -43,14 +42,14 @@ export function ProductDetailHeader({
         <ProductMetadata product={product} />
       </div>
       <div className={styles.productBasicInfo}>
-        <div className={`${sharedStyles.field} ${sharedStyles.fullWidth}`}>
-          <label className={sharedStyles.fieldLabel}>Product Name</label>
+        <div className={`${styles.field} ${styles.fullWidth}`}>
+          <label className={styles.fieldLabel}>Product Name</label>
           {isEditing ? (
             <input
               type="text"
               value={product.name}
               onChange={(e) => onFieldChange('name', e.target.value)}
-              className={sharedStyles.input}
+              className={styles.input}
             />
           ) : (
             <h1 className={styles.productName}>{product.name}</h1>

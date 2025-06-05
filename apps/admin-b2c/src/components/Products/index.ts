@@ -1,11 +1,11 @@
 // Export all product detail components
-export { LoadingState } from './LoadingState';
-export { NotFoundState } from './NotFoundState';
-export { ProductMetadata } from './ProductMetadata';
-export { ProductDescription } from './ProductDescription';
-export { ProductMetaGrid } from './ProductMetaGrid';
-export { ProductDetailHeader } from './ProductDetailHeader';
-export { ActionsPanel } from './ActionsPanel';
+export { LoadingState } from './ProductDetail/LoadingState';
+export { NotFoundState } from './ProductDetail/NotFoundState';
+export { ProductMetadata } from './ProductDetail/ProductMetadata';
+export { ProductDescription } from './ProductDetail/ProductDescription';
+export { ProductMetaGrid } from './ProductDetail/ProductMetaGrid';
+export { ProductDetailHeader } from './ProductDetail/ProductDetailHeader';
+export { ActionsPanel } from './ProductDetail/ActionsPanel';
 
 // Export existing table and aggregation components
 export { ProductsTable } from './ProductsTable';

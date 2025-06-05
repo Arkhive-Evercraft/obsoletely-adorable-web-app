@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './NotFoundState.module.css';
+import styles from './ProductDetail.module.css';
 
 interface NotFoundStateProps {
   error?: string;

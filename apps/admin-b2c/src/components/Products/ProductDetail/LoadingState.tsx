@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import styles from './LoadingState.module.css';
+import styles from './ProductDetail.module.css';
 
 export function LoadingState() {
   return (

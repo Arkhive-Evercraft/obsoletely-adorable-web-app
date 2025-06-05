@@ -1,8 +1,7 @@
 "use client";
 
 import React from 'react';
-import styles from './ProductMetaGrid.module.css';
-import sharedStyles from './shared.module.css';
+import styles from './ProductDetail.module.css';
 
 interface Product {
   price: number;
@@ -18,10 +17,10 @@ interface ProductMetaGridProps {
 
 export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMetaGridProps) {
   return (
-    <div className={`${sharedStyles.field} ${sharedStyles.fullWidth}`}>
+    <div className={`${styles.field} ${styles.fullWidth}`}>
       <div className={styles.productMetaGrid}>
         <div className={styles.metaField}>
-          <label className={sharedStyles.fieldLabel}>Price</label>
+          <label className={styles.fieldLabel}>Price</label>
           {isEditing ? (
             <input
               type="number"
@@ -29,7 +28,7 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
               min="0"
               value={product.price}
               onChange={(e) => onFieldChange('price', parseFloat(e.target.value) || 0)}
-              className={sharedStyles.input}
+              className={styles.input}
               placeholder="0.00"
             />
           ) : (
@@ -38,12 +37,12 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
         </div>
 
         <div className={styles.metaField}>
-          <label className={sharedStyles.fieldLabel}>Status</label>
+          <label className={styles.fieldLabel}>Status</label>
           {isEditing ? (
             <select
               value={product.inStock ? 'true' : 'false'}
               onChange={(e) => onFieldChange('inStock', e.target.value === 'true')}
-              className={sharedStyles.select}
+              className={styles.select}
             >
               <option value="true">In Stock</option>
               <option value="false">Out of Stock</option>
@@ -60,13 +59,13 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
         </div>
 
         <div className={styles.metaField}>
-          <label className={sharedStyles.fieldLabel}>Category</label>
+          <label className={styles.fieldLabel}>Category</label>
           {isEditing ? (
             <input
               type="text"
               value={product.categoryName}
               onChange={(e) => onFieldChange('categoryName', e.target.value)}
-              className={sharedStyles.input}
+              className={styles.input}
               placeholder="Enter category"
             />
           ) : (
