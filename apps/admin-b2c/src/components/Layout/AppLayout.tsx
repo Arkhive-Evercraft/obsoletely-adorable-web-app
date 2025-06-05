@@ -33,7 +33,7 @@ export function AppLayout({
             </Column>
 
             {/* Right Column */}
-            <Column title="Analytics" className="col-span-1 row-span-3 row-start-2">
+            <Column title="Categories" className="col-span-1 row-span-3 row-start-2">
                 {rightColumn}
             </Column>
 

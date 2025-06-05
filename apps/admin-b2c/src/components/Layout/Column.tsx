@@ -11,13 +11,13 @@ export function Column({
   title
 }: PropsWithChildren<ColumnProps>) {
   return (
-    <div className={`${className} bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`${className} bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${className} flex flex-col`}>
       {title && (
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3">
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         </div>
       )}
-      <div className="h-full overflow-y-auto p-4">
+      <div className="flex-1 overflow-hidden p-4">
         {children}
       </div>
     </div>
