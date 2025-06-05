@@ -334,6 +334,51 @@
   background-color: #2563eb;
 }
 
+/* New organized grid layout for meta fields */
+.productMetaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.metaField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metaField .fieldLabel {
+  margin-bottom: 0;
+}
+
+.metaField .input,
+.metaField .select {
+  width: 100%;
+}
+
+.metaField .price,
+.metaField .stock,
+.metaField .category {
+  min-height: 44px; /* Match input height */
+  display: flex;
+  align-items: center;
+}
+
+.metaField .category {
+  width: fit-content;
+  min-height: auto;
+  margin: 0;
+}
+
+/* Legacy styles - keep for backward compatibility but update */
+.productMetaLine {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .productHeader {

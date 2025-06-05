@@ -174,40 +174,37 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          {/* Price, Stock Status, and Category in one line */}
+          {/* Price, Stock Status, and Category in organized grid */}
           <div className={`${styles.field} ${styles.fullWidth}`}>
-            <div className={styles.productMetaLine}>
-              <div className={styles.priceSection}>
+            <div className={styles.productMetaGrid}>
+              <div className={styles.metaField}>
+                <label className={styles.fieldLabel}>Price</label>
                 {isEditing ? (
-                  <div>
-                    <label className={styles.fieldLabel}>Price</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={currentProduct.price}
-                      onChange={(e) => handleFieldChange('price', parseFloat(e.target.value) || 0)}
-                      className={styles.input}
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={currentProduct.price}
+                    onChange={(e) => handleFieldChange('price', parseFloat(e.target.value) || 0)}
+                    className={styles.input}
+                    placeholder="0.00"
+                  />
                 ) : (
                   <div className={styles.price}>${currentProduct.price.toFixed(2)}</div>
                 )}
               </div>
 
-              <div className={styles.statusSection}>
+              <div className={styles.metaField}>
+                <label className={styles.fieldLabel}>Status</label>
                 {isEditing ? (
-                  <div>
-                    <label className={styles.fieldLabel}>Status</label>
-                    <select
-                      value={currentProduct.inStock ? 'true' : 'false'}
-                      onChange={(e) => handleFieldChange('inStock', e.target.value === 'true')}
-                      className={styles.select}
-                    >
-                      <option value="true">In Stock</option>
-                      <option value="false">Out of Stock</option>
-                    </select>
-                  </div>
+                  <select
+                    value={currentProduct.inStock ? 'true' : 'false'}
+                    onChange={(e) => handleFieldChange('inStock', e.target.value === 'true')}
+                    className={styles.select}
+                  >
+                    <option value="true">In Stock</option>
+                    <option value="false">Out of Stock</option>
+                  </select>
                 ) : (
                   <div className={styles.stock}>
                     {currentProduct.inStock ? (
@@ -219,17 +216,16 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
-              <div className={styles.categorySection}>
+              <div className={styles.metaField}>
+                <label className={styles.fieldLabel}>Category</label>
                 {isEditing ? (
-                  <div>
-                    <label className={styles.fieldLabel}>Category</label>
-                    <input
-                      type="text"
-                      value={currentProduct.categoryName}
-                      onChange={(e) => handleFieldChange('categoryName', e.target.value)}
-                      className={styles.input}
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={currentProduct.categoryName}
+                    onChange={(e) => handleFieldChange('categoryName', e.target.value)}
+                    className={styles.input}
+                    placeholder="Enter category"
+                  />
                 ) : (
                   <span className={styles.category}>{currentProduct.categoryName}</span>
                 )}
