@@ -54,36 +54,25 @@ export function ProductsTable({
   
   const columns: TableColumn<Product>[] = [
     {
-      key: 'imageUrl',
-      title: 'Image',
-      width: '80px',
-      sortable: false,
-      render: (imageUrl: string, product: Product) => (
-        <img 
-          src={imageUrl} 
-          alt={product.name}
-          style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
-        />
-      )
-    },
-    {
       key: 'name',
       title: 'Product Name',
       sortable: true,
       width: '250px'
+      // Product name remains left-aligned (default)
     },
     {
       key: 'category',
       title: 'Category',
       sortable: true,
-      width: '120px'
+      width: '120px',
+      align: 'center'
     },
     {
       key: 'price',
       title: 'Price',
       sortable: true,
       width: '100px',
-      align: 'right',
+      align: 'center',
       render: (price: number) => `$${price.toFixed(2)}`
     },
     {
@@ -125,6 +114,7 @@ export function ProductsTable({
       title: 'Last Updated',
       sortable: true,
       width: '120px',
+      align: 'center',
       render: (date: string) => new Date(date).toLocaleDateString()
     }
   ];

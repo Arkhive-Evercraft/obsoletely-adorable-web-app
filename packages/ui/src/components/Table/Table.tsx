@@ -180,7 +180,7 @@ export function Table<T extends Record<string, any>>({
                     style={{ width: column.width }}
                     onClick={() => column.sortable !== false && handleSort(column.key)}
                   >
-                    <div className={styles.headerContent}>
+                    <div className={`${styles.headerContent} ${column.align ? styles[column.align] : ''}`}>
                       <span>{column.title}</span>
                       {sortable && column.sortable !== false && (
                         <span className={styles.sortIndicator}>
@@ -193,8 +193,10 @@ export function Table<T extends Record<string, any>>({
                   </th>
                 ))}
                 {actions.length > 0 && (
-                  <th className={`${styles.headerCell} ${styles.actionsHeader}`}>
-                    Actions
+                  <th className={`${styles.headerCell} ${styles.actionsHeader} ${styles.center}`}>
+                    <div className={`${styles.headerContent} ${styles.center}`}>
+                      <span>Actions</span>
+                    </div>
                   </th>
                 )}
               </tr>

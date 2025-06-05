@@ -132,26 +132,45 @@
   font-weight: 600;
   color: #374151;
   border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;
 }
 
-.headerCell:hover {
-  background-color: #f3f4f6;
+.headerCell:last-child {
+  border-right: none;
 }
 
 .headerContent {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.25rem;
 }
 
+.headerContent.center {
+  justify-content: center;
+}
+
+.headerContent.left {
+  justify-content: flex-start;
+}
+
+.headerContent.right {
+  justify-content: flex-end;
+}
+
 .sortIndicator {
-  font-size: 0.75rem;
-  color: #6b7280;
-  opacity: 0.7;
+  font-size: 1rem;
+  color: #374151;
+  opacity: 1;
+  font-weight: 700;
+  margin-left: 0.25rem;
+  transition: color 0.2s;
+}
+
+.headerCell:hover .sortIndicator {
+  color: #1f2937;
 }
 
 .actionsHeader {
@@ -199,6 +218,11 @@
   color: #374151;
   vertical-align: top;
   line-height: 1.4;
+  border-right: 1px solid #f3f4f6;
+}
+
+.cell:last-child {
+  border-right: none;
 }
 
 .compact .cell {
@@ -213,17 +237,20 @@
 .actionsCell {
   width: 120px;
   padding: 0.5rem;
+  text-align: center;
 }
 
 .actions {
   display: flex;
   gap: 0.25rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .actionButton {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
   border: none;
@@ -232,6 +259,8 @@
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
+  min-width: 4rem;
+  width: 4rem;
 }
 
 .actionButton:disabled {
@@ -363,6 +392,7 @@
 
 :global(.dark) .cell {
   color: #e5e7eb;
+  border-right-color: #374151;
 }
 
 :global(.dark) .searchInput,
