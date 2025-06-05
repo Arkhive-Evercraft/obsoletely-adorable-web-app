@@ -7,14 +7,16 @@ export function TableSelectFilter({
   options,
   onFilter,
   className = '',
-  placeholder = 'All'
+  placeholder = 'All',
+  disabled = false
 }: TableSelectFilterProps) {
   return (
     <div className={`${styles.filterContainer} ${className}`}>
       <select
         value={selectedValue}
-        onChange={(e) => onFilter(e.target.value)}
+        onChange={(e) => disabled ? undefined : onFilter(e.target.value)}
         className={styles.filterSelect}
+        disabled={disabled}
       >
         <option value="">{placeholder}</option>
         {options.map((option) => {

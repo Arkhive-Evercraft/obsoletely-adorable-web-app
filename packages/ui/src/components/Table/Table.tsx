@@ -46,6 +46,11 @@ export function Table<T extends Record<string, any>>({
   onStatusFilter = () => {},
   onDateFilter = () => {},
   onSort = () => {},
+  
+  // Disabled state props
+  searchDisabled = false,
+  filtersDisabled = false,
+  
   onFilteredDataChange,
 }: TableProps<T>) {
   // Determine if component is in controlled mode
@@ -280,6 +285,7 @@ export function Table<T extends Record<string, any>>({
               onSearch={handleSearch}
               placeholder="Search..."
               className={styles.searchControl}
+              disabled={searchDisabled}
             />
           )}
           {filterable && finalCategories.length > 0 && (
@@ -288,6 +294,7 @@ export function Table<T extends Record<string, any>>({
               categories={finalCategories}
               onFilter={handleFilter}
               className={styles.filterControl}
+              disabled={filtersDisabled}
             />
           )}
           {filterable && finalStatusOptions.length > 0 && (
@@ -297,6 +304,7 @@ export function Table<T extends Record<string, any>>({
               onFilter={handleStatusFilter}
               className={styles.filterControl}
               placeholder="All Status"
+              disabled={filtersDisabled}
             />
           )}
           {filterable && dateRangeOptions.length > 0 && (
@@ -306,6 +314,7 @@ export function Table<T extends Record<string, any>>({
               onFilter={handleDateFilter}
               className={styles.filterControl}
               placeholder="All Dates"
+              disabled={filtersDisabled}
             />
           )}
         </div>

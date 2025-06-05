@@ -7,13 +7,15 @@ export function TableFilter({
   categories,
   onFilter,
   className = '',
+  disabled = false,
 }: TableFilterProps) {
   return (
     <div className={`${styles.filterContainer} ${className}`}>
       <select
         value={selectedCategory}
-        onChange={(e) => onFilter(e.target.value)}
+        onChange={(e) => disabled ? undefined : onFilter(e.target.value)}
         className={styles.filterSelect}
+        disabled={disabled}
       >
         <option value="">All Categories</option>
         {categories.map((category) => (

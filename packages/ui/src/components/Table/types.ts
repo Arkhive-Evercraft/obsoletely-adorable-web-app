@@ -53,6 +53,10 @@ export interface TableProps<T = any> {
   onDateFilter?: (dateRange: string) => void;
   onSort?: (sortBy: string) => void;
 
+  // Disabled state for search and filters
+  searchDisabled?: boolean;
+  filtersDisabled?: boolean;
+
   // Callback for when filtered data changes (useful for getting counts, etc.)
   onFilteredDataChange?: (filteredData: T[], originalData: T[]) => void;
 }
@@ -62,6 +66,7 @@ export interface TableSearchProps {
   placeholder?: string;
   onSearch: (term: string) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export interface TableFilterProps {
@@ -70,6 +75,7 @@ export interface TableFilterProps {
   onFilter: (category: string) => void;
   className?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export interface TableSelectFilterProps {
@@ -78,4 +84,5 @@ export interface TableSelectFilterProps {
   onFilter: (value: string) => void;
   className?: string;
   placeholder?: string;
+  disabled?: boolean;
 }

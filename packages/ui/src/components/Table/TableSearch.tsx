@@ -7,6 +7,7 @@ export function TableSearch({
   placeholder = 'Search...',
   onSearch,
   className = '',
+  disabled = false,
 }: TableSearchProps) {
   return (
     <div className={`${styles.searchContainer} ${className}`}>
@@ -24,11 +25,12 @@ export function TableSearch({
         <input
           type="text"
           value={searchTerm}
-          onChange={(e) => onSearch(e.target.value)}
+          onChange={(e) => disabled ? undefined : onSearch(e.target.value)}
           placeholder={placeholder}
           className={styles.searchInput}
+          disabled={disabled}
         />
-        {searchTerm && (
+        {searchTerm && !disabled && (
           <button
             onClick={() => onSearch('')}
             className={styles.clearButton}
