@@ -162,7 +162,8 @@ export function ProductsTable({
       onSearch={onSearch}
       onFilter={onCategoryFilter}
       emptyMessage="No products found"
-      maxHeight="600px"
+      maxHeight="100%"
+      className="h-full"
     />
   );
 }
