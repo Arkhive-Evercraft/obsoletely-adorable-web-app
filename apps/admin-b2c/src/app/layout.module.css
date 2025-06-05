@@ -1,0 +1,76 @@
+.stockLevels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stockItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stockItem .inStock {
+  color: #28a745;
+}
+
+.stockItem .lowStock {
+  color: #ffc107;
+}
+
+.stockItem .outOfStock {
+  color: #dc3545;
+}
+
+.stockItem .value {
+  font-weight: 600;
+}
+
+.stockTotal {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.stockTotal .totalItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stockTotal .label,
+.stockTotal .value {
+  font-weight: 600;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.categoryItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryCount {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.manageButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.manageButton:hover {
+  background-color: #0056b3;
+}

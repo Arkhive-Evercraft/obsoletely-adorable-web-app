@@ -13,13 +13,16 @@
 }
 
 .searchFilter {
-  flex: 1;
+  max-width: 300px;
+  min-width: 200px;
 }
 
 .filterControls {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .advancedFiltersButton {
@@ -35,6 +38,8 @@
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
+  min-width: 120px;
+  white-space: nowrap;
 }
 
 .advancedFiltersButton:hover {
@@ -72,6 +77,8 @@
   color: var(--danger);
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 100px;
+  white-space: nowrap;
 }
 
 .resetFiltersButton:hover {
