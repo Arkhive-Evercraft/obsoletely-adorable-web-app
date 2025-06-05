@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { TableProps, TableColumn, TableAction } from './types';
 import { TableSearch, TableFilter, TableSelectFilter } from '@/components/Table';
 import styles from './Table.module.css';
@@ -18,72 +18,131 @@ export function Table<T extends Record<string, any>>({
   emptyMessage = 'No data available',
   className = '',
   onRowClick,
-  // Search and filter props
-  searchTerm = '',
-  selectedCategory = '',
-  selectedStatus = '',
-  selectedDateRange = '',
-  sortOption = '',
-  categories = [],
-  statusOptions = [],
-  dateRangeOptions = [],
+  
+  // Auto-extract options
+  autoExtractCategories = true,
+  autoExtractStatuses = true,
+  categoryKey = 'category',
+  statusKey = 'status',
+  dateKey = 'dateAdded',
+  
+  // Controlled mode props
+  searchTerm,
+  selectedCategory,
+  selectedStatus,
+  selectedDateRange,
+  sortOption,
+  categories,
+  statusOptions,
+  dateRangeOptions = [
+    { value: 'last7days', label: 'Last 7 days' },
+    { value: 'last30days', label: 'Last 30 days' },
+    { value: 'last90days', label: 'Last 90 days' },
+    { value: 'thisyear', label: 'This year' },
+  ],
   sortOptions = [],
   onSearch = () => {},
   onFilter = () => {},
   onStatusFilter = () => {},
   onDateFilter = () => {},
   onSort = () => {},
+  onFilteredDataChange,
 }: TableProps<T>) {
-  const [internalSearchTerm, setInternalSearchTerm] = useState(searchTerm);
-  const [internalSelectedCategory, setInternalSelectedCategory] = useState(selectedCategory);
-  const [internalSelectedStatus, setInternalSelectedStatus] = useState(selectedStatus);
-  const [internalSelectedDateRange, setInternalSelectedDateRange] = useState(selectedDateRange);
-  const [sortBy, setSortBy] = useState(sortOption);
+  // Determine if component is in controlled mode
+  const isControlled = searchTerm !== undefined || selectedCategory !== undefined || 
+                      selectedStatus !== undefined || selectedDateRange !== undefined;
+
+  // Internal state for uncontrolled mode
+  const [internalSearchTerm, setInternalSearchTerm] = useState('');
+  const [internalSelectedCategory, setInternalSelectedCategory] = useState('');
+  const [internalSelectedStatus, setInternalSelectedStatus] = useState('');
+  const [internalSelectedDateRange, setInternalSelectedDateRange] = useState('');
+  const [sortBy, setSortBy] = useState(sortOption || '');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  // Auto-extract categories from data
+  const autoCategories = useMemo(() => {
+    if (!autoExtractCategories || !filterable) return [];
+    const categorySet = new Set<string>();
+    data.forEach(item => {
+      const categoryValue = item[categoryKey];
+      if (categoryValue && typeof categoryValue === 'string') {
+        categorySet.add(categoryValue);
+      }
+    });
+    return Array.from(categorySet).sort();
+  }, [data, autoExtractCategories, filterable, categoryKey]);
+
+  // Auto-extract status options from data
+  const autoStatusOptions = useMemo(() => {
+    if (!autoExtractStatuses || !filterable) return [];
+    
+    // Check if using boolean inStock field
+    if (statusKey === 'inStock' || (statusKey === 'status' && data.some(item => typeof item.inStock === 'boolean'))) {
+      return ['In Stock', 'Out of Stock'];
+    }
+    
+    // Extract unique status values
+    const statusSet = new Set<string>();
+    data.forEach(item => {
+      const statusValue = item[statusKey];
+      if (statusValue && typeof statusValue === 'string') {
+        statusSet.add(statusValue);
+      }
+    });
+    return Array.from(statusSet).sort();
+  }, [data, autoExtractStatuses, filterable, statusKey]);
+
+  // Use provided options or auto-extracted ones
+  const finalCategories = categories || autoCategories;
+  const finalStatusOptions = statusOptions || autoStatusOptions;
+
+  // Get current filter values (controlled or uncontrolled)
+  const currentSearchTerm = isControlled ? (searchTerm || '') : internalSearchTerm;
+  const currentSelectedCategory = isControlled ? (selectedCategory || '') : internalSelectedCategory;
+  const currentSelectedStatus = isControlled ? (selectedStatus || '') : internalSelectedStatus;
+  const currentSelectedDateRange = isControlled ? (selectedDateRange || '') : internalSelectedDateRange;
 
   // Filter and search data
   const filteredData = useMemo(() => {
     let filtered = [...data];
 
     // Apply search filter
-    const searchText = searchTerm || internalSearchTerm;
-    if (searchText) {
+    if (currentSearchTerm) {
       filtered = filtered.filter(item =>
         Object.values(item).some(value =>
-          String(value).toLowerCase().includes(searchText.toLowerCase())
+          String(value).toLowerCase().includes(currentSearchTerm.toLowerCase())
         )
       );
     }
 
     // Apply category filter
-    const categoryFilter = selectedCategory || internalSelectedCategory;
-    if (categoryFilter && categoryFilter !== '') {
+    if (currentSelectedCategory && currentSelectedCategory !== '') {
       filtered = filtered.filter(item =>
-        item.category === categoryFilter || item.type === categoryFilter
+        item[categoryKey] === currentSelectedCategory
       );
     }
 
     // Apply status filter
-    const statusFilter = selectedStatus || internalSelectedStatus;
-    if (statusFilter && statusFilter !== '') {
-      filtered = filtered.filter(item => {
-        if (statusFilter === 'In Stock') {
-          return item.inStock === true;
-        } else if (statusFilter === 'Out of Stock') {
-          return item.inStock === false;
+    if (currentSelectedStatus && currentSelectedStatus !== '') {
+      if (statusKey === 'inStock' || (statusKey === 'status' && typeof filtered[0]?.inStock === 'boolean')) {
+        if (currentSelectedStatus === 'In Stock') {
+          filtered = filtered.filter(item => item.inStock === true);
+        } else if (currentSelectedStatus === 'Out of Stock') {
+          filtered = filtered.filter(item => item.inStock === false);
         }
-        return true;
-      });
+      } else {
+        filtered = filtered.filter(item => item[statusKey] === currentSelectedStatus);
+      }
     }
 
     // Apply date range filter
-    const dateRangeFilter = selectedDateRange || internalSelectedDateRange;
-    if (dateRangeFilter && dateRangeFilter !== '') {
+    if (currentSelectedDateRange && currentSelectedDateRange !== '') {
       const now = new Date();
       filtered = filtered.filter(item => {
-        const itemDate = new Date(item.dateAdded);
+        const itemDate = new Date(item[dateKey] || item.orderDate || item.dateAdded);
         
-        switch (dateRangeFilter) {
+        switch (currentSelectedDateRange) {
           case 'last7days':
             const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
             return itemDate >= last7Days;
@@ -122,26 +181,45 @@ export function Table<T extends Record<string, any>>({
     }
 
     return filtered;
-  }, [data, searchTerm, internalSearchTerm, selectedCategory, internalSelectedCategory, selectedStatus, internalSelectedStatus, selectedDateRange, internalSelectedDateRange, sortOption, sortBy, sortDirection, sortable]);
+  }, [data, currentSearchTerm, currentSelectedCategory, currentSelectedStatus, currentSelectedDateRange, sortOption, sortBy, sortDirection, sortable, categoryKey, statusKey, dateKey]);
+
+  // Notify parent of filtered data changes
+  useEffect(() => {
+    if (onFilteredDataChange) {
+      onFilteredDataChange(filteredData, data);
+    }
+  }, [filteredData, data, onFilteredDataChange]);
 
   const handleSearch = (term: string) => {
-    setInternalSearchTerm(term);
-    onSearch(term);
+    if (isControlled) {
+      onSearch(term);
+    } else {
+      setInternalSearchTerm(term);
+    }
   };
 
   const handleFilter = (category: string) => {
-    setInternalSelectedCategory(category);
-    onFilter(category);
+    if (isControlled) {
+      onFilter(category);
+    } else {
+      setInternalSelectedCategory(category);
+    }
   };
 
   const handleStatusFilter = (status: string) => {
-    setInternalSelectedStatus(status);
-    onStatusFilter(status);
+    if (isControlled) {
+      onStatusFilter(status);
+    } else {
+      setInternalSelectedStatus(status);
+    }
   };
 
   const handleDateFilter = (dateRange: string) => {
-    setInternalSelectedDateRange(dateRange);
-    onDateFilter(dateRange);
+    if (isControlled) {
+      onDateFilter(dateRange);
+    } else {
+      setInternalSelectedDateRange(dateRange);
+    }
   };
 
   const handleSort = (columnKey: string) => {
@@ -153,7 +231,10 @@ export function Table<T extends Record<string, any>>({
       setSortBy(columnKey);
       setSortDirection('asc');
     }
-    onSort(columnKey);
+    
+    if (isControlled) {
+      onSort(columnKey);
+    }
   };
 
   const renderCell = (column: TableColumn<T>, record: T, index: number) => {
@@ -195,24 +276,24 @@ export function Table<T extends Record<string, any>>({
         <div className={styles.controls}>
           {searchable && (
             <TableSearch
-              searchTerm={searchTerm || internalSearchTerm}
+              searchTerm={currentSearchTerm}
               onSearch={handleSearch}
               placeholder="Search..."
               className={styles.searchControl}
             />
           )}
-          {filterable && categories.length > 0 && (
+          {filterable && finalCategories.length > 0 && (
             <TableFilter
-              selectedCategory={selectedCategory || internalSelectedCategory}
-              categories={categories}
+              selectedCategory={currentSelectedCategory}
+              categories={finalCategories}
               onFilter={handleFilter}
               className={styles.filterControl}
             />
           )}
-          {filterable && statusOptions.length > 0 && (
+          {filterable && finalStatusOptions.length > 0 && (
             <TableSelectFilter
-              selectedValue={selectedStatus || internalSelectedStatus}
-              options={statusOptions}
+              selectedValue={currentSelectedStatus}
+              options={finalStatusOptions}
               onFilter={handleStatusFilter}
               className={styles.filterControl}
               placeholder="All Status"
@@ -220,7 +301,7 @@ export function Table<T extends Record<string, any>>({
           )}
           {filterable && dateRangeOptions.length > 0 && (
             <TableSelectFilter
-              selectedValue={selectedDateRange || internalSelectedDateRange}
+              selectedValue={currentSelectedDateRange}
               options={dateRangeOptions}
               onFilter={handleDateFilter}
               className={styles.filterControl}

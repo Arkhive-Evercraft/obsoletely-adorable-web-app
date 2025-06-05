@@ -2,24 +2,7 @@
 
 import React from 'react';
 import { Table } from '@repo/ui';
-
-// Import the types from the UI package
-interface TableColumn<T = any> {
-  key: string;
-  title: string;
-  width?: string;
-  sortable?: boolean;
-  render?: (value: any, record: T, index: number) => React.ReactNode;
-  align?: 'left' | 'center' | 'right';
-}
-
-interface TableAction<T = any> {
-  label: string;
-  icon?: React.ReactNode;
-  onClick: (record: T) => void;
-  variant?: 'primary' | 'secondary' | 'danger';
-  disabled?: (record: T) => boolean;
-}
+import type { TableColumn, TableAction } from '@repo/ui';
 
 interface Product {
   id: string;
@@ -36,29 +19,10 @@ interface Product {
 
 interface ProductsTableProps {
   products: Product[];
-  onSearch: (term: string) => void;
-  onCategoryFilter: (category: string) => void;
-  onStatusFilter: (status: string) => void;
-  onDateFilter: (dateRange: string) => void;
-  searchTerm: string;
-  selectedCategory: string;
-  selectedStatus: string;
-  selectedDateRange: string;
-  categories: string[];
+  onFilteredDataChange?: (filteredProducts: Product[], originalProducts: Product[]) => void;
 }
 
-export function ProductsTable({
-  products,
-  onSearch,
-  onCategoryFilter,
-  onStatusFilter,
-  onDateFilter,
-  searchTerm,
-  selectedCategory,
-  selectedStatus,
-  selectedDateRange,
-  categories
-}: ProductsTableProps) {
+export function ProductsTable({ products, onFilteredDataChange }: ProductsTableProps) {
   
   const columns: TableColumn<Product>[] = [
     {
@@ -66,7 +30,6 @@ export function ProductsTable({
       title: 'Product Name',
       sortable: true,
       width: '250px'
-      // Product name remains left-aligned (default)
     },
     {
       key: 'category',
@@ -146,17 +109,6 @@ export function ProductsTable({
     }
   ];
 
-  // Define status options for the filter
-  const statusOptions = ['In Stock', 'Out of Stock'];
-  
-  // Define date range options for the filter
-  const dateRangeOptions = [
-    { value: 'last7days', label: 'Last 7 days' },
-    { value: 'last30days', label: 'Last 30 days' },
-    { value: 'last90days', label: 'Last 90 days' },
-    { value: 'thisyear', label: 'This year' },
-  ];
-
   return (
     <Table
       data={products}
@@ -165,20 +117,15 @@ export function ProductsTable({
       searchable={true}
       filterable={true}
       sortable={true}
-      searchTerm={searchTerm}
-      selectedCategory={selectedCategory}
-      selectedStatus={selectedStatus}
-      selectedDateRange={selectedDateRange}
-      categories={categories}
-      statusOptions={statusOptions}
-      dateRangeOptions={dateRangeOptions}
-      onSearch={onSearch}
-      onFilter={onCategoryFilter}
-      onStatusFilter={onStatusFilter}
-      onDateFilter={onDateFilter}
+      autoExtractCategories={true}
+      autoExtractStatuses={true}
+      categoryKey="category"
+      statusKey="inStock"
+      dateKey="dateAdded"
       emptyMessage="No products found"
       maxHeight="100%"
       className="h-full"
+      onFilteredDataChange={onFilteredDataChange}
     />
   );
 }
