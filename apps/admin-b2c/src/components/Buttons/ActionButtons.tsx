@@ -29,7 +29,7 @@ export const SaveButton: React.FC<ActionButtonProps> = ({ children = 'Save Chang
 
 export const CancelButton: React.FC<ActionButtonProps> = ({ children = 'Cancel', ...props }) => (
   <Button
-    variant="danger"
+    variant="secondary"
     icon={<CancelIcon />}
     {...props}
   >
@@ -39,7 +39,7 @@ export const CancelButton: React.FC<ActionButtonProps> = ({ children = 'Cancel',
 
 export const AddButton: React.FC<ActionButtonProps> = ({ children = 'Add New Product', ...props }) => (
   <Button
-    variant="success"
+    variant="primary"
     icon={<PlusIcon />}
     {...props}
   >
@@ -49,7 +49,7 @@ export const AddButton: React.FC<ActionButtonProps> = ({ children = 'Add New Pro
 
 export const ManageCategoriesButton: React.FC<ActionButtonProps> = ({ children = 'Manage Categories', ...props }) => (
   <Button
-    variant="warning"
+    variant="secondary"
     icon={<CategoriesIcon />}
     {...props}
   >
