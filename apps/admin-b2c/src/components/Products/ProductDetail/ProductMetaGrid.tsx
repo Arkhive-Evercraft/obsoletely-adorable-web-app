@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useAppData } from '@/components/AppDataProvider';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
 
 interface Product {
@@ -21,7 +21,7 @@ interface ProductMetaGridProps {
 export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMetaGridProps) {
   // Use the app data context instead of fetching categories locally
   const { categories, categoriesLoading } = useAppData();
-  const { validateField, clearFieldError, getFieldError } = useValidation();
+  const { validateField, clearFieldError, getFieldError } = useProductValidation();
   const entityId = product.id?.toString() || '0';
 
   const handlePriceChange = (value: number) => {

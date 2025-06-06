@@ -6,8 +6,9 @@ import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState } from '@/components/Products';
 import { useProductManagement } from '@/hooks/useProductManagement';
+import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const router = useRouter();
   const {
     products,
@@ -67,5 +68,13 @@ export default function ProductsPage() {
         }
       />
     </AppLayout>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <ProductValidationProvider>
+      <ProductsPageContent />
+    </ProductValidationProvider>
   );
 }

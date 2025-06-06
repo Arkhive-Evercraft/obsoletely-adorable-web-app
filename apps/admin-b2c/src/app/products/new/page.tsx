@@ -10,7 +10,8 @@ import {
   ProductDescription, 
   NewProductActionsPanel 
 } from '@/components/Products';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
+import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 
 interface Product {
   id: number;
@@ -25,12 +26,12 @@ interface Product {
   updatedAt: string;
 }
 
-export default function AddNewProductPage() {
+function AddNewProductPageContent() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
-  const { validateEntity, clearEntityErrors } = useValidation();
+  const { validateProduct, clearProductErrors } = useProductValidation();
   
   // Initialize with empty product data
   const [newProduct, setNewProduct] = useState<Product>({
@@ -77,8 +78,8 @@ export default function AddNewProductPage() {
   const handleSave = async () => {
     const entityId = newProduct.id.toString(); // Use '0' for new products
     
-    // Validate the entire product using the context
-    const isValid = validateEntity(entityId, newProduct);
+    // Validate the entire product using the product validation context
+    const isValid = validateProduct(entityId, newProduct);
     
     if (!isValid) {
       setIsSaving(false);
@@ -121,7 +122,7 @@ export default function AddNewProductPage() {
       // Clean up states
       setSelectedImageFile(null);
       setImagePreviewUrl('');
-      clearEntityErrors(entityId); // Clear validation errors
+      clearProductErrors(entityId); // Clear validation errors
       
       // Navigate to the created product's detail page
       router.push(`/products/${createdProduct.id}`);
@@ -140,7 +141,7 @@ export default function AddNewProductPage() {
     setImagePreviewUrl('');
     
     // Clean up validation states
-    clearEntityErrors('0'); // Clear validation errors for new product
+    clearProductErrors('0'); // Clear validation errors for new product
     
     // Clean up any object URLs to prevent memory leaks
     if (imagePreviewUrl) {
@@ -199,5 +200,13 @@ export default function AddNewProductPage() {
         }
       />
     </AppLayout>
+  );
+}
+
+export default function AddNewProductPage() {
+  return (
+    <ProductValidationProvider>
+      <AddNewProductPageContent />
+    </ProductValidationProvider>
   );
 }

@@ -12,7 +12,8 @@ import {
   ProductDescription, 
   ActionsPanel 
 } from '@/components/Products';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
+import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 
 interface Product {
   id: number;
@@ -27,7 +28,7 @@ interface Product {
   updatedAt: string;
 }
 
-export default function ProductDetailPage() {
+function ProductDetailPageContent() {
   const params = useParams();
   const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
   
@@ -39,7 +40,7 @@ export default function ProductDetailPage() {
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
-  const { validateEntity, clearEntityErrors } = useValidation();
+  const { validateProduct, clearProductErrors } = useProductValidation();
 
   // Fetch product data from API
   useEffect(() => {
@@ -84,8 +85,8 @@ export default function ProductDetailPage() {
     
     const entityId = currentProduct.id.toString();
     
-    // Validate the entire product using the context
-    const isValid = validateEntity(entityId, currentProduct);
+    // Validate the entire product using the product validation context
+    const isValid = validateProduct(entityId, currentProduct);
     
     if (!isValid) {
       setIsSaving(false);
@@ -113,7 +114,7 @@ export default function ProductDetailPage() {
       // Clean up states
       setSelectedImageFile(null);
       setImagePreviewUrl('');
-      clearEntityErrors(entityId); // Clear validation errors
+      clearProductErrors(entityId); // Clear validation errors
       
       setIsEditing(false);
     } catch (error) {
@@ -133,7 +134,7 @@ export default function ProductDetailPage() {
     
     // Clean up validation states
     if (product) {
-      clearEntityErrors(product.id.toString());
+      clearProductErrors(product.id.toString());
     }
     
     // Clean up any object URLs to prevent memory leaks
@@ -244,5 +245,13 @@ export default function ProductDetailPage() {
         rightColumn={renderActionsPanel()}
       />
     </AppLayout>
+  );
+}
+
+export default function ProductDetailPage() {
+  return (
+    <ProductValidationProvider>
+      <ProductDetailPageContent />
+    </ProductValidationProvider>
   );
 }

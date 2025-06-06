@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
 
 interface ProductDescriptionProps {
@@ -17,7 +17,7 @@ export function ProductDescription({
   onDescriptionChange,
   productId = '0'
 }: ProductDescriptionProps) {
-  const { validateField, clearFieldError, getFieldError } = useValidation();
+  const { validateField, clearFieldError, getFieldError } = useProductValidation();
   const entityId = productId.toString();
 
   const handleDescriptionChange = (value: string) => {

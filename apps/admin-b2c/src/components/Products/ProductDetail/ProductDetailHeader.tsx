@@ -3,7 +3,7 @@
 import React from 'react';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { ProductMetadata } from './ProductMetadata';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
 
 interface Product {
@@ -30,7 +30,7 @@ export function ProductDetailHeader({
   onImageChange,
   children
 }: ProductDetailHeaderProps) {
-  const { validateField, clearFieldError, getFieldError } = useValidation();
+  const { validateField, clearFieldError, getFieldError } = useProductValidation();
   
   // Check if this is a new product (ID 0 or falsy)
   const isNewProduct = !product.id || product.id === 0;

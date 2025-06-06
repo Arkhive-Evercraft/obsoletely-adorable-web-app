@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAppData } from '@/components/AppDataProvider';
-import { useValidation } from '@/contexts/ValidationContext';
+import { useProductValidation } from '@/contexts/ProductValidationContext';
 
 interface Product {
   id: string;
@@ -17,7 +17,7 @@ interface Product {
 
 export function useProductManagement() {
   const { products: appProducts, productsLoading, refreshProducts } = useAppData();
-  const { validateEntities, hasAnyErrors, clearAllErrors } = useValidation();
+  const { validateProducts, hasAnyErrors, clearAllErrors } = useProductValidation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,9 +73,9 @@ export function useProductManagement() {
     console.log('Save button clicked - starting save process');
     setIsSaving(true);
     
-    // Validate all edited products using the context
+    // Validate all edited products using the product validation context
     const entities = editedProducts.map(product => ({ id: product.id, data: product }));
-    const isValid = validateEntities(entities);
+    const isValid = validateProducts(entities);
     
     if (!isValid) {
       console.log('Validation failed, not saving');
@@ -136,7 +136,7 @@ export function useProductManagement() {
     } finally {
       setIsSaving(false);
     }
-  }, [editedProducts, originalProducts, hasProductChanged, validateEntities, clearAllErrors]);
+  }, [editedProducts, originalProducts, hasProductChanged, validateProducts, clearAllErrors]);
 
   const handleCancelEdit = useCallback(() => {
     console.log('Cancel button clicked - resetting to original values');
