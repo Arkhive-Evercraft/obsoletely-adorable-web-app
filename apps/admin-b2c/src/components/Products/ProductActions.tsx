@@ -47,13 +47,13 @@ export function ProductActions({
       
       {!isEditing && (
         <>
-          <AddButton
-            onClick={onAddNewProduct}
+          <ManageCategoriesButton
+            onClick={onManageCategories}
             fullWidth
           />
           
-          <ManageCategoriesButton
-            onClick={onManageCategories}
+          <AddButton
+            onClick={onAddNewProduct}
             fullWidth
           />
         </>

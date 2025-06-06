@@ -33,13 +33,13 @@ const LoadingRightColumn = (
       fullWidth
     />
     
-    <AddButton
+    <ManageCategoriesButton
       onClick={() => {}}
       disabled={true}
       fullWidth
     />
-    
-    <ManageCategoriesButton
+
+    <AddButton
       onClick={() => {}}
       disabled={true}
       fullWidth
