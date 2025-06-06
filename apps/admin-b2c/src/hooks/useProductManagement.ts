@@ -40,7 +40,7 @@ export function useProductManagement() {
         imageUrl: product.imageUrl,
         categoryName: product.categoryName,
         featured: product.inStock,
-        inventory: Math.floor(Math.random() * 50) + 1,
+        inventory: product.inventory || 0, // Use actual inventory from API
         dateAdded: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         lastUpdated: new Date().toISOString().split('T')[0]
       }));

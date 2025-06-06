@@ -127,22 +127,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
     if (!isEditing) {
       if (field === 'price') return `$${((value as number) / 100).toFixed(2)}`;
-      if (field === 'inventory') {
-        const product = editableProducts.find(p => p.id === productId);
-        const inStock = product ? product.inventory > 0 : false;
-        return (
-          <span style={{
-            padding: '4px 8px',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            backgroundColor: inStock ? '#dcfce7' : '#fef2f2',
-            color: inStock ? '#16a34a' : '#dc2626'
-          }}>
-            {inStock ? 'In Stock' : 'Out of Stock'}
-          </span>
-        );
-      }
+      if (field === 'inventory') return `${value} ${value === 1 ? 'item' : 'items'}`;
       return value;
     }
 
@@ -253,13 +238,13 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       render: (inventory: number, product: Product) => renderEditableField(inventory, product.id, 'inventory', 'number')
     },
     {
-      key: 'inventory',
+      key: 'status', // Changed from 'inventory' to 'status' to make it unique
       title: 'Status',
       sortable: true,
       width: '90px',
       align: 'center',
-      render: (inventory: number, product: Product) => {
-        const inStock = inventory > 0;
+      render: (value: any, product: Product) => {
+        const inStock = product.inventory > 0;
         return (
           <span style={{
             padding: '4px 8px',
