@@ -11,7 +11,7 @@ import {
 } from '@/components/Categories';
 import { LoadingState } from '@/components/Products';
 import { NotFoundState } from '@/components/Products';
-import { useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
+import { CategoryValidationProvider, useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 
 interface Category {
   name: string;
@@ -106,6 +106,7 @@ function CategoryDetailPageContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          name: updatedCategory.name,
           description: updatedCategory.description,
           imageUrl: updatedCategory.imageUrl,
         }),
@@ -127,9 +128,14 @@ function CategoryDetailPageContent() {
       clearCategoryErrors(currentCategory.name); // Clear validation errors using context
       
       setIsEditing(false);
+      
+      // If the category name has changed, navigate to the new URL
+      if (category && category.name !== savedCategory.name) {
+        router.push(`/categories/${encodeURIComponent(savedCategory.name)}`);
+      }
     } catch (error) {
       console.error('Error saving category:', error);
-      // TODO: Show error message to user
+      setError(error instanceof Error ? error.message : 'Failed to save category. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -203,16 +209,30 @@ function CategoryDetailPageContent() {
   };
 
   const uploadImage = async (file: File): Promise<string> => {
-    // TODO: Implement actual image upload to your storage service
-    // For now, we'll simulate the upload and return a mock URL
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // In a real implementation, you would upload to a service like AWS S3, Cloudinary, etc.
-        // and return the actual URL
-        const mockUrl = `https://example.com/uploads/${Date.now()}-${file.name}`;
-        resolve(mockUrl);
-      }, 1000);
-    });
+    try {
+      // Create a FormData object to send the file
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Call the image upload API endpoint
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+      
+      const data = await response.json();
+      return data.imageUrl; // Return the URL of the uploaded image
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      
+      // If upload fails in development/testing, use a fallback URL
+      // In production, this should be handled more robustly
+      return 'https://via.placeholder.com/300x200?text=Upload+Failed';
+    }
   };
 
   // Create a function to render the ActionsPanel that's always available
@@ -321,5 +341,9 @@ function CategoryDetailPageContent() {
 }
 
 export default function CategoryDetailPage() {
-  return <CategoryDetailPageContent />;
+  return (
+    <CategoryValidationProvider>
+      <CategoryDetailPageContent />
+    </CategoryValidationProvider>
+  );
 }

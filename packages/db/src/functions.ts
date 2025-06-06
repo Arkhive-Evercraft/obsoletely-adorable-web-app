@@ -41,8 +41,6 @@ export async function createProduct(data: {
   description: string;
   imageUrl: string;
   categoryName: string;
-  inStock?: boolean;
-  featured?: boolean;
   inventory: number;
 }): Promise<Product | null> {
   try {
@@ -54,7 +52,6 @@ export async function createProduct(data: {
         imageUrl: data.imageUrl,
         categoryName: data.categoryName,
         inventory: data.inventory ?? 0,
-        featured: data.featured ?? false
       }
     });
     
@@ -74,8 +71,7 @@ export async function updateProduct(
     description: string;
     imageUrl: string;
     categoryName: string;
-    inStock: boolean;
-    featured: boolean;
+    inventory: number;
   }>
 ): Promise<Product | null> {
   try {
@@ -181,21 +177,22 @@ export async function createCategory(data: {
 
 // Update a category
 export async function updateCategory(
-  name: string,
+  currentName: string,
   data: Partial<{
+    name: string;
     description: string;
     imageUrl: string;
   }>
 ): Promise<Category | null> {
   try {
     const category = await client.db.category.update({
-      where: { name },
+      where: { name: currentName },
       data
     });
     
     return category;
   } catch (error) {
-    console.error(`Error updating category with name ${name}:`, error);
+    console.error(`Error updating category with name ${currentName}:`, error);
     return null;
   }
 }

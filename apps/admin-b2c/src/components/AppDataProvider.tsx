@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 
 // Define types for our data
 interface Category {
@@ -10,7 +10,7 @@ interface Category {
 }
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   description: string;
@@ -18,16 +18,14 @@ interface Product {
   categoryName: string;
   featured: boolean;
   inventory: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface AppDataContextType {
   categories: Category[];
-  products: Product[];
   categoriesLoading: boolean;
-  productsLoading: boolean;
   refreshCategories: () => Promise<void>;
+  products: Product[];
+  productsLoading: boolean;
   refreshProducts: () => Promise<void>;
 }
 
@@ -49,12 +47,12 @@ interface AppDataProviderProps {
 
 export function AppDataProvider({ children }: AppDataProviderProps) {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
 
   // Fetch categories
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setCategoriesLoading(true);
     try {
       const response = await fetch('/api/categories');
@@ -69,10 +67,10 @@ export function AppDataProvider({ children }: AppDataProviderProps) {
     } finally {
       setCategoriesLoading(false);
     }
-  };
+  }, []);
 
   // Fetch products
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setProductsLoading(true);
     try {
       const response = await fetch('/api/products');
@@ -87,20 +85,20 @@ export function AppDataProvider({ children }: AppDataProviderProps) {
     } finally {
       setProductsLoading(false);
     }
-  };
+  }, []);
 
-  // Fetch data once on mount - this will only happen once when the app loads
+  // Fetch data once on mount
   useEffect(() => {
     fetchCategories();
     fetchProducts();
-  }, []);
+  }, [fetchCategories, fetchProducts]);
 
   const contextValue: AppDataContextType = {
     categories,
-    products,
     categoriesLoading,
-    productsLoading,
     refreshCategories: fetchCategories,
+    products,
+    productsLoading,
     refreshProducts: fetchProducts,
   };
 

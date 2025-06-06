@@ -34,8 +34,9 @@ export async function seed() {
           description: product.description || "",
           imageUrl: product.imageUrl,
           categoryName: product.categoryName,
-          featured: product.featured ?? false,
-          inventory: product.inventory || 0, // Add inventory field with fallback
+          inventory: product.inventory || 0,
+          // createdAt is not part of ProductCreateInput, so it is removed
+          updatedAt: product.updatedAt
         },
       });
     }

@@ -1,12 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAppData } from '@/components/AppDataProvider';
-import { useCategoryValidation } from '@/utils/categoryValidation';
+import { useAppData } from '../components/AppDataProvider';
+import { useCategoryValidation } from '../utils/categoryValidation';
 
 interface Category {
   name: string;
   description: string;
   imageUrl: string;
   productCount?: number;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+  categoryName: string;
+  featured: boolean;
+  inventory: number;
 }
 
 export function useCategoryManagement() {
@@ -32,25 +43,28 @@ export function useCategoryManagement() {
     if (!categoriesLoading && appCategories) {
       try {
         // Transform API response to match the admin interface
-        const transformedCategories = appCategories.map((category: any) => ({
-          name: category.name,
-          description: category.description,
-          imageUrl: category.imageUrl,
-          productCount: products.filter((product: { categoryName: any; }) => product.categoryName === category.name).length
-        }));
+        const transformedCategories = appCategories.map((category: any) => {
+          // Safely calculate product count with proper type checking
+          let productCount = 0;
+          if (Array.isArray(products)) {
+            productCount = products.filter((product: any) => {
+              // Ensure product and categoryName exist before comparing
+              return product && typeof product === 'object' && 
+                     'categoryName' in product && 
+                     product.categoryName === category.name;
+            }).length;
+          }
+          
+          return {
+            name: category.name,
+            description: category.description,
+            imageUrl: category.imageUrl,
+            productCount
+          };
+        });
 
         setCategories(transformedCategories);
         setFilteredCategories(transformedCategories);
-        
-        // Also update edited categories if we're in editing mode to keep counts in sync
-        if (isEditing && editedCategories.length > 0) {
-          const updatedEditedCategories = editedCategories.map(editedCategory => ({
-            ...editedCategory,
-            productCount: products.filter((product: { categoryName: any; }) => product.categoryName === editedCategory.name).length
-          }));
-          setEditedCategories(updatedEditedCategories);
-        }
-        
         setLoading(false);
         setError(null);
       } catch (err) {
@@ -63,7 +77,7 @@ export function useCategoryManagement() {
       setFilteredCategories([]);
       setLoading(false);
     }
-  }, [categoriesLoading, appCategories, products, isEditing, editedCategories.length]); // Added products dependency to refresh counts when products change
+  }, [categoriesLoading, appCategories, products]);
 
   // Method to handle adding a new image for a category
   const handleAddCategoryImage = useCallback((categoryName: string, file: File) => {
@@ -181,6 +195,7 @@ export function useCategoryManagement() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+              name: category.name,
               description: category.description,
               imageUrl: finalImageUrl,
             }),

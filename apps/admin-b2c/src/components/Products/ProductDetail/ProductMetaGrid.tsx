@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useAppData } from '@/components/AppDataProvider';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
 
@@ -16,11 +15,10 @@ interface ProductMetaGridProps {
   product: Product;
   isEditing: boolean;
   onFieldChange: (field: string, value: any) => void;
+  categories?: { name: string; description: string }[];
 }
 
-export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMetaGridProps) {
-  // Use the app data context instead of fetching categories locally
-  const { categories, categoriesLoading } = useAppData();
+export function ProductMetaGrid({ product, isEditing, onFieldChange, categories = [] }: ProductMetaGridProps) {
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
   const entityId = product.id?.toString() || '0';
   
@@ -96,6 +94,8 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
   const priceError = getFieldError(entityId, 'price');
   const inventoryError = getFieldError(entityId, 'inventory');
   const categoryError = getFieldError(entityId, 'categoryName');
+  
+  const categoriesLoading = categories.length === 0;
 
   return (
     <div className={`${styles.field} ${styles.fullWidth}`}>

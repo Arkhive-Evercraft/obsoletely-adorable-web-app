@@ -33,7 +33,7 @@ interface ProductsTableProps {
 
 export function ProductsTable({ products, onFilteredDataChange, isEditing = false, onProductUpdate }: ProductsTableProps) {
   const router = useRouter();
-  const { categories, categoriesLoading } = useAppData();
+  const { categories, categoriesLoading, refreshProducts } = useAppData();
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
   
   const [modalState, setModalState] = useState<{
@@ -190,6 +190,9 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       if (!response.ok) {
         throw new Error('Failed to delete product');
       }
+      
+      // Refresh product data in the context
+      await refreshProducts();
       
       // Update the products list by removing the deleted product
       const updatedProducts = editableProducts.filter(p => p.id !== deleteConfirmation.productId);

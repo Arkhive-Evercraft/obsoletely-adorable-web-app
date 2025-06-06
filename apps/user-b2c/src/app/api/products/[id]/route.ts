@@ -28,9 +28,16 @@ export async function GET(
 
     // Transform the database product to match the frontend interface
     const transformedProduct = {
-      ...product,
+      id: product.id,
+      name: product.name,
       price: product.price / 100, // Convert from cents to dollars
-      inStock: product.inventory > 0 // Compute inStock from inventory
+      description: product.description,
+      imageUrl: product.imageUrl,
+      categoryName: product.categoryName,
+      inventory: product.inventory,
+      inStock: product.inventory > 0, // Compute inStock from inventory
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt
     };
 
     return NextResponse.json(transformedProduct);

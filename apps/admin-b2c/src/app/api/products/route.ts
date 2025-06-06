@@ -5,11 +5,18 @@ export async function GET() {
   try {
     const products = await getProducts();
     
-    // Transform products to convert prices from cents to dollars
+    // Transform products to convert prices from cents to dollars and include date fields
     const transformedProducts = products.map(product => ({
-      ...product,
+      id: product.id,
+      name: product.name,
       price: product.price / 100, // Convert from cents to dollars
-      inStock: product.inventory > 0 // Compute inStock from inventory
+      description: product.description,
+      imageUrl: product.imageUrl,
+      categoryName: product.categoryName,
+      inventory: product.inventory,
+      inStock: product.inventory > 0, // Compute inStock from inventory
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt
     }));
     
     return NextResponse.json(transformedProducts);
@@ -25,7 +32,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, price, description, imageUrl, categoryName, featured, inventory } = body;
+    const { name, price, description, imageUrl, categoryName, inventory } = body;
 
     // Validation
     if (!name) {
@@ -63,7 +70,6 @@ export async function POST(request: Request) {
       description: description || '',
       imageUrl,
       categoryName,
-      featured: featured || false,
       inventory: inventory || 0
     });
 
@@ -74,19 +80,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Transform the response to match frontend expectations
+    // Transform the response to include date fields and proper formatting
     const transformedProduct = {
       id: newProduct.id,
       name: newProduct.name,
       price: newProduct.price / 100, // Convert back to dollars
-      description: newProduct.description || '',
+      description: newProduct.description,
       imageUrl: newProduct.imageUrl,
-      categoryName: newProduct.categoryName || 'Uncategorized',
-      featured: newProduct.featured || false,
-      inventory: newProduct.inventory || 0,
-      inStock: (newProduct.inventory || 0) > 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      categoryName: newProduct.categoryName,
+      inventory: newProduct.inventory,
+      inStock: newProduct.inventory > 0,
+      createdAt: newProduct.createdAt,
+      updatedAt: newProduct.updatedAt
     };
 
     return NextResponse.json(transformedProduct, { status: 201 });

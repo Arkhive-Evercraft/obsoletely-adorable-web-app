@@ -51,19 +51,22 @@ export async function PUT(
       );
     }
 
-    const { description, imageUrl } = body;
+    const { name: newName, description, imageUrl } = body;
     
-    if (!description && !imageUrl) {
+    if (!description && !imageUrl && !newName) {
       return NextResponse.json(
-        { error: 'At least one field (description or imageUrl) is required' },
+        { error: 'At least one field (name, description or imageUrl) is required' },
         { status: 400 }
       );
     }
 
-    const updatedCategory = await updateCategory(decodeURIComponent(name), {
-      description,
-      imageUrl
-    });
+    // Build update data object
+    const updateData: Partial<{ name: string; description: string; imageUrl: string }> = {};
+    if (description !== undefined) updateData.description = description;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+    if (newName !== undefined) updateData.name = newName;
+
+    const updatedCategory = await updateCategory(decodeURIComponent(name), updateData);
     
     if (!updatedCategory) {
       return NextResponse.json(

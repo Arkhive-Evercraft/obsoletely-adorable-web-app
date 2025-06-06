@@ -10,10 +10,10 @@ export type Product = {
   price: number;
   description?: string;
   imageUrl: string;
-  inStock: boolean;
-  featured: boolean;
   categoryName: string;
   inventory: number; // Add inventory field
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const categories: Category[] = [
@@ -41,10 +41,10 @@ export const products: Product[] = [
     price: 79999,
     description: "Latest smartphone with amazing features",
     imageUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
-    inStock: true,
-    featured: true,
     categoryName: "Electronics",
-    inventory: 50
+    inventory: 50,
+    createdAt: new Date('2025-05-15T10:30:00Z'),
+    updatedAt: new Date('2025-06-01T14:20:00Z')
   },
   {
     id: 2,
@@ -52,10 +52,10 @@ export const products: Product[] = [
     price: 129999,
     description: "Powerful laptop for work and gaming",
     imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
-    inStock: true,
-    featured: true,
     categoryName: "Electronics",
-    inventory: 30
+    inventory: 30,
+    createdAt: new Date('2025-05-10T09:15:00Z'),
+    updatedAt: new Date('2025-05-28T16:45:00Z')
   },
   {
     id: 3,
@@ -63,10 +63,10 @@ export const products: Product[] = [
     price: 1999,
     description: "Comfortable cotton t-shirt",
     imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
-    inStock: true,
-    featured: false,
     categoryName: "Clothing",
-    inventory: 100
+    inventory: 100,
+    createdAt: new Date('2025-04-20T11:00:00Z'),
+    updatedAt: new Date('2025-05-30T13:30:00Z')
   },
   {
     id: 4,
@@ -74,10 +74,10 @@ export const products: Product[] = [
     price: 4999,
     description: "Classic denim jeans",
     imageUrl: "https://images.unsplash.com/photo-1542272604-787c3835535d",
-    inStock: true,    
-    featured: false,
     categoryName: "Clothing",
-    inventory: 80
+    inventory: 80,
+    createdAt: new Date('2025-04-25T15:45:00Z'),
+    updatedAt: new Date('2025-06-02T10:15:00Z')
   },
   {
     id: 5,
@@ -85,10 +85,10 @@ export const products: Product[] = [
     price: 1599,
     description: "Decorative pot for indoor plants",
     imageUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
-    inStock: true,
-    featured: false,
     categoryName: "Home & Garden",
-    inventory: 70
+    inventory: 70,
+    createdAt: new Date('2025-05-05T08:20:00Z'),
+    updatedAt: new Date('2025-05-25T12:10:00Z')
   },
   {
     id: 6,
@@ -96,9 +96,9 @@ export const products: Product[] = [
     price: 2499,
     description: "Modern desk lamp with adjustable brightness",
     imageUrl: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
-    inStock: false,
-    featured: false,
     categoryName: "Home & Garden",
-    inventory: 0
+    inventory: 0,
+    createdAt: new Date('2025-03-18T14:30:00Z'),
+    updatedAt: new Date('2025-06-05T09:45:00Z')
   }
 ];

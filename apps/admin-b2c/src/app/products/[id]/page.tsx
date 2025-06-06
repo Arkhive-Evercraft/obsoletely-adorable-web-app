@@ -14,6 +14,7 @@ import {
 } from '@/components/Products';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
+import { useAppData } from '@/components/AppDataProvider';
 
 interface Product {
   id: number;
@@ -32,6 +33,9 @@ function ProductDetailPageContent() {
   const params = useParams();
   const router = useRouter();
   const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
+  
+  // Add refreshProducts from AppDataProvider
+  const { refreshProducts } = useAppData();
   
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +70,7 @@ function ProductDetailPageContent() {
         }
         
         const productData = await response.json();
+        // Don't convert price - API already returns it in dollars
         setProduct(productData);
         setCurrentProduct(productData);
       } catch (err) {
@@ -78,6 +83,34 @@ function ProductDetailPageContent() {
 
     fetchProduct();
   }, [id]);
+  
+  // Add a state for categories
+  const [categories, setCategories] = useState<{ name: string; description: string }[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  // Fetch categories from API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setCategoriesLoading(true);
+      try {
+        const response = await fetch('/api/categories');
+        
+        if (!response.ok) {
+          console.error('Failed to fetch categories');
+          return;
+        }
+        
+        const categoriesData = await response.json();
+        setCategories(categoriesData);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -107,13 +140,32 @@ function ProductDetailPageContent() {
         updatedProduct.imageUrl = uploadedImageUrl;
       }
       
-      // TODO: Implement API call to update product with updatedProduct data
-      // For now, just simulate the save
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Make API call to update the product
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...updatedProduct,
+          price: Math.round(updatedProduct.price * 100), // Convert to cents for API
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update product');
+      }
+      
+      const savedProduct = await response.json();
+      
+      // API already returns price in dollars, no need to convert again
+      const transformedProduct = {
+        ...savedProduct
+      };
       
       // Update the original product data with the saved changes
-      setProduct(updatedProduct);
-      setCurrentProduct(updatedProduct);
+      setProduct(transformedProduct);
+      setCurrentProduct(transformedProduct);
       
       // Clean up states
       setSelectedImageFile(null);
@@ -121,9 +173,12 @@ function ProductDetailPageContent() {
       clearProductErrors(entityId); // Clear validation errors
       
       setIsEditing(false);
+
+      // Refresh product data in the context
+      await refreshProducts();
     } catch (error) {
       console.error('Error saving product:', error);
-      // TODO: Show error message to user
+      setError('Failed to save product. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -169,6 +224,9 @@ function ProductDetailPageContent() {
       if (!response.ok) {
         throw new Error('Failed to delete product');
       }
+      
+      // Refresh product data in the context before navigating
+      await refreshProducts();
       
       // Navigate back to products list
       router.push('/products');
@@ -264,6 +322,7 @@ function ProductDetailPageContent() {
           product={currentProduct}
           isEditing={isEditing}
           onFieldChange={handleFieldChange}
+          categories={categories}
         />
         <ProductDescription
           description={currentProduct.description}

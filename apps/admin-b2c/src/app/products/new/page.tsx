@@ -12,6 +12,7 @@ import {
 } from '@/components/Products';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
+import { useAppData } from '@/components/AppDataProvider';
 
 interface Product {
   id: number;
@@ -28,6 +29,7 @@ interface Product {
 
 function AddNewProductPageContent() {
   const router = useRouter();
+  const { refreshProducts } = useAppData();
   const [isSaving, setIsSaving] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
@@ -123,6 +125,9 @@ function AddNewProductPageContent() {
       setSelectedImageFile(null);
       setImagePreviewUrl('');
       clearProductErrors(entityId); // Clear validation errors
+      
+      // Refresh product list in the context
+      refreshProducts();
       
       // Navigate to the created product's detail page
       router.push(`/products/${createdProduct.id}`);
