@@ -89,10 +89,6 @@ export async function seed() {
       });
     }
     
-    // Create some sample sales
-    console.log("Creating sample sales...");
-    const statuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
-    
     // Create 20 sample sales
     for (let i = 1; i <= 20; i++) {
       // Pick random customer
@@ -103,14 +99,10 @@ export async function seed() {
       const saleDate = new Date();
       saleDate.setDate(saleDate.getDate() - daysAgo);
       
-      // Pick random status
-      const status = statuses[Math.floor(Math.random() * statuses.length)];
-      
       // Create the sale first
       const sale = await client.db.sale.create({
         data: {
           customerId,
-          status,
           date: saleDate,
           total: 0, // Will be calculated after adding items
         },

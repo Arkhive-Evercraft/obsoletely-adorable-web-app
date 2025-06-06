@@ -22,7 +22,7 @@ export async function GET() {
     });
 
     // Transform the data to match the orders interface
-    const orders = sales.map(sale => ({
+    const orders = sales.map((sale: { id: { toString: () => string; }; customer: { name: any; email: any; address: any; }; total: number; date: { toISOString: () => string; }; items: any[]; }) => ({
       id: `ORD-${sale.id.toString().padStart(3, '0')}`,
       customerName: sale.customer.name,
       customerEmail: sale.customer.email,
