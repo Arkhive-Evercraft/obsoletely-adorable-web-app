@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@repo/ui/components"
 import { AppDataProvider } from "@/components/AppDataProvider";
+import { ValidationProvider } from '@/contexts/ValidationContext';
 
 
 const geistSans = localFont({
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider>
           <AppDataProvider>
-            {children}
+            <ValidationProvider>
+              {children}
+            </ValidationProvider>
           </AppDataProvider>
         </ThemeProvider>
       </body>

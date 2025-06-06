@@ -7,6 +7,7 @@ import type { TableColumn } from '@repo/ui';
 import { ImageModal } from '../../ImageModal/ImageModal';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { useAppData } from '@/components/AppDataProvider';
+import { useValidation } from '@/contexts/ValidationContext';
 import styles from './ProductsTable.module.css';
 
 interface Product {
@@ -31,8 +32,8 @@ interface ProductsTableProps {
 
 export function ProductsTable({ products, onFilteredDataChange, isEditing = false, onProductUpdate }: ProductsTableProps) {
   const router = useRouter();
-  // Use the app data context instead of fetching categories locally
   const { categories, categoriesLoading } = useAppData();
+  const { validateField, clearFieldError, getFieldError } = useValidation();
   
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -85,6 +86,22 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     onProductUpdate?.(updatedProducts);
   };
 
+  const handleFieldBlur = (productId: string, field: keyof Product, value: any) => {
+    if (isEditing) {
+      validateField(productId, field, value);
+    }
+  };
+
+  const handleFieldFocus = (productId: string, field: keyof Product) => {
+    if (isEditing) {
+      clearFieldError(productId, field);
+    }
+  };
+
+  const getFieldErrorForProduct = (productId: string, field: string): string | null => {
+    return getFieldError(productId, field);
+  };
+
   const handleImageChange = (productId: string, file: File) => {
     // Create preview URL for immediate display
     const previewUrl = URL.createObjectURL(file);
@@ -103,28 +120,38 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       return value;
     }
 
+    const fieldError = getFieldErrorForProduct(productId, field);
+    const hasError = !!fieldError;
+
     if (field === 'categoryName') {
       if (categoriesLoading) {
         return (
-          <select disabled className="w-full px-2 py-1 border border-gray-300 rounded text-sm bg-gray-100">
+          <select disabled className={`${styles.tableInput} bg-gray-100`}>
             <option>Loading categories...</option>
           </select>
         );
       }
 
       return (
-        <select
-          value={value}
-          onChange={(e) => handleFieldChange(productId, field, e.target.value)}
-          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-        >
-          <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category.name} value={category.name}>
-              {category.name}
-            </option>
-          ))}
-        </select>
+        <div className={hasError ? styles.tableCellWithError : ''}>
+          <select
+            value={value}
+            onChange={(e) => handleFieldChange(productId, field, e.target.value)}
+            onBlur={(e) => handleFieldBlur(productId, field, e.target.value)}
+            onFocus={() => handleFieldFocus(productId, field)}
+            className={`${styles.tableInput} ${hasError ? styles.error : ''}`}
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category.name} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          {hasError && (
+            <span className={styles.tableErrorMessage}>{fieldError}</span>
+          )}
+        </div>
       );
     }
 
@@ -133,29 +160,47 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       const displayValue = field === 'price' ? (value / 100) : value;
       
       return (
-        <input
-          type="number"
-          value={displayValue}
-          onChange={(e) => {
-            const inputValue = parseFloat(e.target.value) || 0;
-            // Convert dollars back to cents for price field
-            const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
-            handleFieldChange(productId, field, storeValue);
-          }}
-          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-          step={field === 'price' ? '0.01' : '1'}
-          min="0"
-        />
+        <div className={hasError ? styles.tableCellWithError : ''}>
+          <input
+            type="number"
+            value={displayValue}
+            onChange={(e) => {
+              const inputValue = parseFloat(e.target.value) || 0;
+              // Convert dollars back to cents for price field
+              const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
+              handleFieldChange(productId, field, storeValue);
+            }}
+            onBlur={(e) => {
+              const inputValue = parseFloat(e.target.value) || 0;
+              const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
+              handleFieldBlur(productId, field, storeValue);
+            }}
+            onFocus={() => handleFieldFocus(productId, field)}
+            className={`${styles.tableInput} ${hasError ? styles.error : ''}`}
+            step={field === 'price' ? '0.01' : '1'}
+            min="0"
+          />
+          {hasError && (
+            <span className={styles.tableErrorMessage}>{fieldError}</span>
+          )}
+        </div>
       );
     }
 
     return (
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => handleFieldChange(productId, field, e.target.value)}
-        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-      />
+      <div className={hasError ? styles.tableCellWithError : ''}>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => handleFieldChange(productId, field, e.target.value)}
+          onBlur={(e) => handleFieldBlur(productId, field, e.target.value)}
+          onFocus={() => handleFieldFocus(productId, field)}
+          className={`${styles.tableInput} ${hasError ? styles.error : ''}`}
+        />
+        {hasError && (
+          <span className={styles.tableErrorMessage}>{fieldError}</span>
+        )}
+      </div>
     );
   };
   

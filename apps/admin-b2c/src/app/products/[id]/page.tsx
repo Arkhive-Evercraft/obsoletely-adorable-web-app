@@ -12,6 +12,7 @@ import {
   ProductDescription, 
   ActionsPanel 
 } from '@/components/Products';
+import { useValidation } from '@/contexts/ValidationContext';
 
 interface Product {
   id: number;
@@ -38,6 +39,7 @@ export default function ProductDetailPage() {
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
+  const { validateEntity, clearEntityErrors } = useValidation();
 
   // Fetch product data from API
   useEffect(() => {
@@ -78,7 +80,17 @@ export default function ProductDetailPage() {
   };
 
   const handleSave = async () => {
-    if (!currentProduct) return; // Guard clause
+    if (!currentProduct) return;
+    
+    const entityId = currentProduct.id.toString();
+    
+    // Validate the entire product using the context
+    const isValid = validateEntity(entityId, currentProduct);
+    
+    if (!isValid) {
+      setIsSaving(false);
+      return; // Don't save if there are validation errors
+    }
     
     setIsSaving(true);
     try {
@@ -98,9 +110,10 @@ export default function ProductDetailPage() {
       setProduct(updatedProduct);
       setCurrentProduct(updatedProduct);
       
-      // Clean up image states
+      // Clean up states
       setSelectedImageFile(null);
       setImagePreviewUrl('');
+      clearEntityErrors(entityId); // Clear validation errors
       
       setIsEditing(false);
     } catch (error) {
@@ -118,6 +131,11 @@ export default function ProductDetailPage() {
     setSelectedImageFile(null);
     setImagePreviewUrl('');
     
+    // Clean up validation states
+    if (product) {
+      clearEntityErrors(product.id.toString());
+    }
+    
     // Clean up any object URLs to prevent memory leaks
     if (imagePreviewUrl) {
       URL.revokeObjectURL(imagePreviewUrl);
@@ -131,7 +149,7 @@ export default function ProductDetailPage() {
     <ActionsPanel
       isEditing={isEditing}
       isSaving={isSaving}
-      isLoading={isLoading || !product} // Loading OR no product data yet
+      isLoading={isLoading || !product}
       onEdit={handleEdit}
       onSave={handleSave}
       onCancel={handleCancel}
@@ -192,7 +210,8 @@ export default function ProductDetailPage() {
     });
   };
 
-  const ProductDetailContent = () => (
+  // Move ProductDetailContent to be a stable component reference
+  const productDetailContent = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <ProductDetailHeader
         product={currentProduct}
@@ -209,6 +228,7 @@ export default function ProductDetailPage() {
           description={currentProduct.description}
           isEditing={isEditing}
           onDescriptionChange={(description) => handleFieldChange('description', description)}
+          productId={currentProduct.id}
         />
       </ProductDetailHeader>
     </div>
@@ -220,7 +240,7 @@ export default function ProductDetailPage() {
         pageHeading="Products Management"
         leftColumnTitle={`Products | ${currentProduct.name}`}
         rightColumnTitle="Actions"
-        leftColumn={<ProductDetailContent />}
+        leftColumn={productDetailContent}
         rightColumn={renderActionsPanel()}
       />
     </AppLayout>

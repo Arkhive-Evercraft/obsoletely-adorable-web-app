@@ -10,7 +10,8 @@
       "@/components/*": ["src/components/*"],
       "@/api/*": ["src/app/api/*"],
       "@/utils/*": ["src/utils/*"],
-      "@/hooks/*": ["src/hooks/*"]
+      "@/hooks/*": ["src/hooks/*"],
+      "@/contexts/*": ["src/contexts/*"]
     },
     "baseUrl": "."
   },

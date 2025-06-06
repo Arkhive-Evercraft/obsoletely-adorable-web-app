@@ -53,7 +53,7 @@ export async function createProduct(data: {
         description: data.description,
         imageUrl: data.imageUrl,
         categoryName: data.categoryName,
-        inStock: data.inStock ?? true,
+        inventory: data.inventory ?? 0,
         featured: data.featured ?? false
       }
     });
@@ -102,24 +102,6 @@ export async function deleteProduct(id: number): Promise<boolean> {
   } catch (error) {
     console.error(`Error deleting product with ID ${id}:`, error);
     return false;
-  }
-}
-
-// Toggle product in-stock status
-export async function toggleProductStockStatus(id: number): Promise<Product | null> {
-  try {
-    const product = await getProductById(id);
-    if (!product) return null;
-    
-    const updatedProduct = await client.db.product.update({
-      where: { id },
-      data: { inStock: !product.inStock }
-    });
-    
-    return updatedProduct;
-  } catch (error) {
-    console.error(`Error toggling stock status for product with ID ${id}:`, error);
-    return null;
   }
 }
 

@@ -3,6 +3,7 @@
 import React from 'react';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { ProductMetadata } from './ProductMetadata';
+import { useValidation } from '@/contexts/ValidationContext';
 import styles from './ProductDetail.module.css';
 
 interface Product {
@@ -27,10 +28,31 @@ export function ProductDetailHeader({
   isEditing, 
   onFieldChange, 
   onImageChange,
-  children 
+  children
 }: ProductDetailHeaderProps) {
+  const { validateField, clearFieldError, getFieldError } = useValidation();
+  
   // Check if this is a new product (ID 0 or falsy)
   const isNewProduct = !product.id || product.id === 0;
+  const entityId = product.id.toString();
+
+  const handleNameChange = (value: string) => {
+    onFieldChange('name', value);
+  };
+
+  const handleNameBlur = () => {
+    if (isEditing) {
+      validateField(entityId, 'name', product.name);
+    }
+  };
+
+  const handleNameFocus = () => {
+    if (isEditing) {
+      clearFieldError(entityId, 'name');
+    }
+  };
+
+  const nameError = getFieldError(entityId, 'name');
   
   return (
     <div className={styles.productHeader}>
@@ -47,15 +69,23 @@ export function ProductDetailHeader({
         {!isNewProduct && <ProductMetadata product={product} />}
       </div>
       <div className={styles.productBasicInfo}>
-        <div className={`${styles.field} ${styles.fullWidth}`}>
+        <div className={`${styles.field} ${styles.fullWidth} ${nameError ? styles.fieldWithError : ''}`}>
           <label className={styles.fieldLabel}>Product Name</label>
           {isEditing ? (
-            <input
-              type="text"
-              value={product.name}
-              onChange={(e) => onFieldChange('name', e.target.value)}
-              className={styles.input}
-            />
+            <>
+              <input
+                type="text"
+                value={product.name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                onBlur={handleNameBlur}
+                onFocus={handleNameFocus}
+                className={`${styles.input} ${nameError ? styles.error : ''}`}
+                placeholder="Enter product name"
+              />
+              {nameError && (
+                <span className={styles.errorMessage}>{nameError}</span>
+              )}
+            </>
           ) : (
             <div className={styles.productNameWithStatus}>
               <h1 className={styles.productName}>{product.name}</h1>

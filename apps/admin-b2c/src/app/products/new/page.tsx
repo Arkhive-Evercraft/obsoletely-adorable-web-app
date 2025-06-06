@@ -10,6 +10,7 @@ import {
   ProductDescription, 
   NewProductActionsPanel 
 } from '@/components/Products';
+import { useValidation } from '@/contexts/ValidationContext';
 
 interface Product {
   id: number;
@@ -29,6 +30,7 @@ export default function AddNewProductPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
+  const { validateEntity, clearEntityErrors } = useValidation();
   
   // Initialize with empty product data
   const [newProduct, setNewProduct] = useState<Product>({
@@ -73,27 +75,16 @@ export default function AddNewProductPage() {
   };
 
   const handleSave = async () => {
-    // Validation
-    if (!newProduct.name.trim()) {
-      alert('Product name is required');
-      return;
+    const entityId = newProduct.id.toString(); // Use '0' for new products
+    
+    // Validate the entire product using the context
+    const isValid = validateEntity(entityId, newProduct);
+    
+    if (!isValid) {
+      setIsSaving(false);
+      return; // Don't save if there are validation errors
     }
     
-    if (newProduct.price <= 0) {
-      alert('Product price must be greater than 0');
-      return;
-    }
-    
-    if (!newProduct.imageUrl) {
-      alert('Product image is required');
-      return;
-    }
-    
-    if (!newProduct.categoryName.trim()) {
-      alert('Product category is required');
-      return;
-    }
-
     setIsSaving(true);
     try {
       let finalImageUrl = newProduct.imageUrl;
@@ -127,9 +118,10 @@ export default function AddNewProductPage() {
 
       const createdProduct = await response.json();
       
-      // Clean up image states
+      // Clean up states
       setSelectedImageFile(null);
       setImagePreviewUrl('');
+      clearEntityErrors(entityId); // Clear validation errors
       
       // Navigate to the created product's detail page
       router.push(`/products/${createdProduct.id}`);
@@ -146,6 +138,9 @@ export default function AddNewProductPage() {
     // Clean up image states when canceling
     setSelectedImageFile(null);
     setImagePreviewUrl('');
+    
+    // Clean up validation states
+    clearEntityErrors('0'); // Clear validation errors for new product
     
     // Clean up any object URLs to prevent memory leaks
     if (imagePreviewUrl) {
@@ -182,6 +177,7 @@ export default function AddNewProductPage() {
           description={newProduct.description}
           isEditing={true} // Always in editing mode for new products
           onDescriptionChange={(description) => handleFieldChange('description', description)}
+          productId={newProduct.id}
         />
       </ProductDetailHeader>
     </div>

@@ -366,6 +366,52 @@
 }
 
 /* ==============================================
+   VALIDATION ERROR STYLES
+   ============================================== */
+.errorMessage {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.input.error,
+.select.error,
+.textarea.error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.input.error:focus,
+.select.error:focus,
+.textarea.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* ==============================================
+   FIELD WITH ERROR CONTAINER
+   ============================================== */
+.fieldWithError {
+  position: relative;
+}
+
+.fieldWithError .errorMessage {
+  animation: slideInError 0.2s ease-out;
+}
+
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==============================================
    RESPONSIVE DESIGN
    ============================================== */
 @media (max-width: 1200px) {

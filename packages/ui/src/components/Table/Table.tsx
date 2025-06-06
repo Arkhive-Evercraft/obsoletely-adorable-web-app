@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { TableProps, TableColumn, TableAction } from './types';
-import { TableSearch, TableFilter, TableSelectFilter } from '@/components/Table';
+import { TableSearch, TableFilter, TableSelectFilter } from './index';
 import styles from './Table.module.css';
 
 export function Table<T extends Record<string, any>>({
