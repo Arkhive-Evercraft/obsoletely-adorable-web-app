@@ -8,5 +8,4 @@ export { ProductDetailHeader } from './ProductDetail/ProductDetailHeader';
 export { ActionsPanel } from './ProductDetail/ActionsPanel';
 
 // Export existing table and aggregation components
-export { ProductsTable } from './ProductsTable';
-export { EditableProductImage } from './EditableProductImage';
+export { ProductsTable } from './ProductTable/ProductsTable';

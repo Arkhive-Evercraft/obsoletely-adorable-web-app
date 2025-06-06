@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './EditableProductImage.module.css';
+import styles from './ImageModal.module.css';
 
 export type ImageSize = 'small' | 'medium' | 'large';
 
@@ -86,7 +86,7 @@ export function EditableProductImage({
         <img 
           src={imageUrl} 
           alt={alt}
-          className={styles.image}
+          className={styles.productImage}
         />
         {isEditing && onImageChange && (
           <div className={styles.imageOverlay}>

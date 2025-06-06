@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
 import type { TableColumn } from '@repo/ui';
-import { ImageModal } from './ImageModal';
-import { EditableProductImage } from './EditableProductImage';
+import { ImageModal } from '../../ImageModal/ImageModal';
+import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import styles from './ProductsTable.module.css';
 
 interface Product {

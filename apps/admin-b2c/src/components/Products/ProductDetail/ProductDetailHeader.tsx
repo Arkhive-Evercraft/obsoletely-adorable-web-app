@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { EditableProductImage } from '../EditableProductImage';
+import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { ProductMetadata } from './ProductMetadata';
 import styles from './ProductDetail.module.css';
 

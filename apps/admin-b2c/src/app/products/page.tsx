@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import { ProductsTable } from '@/components/Products/ProductsTable';
+import { ProductsTable } from '@/components/Products';
 import { 
   EditSaveButton, 
   CancelButton, 

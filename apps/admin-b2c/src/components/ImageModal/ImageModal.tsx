@@ -44,11 +44,11 @@ export function ImageModal({ isOpen, imageUrl, imageName, onClose }: ImageModalP
             ×
           </button>
         </div>
-        <div className={styles.imageContainer}>
+        <div className={styles.modalImageContainer}>
           <img 
             src={imageUrl} 
             alt={imageName}
-            className={styles.image}
+            className={styles.modalImage}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
   SaveButton, 
   CancelButton 
 } from '@/components/Buttons';
-import styles from './ProductDetail.module.css';
+import styles from '@/components/Products/ProductDetail/ProductDetail.module.css';
 
 interface ActionsPanelProps {
   isEditing: boolean;
