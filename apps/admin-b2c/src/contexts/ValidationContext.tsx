@@ -1,14 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { validateAllFields, useFieldValidation } from '@/utils/validation';
+import { validateAllFields, validateAllCategoryFields, useFieldValidation } from '@/utils/validation';
 
 interface ValidationContextType {
   // Field-level validation errors for all entities
   validationErrors: Record<string, Record<string, string>>;
   
-  // Validate a single field for a specific entity (product)
-  validateField: (entityId: string, fieldName: string, value: any) => boolean;
+  // Validate a single field for a specific entity (product or category)
+  validateField: (entityId: string, fieldName: string, value: any, entityType?: 'product' | 'category') => boolean;
   
   // Clear error for a specific field
   clearFieldError: (entityId: string, fieldName: string) => void;
@@ -29,10 +29,10 @@ interface ValidationContextType {
   hasAnyErrors: () => boolean;
   
   // Validate all fields for an entity and return whether valid
-  validateEntity: (entityId: string, data: any) => boolean;
+  validateEntity: (entityId: string, data: any, entityType?: 'product' | 'category') => boolean;
   
   // Validate multiple entities (for bulk operations)
-  validateEntities: (entities: { id: string; data: any }[]) => boolean;
+  validateEntities: (entities: { id: string; data: any; type?: 'product' | 'category' }[]) => boolean;
   
   // Set validation errors from external source (like API response)
   setValidationErrors: (errors: Record<string, Record<string, string>>) => void;
@@ -46,19 +46,25 @@ interface ValidationProviderProps {
 
 export function ValidationProvider({ children }: ValidationProviderProps) {
   const [validationErrors, setValidationErrorsState] = useState<Record<string, Record<string, string>>>({});
-  const { validateField: validateSingleField } = useFieldValidation();
+  const { validateSingleField } = useFieldValidation();
   
-  const validateField = useCallback((entityId: string, fieldName: string, value: any): boolean => {
-    console.log(`🔍 ValidationContext.validateField: entityId=${entityId}, field=${fieldName}, value=`, value);
+  const validateField = useCallback((entityId: string, fieldName: string, value: any, entityType: 'product' | 'category' = 'product'): boolean => {
+    console.log(`🔍 ValidationContext.validateField: entityId=${entityId}, field=${fieldName}, value=`, value, `entityType=${entityType}`);
     
-    // Don't validate empty values on blur unless it's a required field
-    if ((value === '' || value === null || value === undefined) && 
-        !['name', 'description', 'categoryName'].includes(fieldName)) {
-      console.log(`⏭️ ValidationContext.validateField: Skipping validation for optional empty field ${fieldName}`);
-      return true;
+    // Don't validate empty values on blur unless it's a required field based on entity type
+    if ((value === '' || value === null || value === undefined)) {
+      const requiredFields = entityType === 'category' 
+        ? ['name', 'description', 'imageUrl']
+        : ['name', 'description', 'categoryName', 'imageUrl', 'price', 'inventory'];
+      
+      if (!requiredFields.includes(fieldName)) {
+        console.log(`⏭️ ValidationContext.validateField: Skipping validation for optional empty field ${fieldName} in ${entityType}`);
+        return true;
+      }
     }
     
-    const error = validateSingleField(fieldName as any, value);
+    // Ensure we pass the correct entityType to validateSingleField
+    const error = validateSingleField(fieldName, value, entityType);
     
     if (error) {
       console.log(`❌ ValidationContext.validateField: Setting error for ${entityId}.${fieldName}:`, error);
@@ -142,24 +148,39 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
     return Object.keys(validationErrors).some(entityId => hasEntityErrors(entityId));
   }, [validationErrors, hasEntityErrors]);
   
-  const validateEntity = useCallback((entityId: string, data: any): boolean => {
-    console.log(`🔍 ValidationContext.validateEntity: entityId=${entityId}`);
+  const validateEntity = useCallback((entityId: string, data: any, entityType: 'product' | 'category' = 'product'): boolean => {
+    console.log(`🔍 ValidationContext.validateEntity: entityId=${entityId}, entityType=${entityType}`);
     console.log('📋 ValidationContext.validateEntity: Raw data received:', JSON.stringify(data, null, 2));
     
     // Create a copy of data and ensure required fields have reasonable defaults
-    const dataToValidate = {
-      ...data,
-      // Ensure price is a number (convert from string if needed)
-      price: typeof data.price === 'string' ? parseFloat(data.price) || 0 : data.price,
-      // Ensure inventory is a number
-      inventory: typeof data.inventory === 'string' ? parseInt(data.inventory) || 0 : data.inventory,
-      // Ensure featured is boolean
-      featured: Boolean(data.featured),
-    };
+    const dataToValidate = { ...data };
+    
+    if (entityType === 'product') {
+      // Product-specific transformations
+      dataToValidate.price = typeof data.price === 'string' ? parseFloat(data.price) || 0 : data.price;
+      dataToValidate.inventory = typeof data.inventory === 'string' ? parseInt(data.inventory) || 0 : data.inventory;
+      dataToValidate.featured = Boolean(data.featured);
+    } else if (entityType === 'category') {
+      // Category-specific transformations - only keep category fields
+      const categoryData = {
+        name: data.name,
+        description: data.description,
+        imageUrl: data.imageUrl
+      };
+      Object.assign(dataToValidate, categoryData);
+      
+      // Remove any non-category fields that might have been included
+      delete dataToValidate.items;
+      delete dataToValidate.productCount;
+      delete dataToValidate.featured;
+      delete dataToValidate.price;
+      delete dataToValidate.inventory;
+      delete dataToValidate.categoryName;
+    }
     
     console.log('🔄 ValidationContext.validateEntity: Data after transformation:', JSON.stringify(dataToValidate, null, 2));
     
-    const errors = validateAllFields(dataToValidate);
+    const errors = entityType === 'category' ? validateAllCategoryFields(dataToValidate) : validateAllFields(dataToValidate);
     
     if (Object.keys(errors).length > 0) {
       console.log(`❌ ValidationContext.validateEntity: Validation failed for ${entityId}:`, errors);
@@ -176,12 +197,29 @@ export function ValidationProvider({ children }: ValidationProviderProps) {
     }
   }, [clearEntityErrors]);
   
-  const validateEntities = useCallback((entities: { id: string; data: any }[]): boolean => {
+  const validateEntities = useCallback((entities: { id: string; data: any; type?: 'product' | 'category' }[]): boolean => {
     const allErrors: Record<string, Record<string, string>> = {};
     let hasAnyValidationErrors = false;
     
-    entities.forEach(({ id, data }) => {
-      const errors = validateAllFields(data);
+    entities.forEach(({ id, data, type = 'product' }) => {
+      // Clean the data based on entity type before validation
+      let cleanedData = { ...data };
+      
+      if (type === 'category') {
+        // For categories, only keep category-specific fields
+        cleanedData = {
+          name: data.name,
+          description: data.description,
+          imageUrl: data.imageUrl
+        };
+      } else if (type === 'product') {
+        // For products, apply any necessary transformations
+        cleanedData.price = typeof data.price === 'string' ? parseFloat(data.price) || 0 : data.price;
+        cleanedData.inventory = typeof data.inventory === 'string' ? parseInt(data.inventory) || 0 : data.inventory;
+        cleanedData.featured = Boolean(data.featured);
+      }
+      
+      const errors = type === 'category' ? validateAllCategoryFields(cleanedData) : validateAllFields(cleanedData);
       if (Object.keys(errors).length > 0) {
         allErrors[id] = errors;
         hasAnyValidationErrors = true;

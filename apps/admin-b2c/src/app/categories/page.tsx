@@ -1,102 +1,90 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { CategoriesTable, CategoryActions } from '@/components/Categories';
+import { useCategoryManagement } from '@/hooks/useCategoryManagement';
+import { AppLayout } from '@/components/Layout/AppLayout';
+import { Main } from '@/components/Main';
 import styles from './categories.module.css';
 
-interface Category {
-  name: string;
-  description: string;
-  imageUrl: string;
-  items?: any[]; // Products in this category
-}
-
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    categories,
+    loading,
+    error,
+    filteredCategories,
+    isEditing,
+    isSaving,
+    handleQuickEdit,
+    handleCategoryUpdate,
+    handleSaveChanges,
+    handleCancelEdit,
+    handleFilteredDataChange,
+    setError
+  } = useCategoryManagement();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/categories');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch categories');
-        }
-        
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setError('Failed to load categories');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleAddNewCategory = () => {
+    // TODO: Implement add new category functionality
+    console.log('Add new category clicked');
+  };
 
-    fetchCategories();
-  }, []);
+  // Loading state component
+  const renderLoadingState = () => (
+    <div className={styles.loading}>
+      <div className={styles.spinner}></div>
+      <p>Loading categories...</p>
+    </div>
+  );
 
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading categories...</div>
+  // Error alert component
+  const renderErrorAlert = () => error ? (
+    <div className={styles.errorAlert}>
+      <span>{error}</span>
+      <button 
+        onClick={() => setError(null)}
+        className={styles.errorClose}
+      >
+        ×
+      </button>
+    </div>
+  ) : null;
+
+  // Categories table content for left column
+  const renderCategoriesContent = () => (
+    <div className={styles.leftColumnContent}>
+      {renderErrorAlert()}
+      <div className={styles.tableContainer}>
+        <CategoriesTable
+          categories={categories}
+          onFilteredDataChange={handleFilteredDataChange}
+          isEditing={isEditing}
+          onCategoryUpdate={handleCategoryUpdate}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (error) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.error}>{error}</div>
-      </div>
-    );
-  }
+  // Actions panel for right column
+  const renderActionsPanel = () => (
+    <CategoryActions
+      isEditing={isEditing}
+      isSaving={isSaving}
+      onEdit={handleQuickEdit}
+      onSave={handleSaveChanges}
+      onCancel={handleCancelEdit}
+      onAddNewCategory={handleAddNewCategory}
+    />
+  );
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Categories Management</h1>
-        <p className={styles.subtitle}>Manage product categories and their organization</p>
-      </div>
-
-      <div className={styles.categoriesGrid}>
-        {categories.map((category) => (
-          <div key={category.name} className={styles.categoryCard}>
-            <div className={styles.categoryImage}>
-              <img 
-                src={category.imageUrl} 
-                alt={category.name}
-                onError={(e) => {
-                  e.currentTarget.src = '/placeholder-category.png';
-                }}
-              />
-            </div>
-            <div className={styles.categoryInfo}>
-              <h3 className={styles.categoryName}>{category.name}</h3>
-              <p className={styles.categoryDescription}>{category.description}</p>
-              <div className={styles.categoryStats}>
-                <span className={styles.productCount}>
-                  {category.items?.length || 0} products
-                </span>
-              </div>
-            </div>
-            <div className={styles.categoryActions}>
-              <button className={styles.editButton}>Edit</button>
-              <button className={styles.deleteButton}>Delete</button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {categories.length === 0 && (
-        <div className={styles.emptyState}>
-          <h3>No categories found</h3>
-          <p>Create your first category to get started</p>
-          <button className={styles.createButton}>Create Category</button>
-        </div>
-      )}
-    </div>
+    <AppLayout>
+      <Main
+        pageHeading="Categories Management"
+        leftColumnTitle="Categories"
+        rightColumnTitle="Actions"
+        leftColumn={loading ? renderLoadingState() : renderCategoriesContent()}
+        rightColumn={renderActionsPanel()}
+      />
+    </AppLayout>
   );
 }

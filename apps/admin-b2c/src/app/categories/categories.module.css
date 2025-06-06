@@ -1,163 +1,82 @@
-.container {
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* Categories page styles for AppLayout structure */
 
-.header {
-  margin-bottom: 32px;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin-bottom: 8px;
-}
-
-.subtitle {
-  color: #6b7280;
-  font-size: 1rem;
-}
-
-.loading,
-.error {
-  text-align: center;
-  padding: 48px;
-  font-size: 1.125rem;
-}
-
-.error {
-  color: #dc2626;
-}
-
-.categoriesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
-}
-
-.categoryCard {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.categoryCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
-}
-
-.categoryImage {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-}
-
-.categoryImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.categoryInfo {
-  padding: 20px;
-}
-
-.categoryName {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 8px;
-}
-
-.categoryDescription {
-  color: #6b7280;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-.categoryStats {
-  margin-bottom: 16px;
-}
-
-.productCount {
-  background: #f3f4f6;
-  color: #374151;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.categoryActions {
+.leftColumnContent {
   display: flex;
-  gap: 8px;
-  padding: 0 20px 20px;
+  flex-direction: column;
+  height: 100%;
+  gap: 1rem;
 }
 
-.editButton,
-.deleteButton,
-.createButton {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  cursor: pointer;
+.tableContainer {
+  flex: 1;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  min-height: 400px;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.errorAlert {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.errorClose {
+  background: none;
   border: none;
+  color: #dc2626;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   transition: background-color 0.2s;
 }
 
-.editButton {
-  background: #3b82f6;
-  color: white;
-  flex: 1;
-}
-
-.editButton:hover {
-  background: #2563eb;
-}
-
-.deleteButton {
-  background: #ef4444;
-  color: white;
-  flex: 1;
-}
-
-.deleteButton:hover {
-  background: #dc2626;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 64px 24px;
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 2px dashed #d1d5db;
-}
-
-.emptyState h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-}
-
-.emptyState p {
-  color: #6b7280;
-  margin-bottom: 24px;
-}
-
-.createButton {
-  background: #10b981;
-  color: white;
-  padding: 12px 24px;
-  font-size: 1rem;
-}
-
-.createButton:hover {
-  background: #059669;
+.errorClose:hover {
+  background-color: rgba(220, 38, 38, 0.1);
 }

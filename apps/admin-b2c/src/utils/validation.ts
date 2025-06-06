@@ -121,39 +121,126 @@ export function validateProduct(data: any): {
   }
 }
 
-// Hook for managing field-level validation state
+// Category validation schema
+export const categorySchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Category name is required')
+    .min(3, 'Category name must be at least 3 characters')
+    .max(50, 'Category name must not exceed 50 characters')
+    .trim(),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(100, 'Description must not exceed 100 characters')
+    .trim(),
+  imageUrl: z
+    .string()
+    .min(1, 'Category image is required')
+    .refine((url) => {
+      // Allow various URL formats: http/https URLs, data URLs, blob URLs, or relative paths
+      return (
+        url.startsWith('http://') ||
+        url.startsWith('https://') ||
+        url.startsWith('data:image/') ||
+        url.startsWith('blob:') ||
+        url.startsWith('/') ||
+        url.includes('.')
+      );
+    }, 'Please provide a valid image URL or file'),
+});
+
+// Type for the category form data
+export type CategoryFormData = z.infer<typeof categorySchema>;
+
+// Function to validate category data and return formatted errors
+export function validateCategory(data: any): {
+  success: boolean;
+  errors: ValidationError[];
+  data?: CategoryFormData;
+} {
+  console.log('🔍 validateCategory called with data:', JSON.stringify(data, null, 2));
+  
+  try {
+    const validData = categorySchema.parse(data);
+    console.log('✅ validateCategory: Validation successful');
+    return {
+      success: true,
+      errors: [],
+      data: validData,
+    };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.log('❌ validateCategory: Zod validation errors:', error.issues);
+      const errors = error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      }));
+      console.log('❌ validateCategory: Formatted errors:', errors);
+      return {
+        success: false,
+        errors,
+      };
+    }
+    console.log('❌ validateCategory: Non-Zod error:', error);
+    return {
+      success: false,
+      errors: [{ field: 'general', message: 'Validation failed' }],
+    };
+  }
+}
+
+// Hook for managing field-level validation state - now supports both entity types
 export function useFieldValidation() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const validateSingleField = useCallback((fieldName: keyof ProductFormData, value: any): string | null => {
-    console.log(`🔍 validateSingleField: ${fieldName} =`, value, `(type: ${typeof value})`);
+  const validateSingleField = useCallback((fieldName: string, value: any, entityType: 'product' | 'category' = 'product'): string | null => {
+    console.log(`🔍 validateSingleField: ${fieldName} =`, value, `(type: ${typeof value}, entityType: ${entityType})`);
     
     try {
-      // Handle empty values more gracefully
+      // Handle empty values more gracefully based on entity type
       if (value === '' || value === null || value === undefined) {
-        if (fieldName === 'name' || fieldName === 'description' || fieldName === 'imageUrl' || fieldName === 'categoryName') {
-          const errorMsg = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
-          console.log(`❌ validateSingleField: ${fieldName} is empty and required:`, errorMsg);
-          return errorMsg;
-        }
-        if (fieldName === 'price' || fieldName === 'inventory') {
-          const errorMsg = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
-          console.log(`❌ validateSingleField: ${fieldName} is empty and required:`, errorMsg);
-          return errorMsg;
+        if (entityType === 'category') {
+          // Category required fields
+          if (['name', 'description', 'imageUrl'].includes(fieldName)) {
+            const errorMsg = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+            console.log(`❌ validateSingleField: ${fieldName} is empty and required for category:`, errorMsg);
+            return errorMsg;
+          }
+        } else {
+          // Product required fields
+          if (['name', 'description', 'imageUrl', 'categoryName'].includes(fieldName)) {
+            const errorMsg = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+            console.log(`❌ validateSingleField: ${fieldName} is empty and required for product:`, errorMsg);
+            return errorMsg;
+          }
+          if (['price', 'inventory'].includes(fieldName)) {
+            const errorMsg = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+            console.log(`❌ validateSingleField: ${fieldName} is empty and required for product:`, errorMsg);
+            return errorMsg;
+          }
         }
       }
 
-      const fieldSchema = productSchema.shape[fieldName];
+      // Use the appropriate schema based on entity type
+      const schema = entityType === 'category' ? categorySchema : productSchema;
+      const fieldSchema = schema.shape[fieldName as keyof typeof schema.shape];
+      
+      if (!fieldSchema) {
+        console.log(`⚠️ validateSingleField: Field ${fieldName} not found in ${entityType} schema`);
+        return null; // Field doesn't exist in this schema, so it's valid
+      }
+      
       fieldSchema.parse(value);
-      console.log(`✅ validateSingleField: ${fieldName} validation passed`);
+      console.log(`✅ validateSingleField: ${fieldName} validation passed for ${entityType}`);
       return null;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMsg = error.issues[0]?.message || 'Invalid value';
-        console.log(`❌ validateSingleField: ${fieldName} validation failed:`, errorMsg, 'Issues:', error.issues);
+        console.log(`❌ validateSingleField: ${fieldName} validation failed for ${entityType}:`, errorMsg, 'Issues:', error.issues);
         return errorMsg;
       }
-      console.log(`❌ validateSingleField: ${fieldName} non-Zod error:`, error);
+      console.log(`❌ validateSingleField: ${fieldName} non-Zod error for ${entityType}:`, error);
       return 'Invalid value';
     }
   }, []);
@@ -168,8 +255,8 @@ export function useFieldValidation() {
     });
   }, []);
 
-  const validateField = useCallback((fieldName: keyof ProductFormData, value: any) => {
-    const error = validateSingleField(fieldName, value);
+  const validateField = useCallback((fieldName: string, value: any, entityType: 'product' | 'category' = 'product') => {
+    const error = validateSingleField(fieldName, value, entityType);
     setFieldError(fieldName, error);
     return error === null;
   }, [validateSingleField, setFieldError]);
@@ -192,7 +279,8 @@ export function useFieldValidation() {
     clearAllErrors,
     hasErrors,
     getFieldError,
-    setFieldError
+    setFieldError,
+    validateSingleField
   };
 }
 
@@ -210,6 +298,25 @@ export function validateAllFields(data: any): Record<string, string> {
     console.log('❌ validateAllFields: Error map:', errorMap);
   } else {
     console.log('✅ validateAllFields: All validation passed');
+  }
+  
+  return errorMap;
+}
+
+// Utility function to validate all category fields at once
+export function validateAllCategoryFields(data: any): Record<string, string> {
+  console.log('🔍 validateAllCategoryFields called with data:', JSON.stringify(data, null, 2));
+  
+  const result = validateCategory(data);
+  const errorMap: Record<string, string> = {};
+  
+  if (!result.success) {
+    result.errors.forEach(error => {
+      errorMap[error.field] = error.message;
+    });
+    console.log('❌ validateAllCategoryFields: Error map:', errorMap);
+  } else {
+    console.log('✅ validateAllCategoryFields: All validation passed');
   }
   
   return errorMap;
