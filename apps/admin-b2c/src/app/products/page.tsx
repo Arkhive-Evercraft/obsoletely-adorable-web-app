@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState } from '@/components/Products';
 import { useProductManagement } from '@/hooks/useProductManagement';
 
 export default function ProductsPage() {
+  const router = useRouter();
   const {
     products,
     loading,
@@ -23,9 +25,8 @@ export default function ProductsPage() {
   } = useProductManagement();
 
   const handleAddNewProduct = useCallback(() => {
-    console.log('Add New Product clicked');
-    // TODO: Implement add new product functionality
-  }, []);
+    router.push('/products/new');
+  }, [router]);
 
   const handleManageCategories = useCallback(() => {
     console.log('Manage Categories clicked');

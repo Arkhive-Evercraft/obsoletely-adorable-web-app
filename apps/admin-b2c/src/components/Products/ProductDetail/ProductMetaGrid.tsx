@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useAppData } from '@/components/AppDataProvider';
 import styles from './ProductDetail.module.css';
 
 interface Product {
@@ -16,6 +17,9 @@ interface ProductMetaGridProps {
 }
 
 export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMetaGridProps) {
+  // Use the app data context instead of fetching categories locally
+  const { categories, categoriesLoading } = useAppData();
+
   return (
     <div className={`${styles.field} ${styles.fullWidth}`}>
       <div className={styles.productMetaGrid}>
@@ -57,13 +61,24 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
         <div className={styles.metaField}>
           <label className={styles.fieldLabel}>Category</label>
           {isEditing ? (
-            <input
-              type="text"
-              value={product.categoryName}
-              onChange={(e) => onFieldChange('categoryName', e.target.value)}
-              className={styles.input}
-              placeholder="Enter category"
-            />
+            categoriesLoading ? (
+              <select disabled className={`${styles.input} bg-gray-100`}>
+                <option>Loading categories...</option>
+              </select>
+            ) : (
+              <select
+                value={product.categoryName}
+                onChange={(e) => onFieldChange('categoryName', e.target.value)}
+                className={styles.input}
+              >
+                <option value="">Select Category</option>
+                {categories.map((category) => (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            )
           ) : (
             <span className={styles.category}>{product.categoryName}</span>
           )}

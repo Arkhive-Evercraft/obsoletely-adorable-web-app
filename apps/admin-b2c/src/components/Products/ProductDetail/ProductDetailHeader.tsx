@@ -29,6 +29,9 @@ export function ProductDetailHeader({
   onImageChange,
   children 
 }: ProductDetailHeaderProps) {
+  // Check if this is a new product (ID 0 or falsy)
+  const isNewProduct = !product.id || product.id === 0;
+  
   return (
     <div className={styles.productHeader}>
       <div className={styles.productImage}>
@@ -40,7 +43,8 @@ export function ProductDetailHeader({
           productId={product.id.toString()}
           onImageChange={isEditing ? onImageChange : undefined}
         />
-        <ProductMetadata product={product} />
+        {/* Only show metadata for existing products, not new ones */}
+        {!isNewProduct && <ProductMetadata product={product} />}
       </div>
       <div className={styles.productBasicInfo}>
         <div className={`${styles.field} ${styles.fullWidth}`}>

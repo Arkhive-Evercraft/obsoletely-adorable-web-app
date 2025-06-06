@@ -6,6 +6,7 @@ export { ProductDescription } from './ProductDetail/ProductDescription';
 export { ProductMetaGrid } from './ProductDetail/ProductMetaGrid';
 export { ProductDetailHeader } from './ProductDetail/ProductDetailHeader';
 export { ActionsPanel } from './ProductDetail/ActionsPanel';
+export { NewProductActionsPanel } from './ProductDetail/NewProductActionsPanel';
 
 // Export existing table and aggregation components
 export { ProductsTable } from './ProductTable/ProductsTable';

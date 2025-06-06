@@ -28,11 +28,47 @@
   transition: all 0.2s ease;
 }
 
+/* Placeholder styles for when no image is present */
+.placeholder {
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.placeholderContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.placeholderContent svg {
+  opacity: 0.5;
+}
+
+.placeholderContent span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
 /* Size variants */
 .small {
   width: 40px;
   height: 40px;
   border: 1px solid #e5e7eb;
+}
+
+.small .placeholderContent span {
+  font-size: 0.625rem;
+}
+
+.small .placeholderContent svg {
+  width: 12px;
+  height: 12px;
 }
 
 .medium {
@@ -41,10 +77,24 @@
   border: 1px solid #e5e7eb;
 }
 
+.medium .placeholderContent svg {
+  width: 16px;
+  height: 16px;
+}
+
 .large {
   width: 300px;
   height: 300px;
   border: 1px solid #e5e7eb;
+}
+
+.large .placeholderContent svg {
+  width: 32px;
+  height: 32px;
+}
+
+.large .placeholderContent span {
+  font-size: 0.875rem;
 }
 
 /* Editable state */

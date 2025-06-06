@@ -73,6 +73,9 @@ export function EditableProductImage({
   const sizeClass = styles[size];
   const editableClass = isEditing ? styles.editable : '';
   const dragOverClass = dragOver ? styles.dragOver : '';
+  
+  // Check if we have a valid image URL
+  const hasImage = imageUrl && imageUrl.trim() !== '';
 
   return (
     <div className={`${styles.imageContainer} ${sizeClass} ${editableClass} ${dragOverClass} ${className}`}>
@@ -83,11 +86,23 @@ export function EditableProductImage({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <img 
-          src={imageUrl} 
-          alt={alt}
-          className={styles.productImage}
-        />
+        {hasImage ? (
+          <img 
+            src={imageUrl} 
+            alt={alt}
+            className={styles.productImage}
+          />
+        ) : (
+          <div className={`${styles.productImage} ${styles.placeholder}`}>
+            <div className={styles.placeholderContent}>
+              <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+              </svg>
+              <span>No Image</span>
+            </div>
+          </div>
+        )}
         {isEditing && onImageChange && (
           <div className={styles.imageOverlay}>
             <div className={styles.imageOverlayContent}>
@@ -96,7 +111,10 @@ export function EditableProductImage({
                 <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
               </svg>
               <span className={styles.overlayText}>
-                {size === 'small' ? 'Edit' : 'Click to change image'}
+                {hasImage 
+                  ? (size === 'small' ? 'Edit' : 'Click to change image')
+                  : (size === 'small' ? 'Add' : 'Click to add image')
+                }
               </span>
             </div>
           </div>
