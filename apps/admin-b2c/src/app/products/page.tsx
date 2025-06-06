@@ -47,6 +47,7 @@ function ProductsPageContent() {
       <Main
         pageHeading="Products Management"
         rightColumnTitle="Actions"
+        leftColumnTitle="Products"
         leftColumn={
           <ProductsTable 
             products={products}

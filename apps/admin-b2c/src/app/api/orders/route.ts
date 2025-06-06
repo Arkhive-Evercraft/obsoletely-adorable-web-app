@@ -5,6 +5,7 @@ export async function GET() {
   try {
     const sales = await client.db.sale.findMany({
       include: {
+        customer: true,
         items: {
           include: {
             item: {
@@ -20,13 +21,12 @@ export async function GET() {
       }
     });
 
-    // Transform the data to match the admin orders interface
+    // Transform the data to match the orders interface
     const orders = sales.map(sale => ({
       id: `ORD-${sale.id.toString().padStart(3, '0')}`,
-      customerName: `Customer ${sale.id}`, // Mock customer name since not in schema
-      customerEmail: `customer${sale.id}@example.com`, // Mock email
+      customerName: sale.customer.name,
+      customerEmail: sale.customer.email,
       totalAmount: sale.total / 100, // Convert from cents to dollars
-      status: getRandomStatus(), // Mock status since not in schema
       orderDate: sale.date.toISOString().split('T')[0],
       lastUpdated: sale.date.toISOString().split('T')[0],
       items: sale.items.map(item => ({
@@ -34,21 +34,15 @@ export async function GET() {
         quantity: item.quantity,
         price: item.priceAtSale / 100 // Convert from cents to dollars
       })),
-      shippingAddress: `123 Mock St, City, State 12345` // Mock address
+      shippingAddress: sale.customer.address || 'Address not provided'
     }));
 
     return NextResponse.json(orders);
   } catch (error) {
     console.error('Error fetching sales:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch sales' },
+      { error: 'Failed to fetch orders' },
       { status: 500 }
     );
   }
-}
-
-// Helper function to generate mock status since it's not in the database
-function getRandomStatus() {
-  const statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
-  return statuses[Math.floor(Math.random() * statuses.length)];
 }

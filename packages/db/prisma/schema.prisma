@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]   // One customer can have many sales
+}
+
 model Category {
   name        String       @id
   description String
@@ -32,10 +43,12 @@ model Product {
 }
 
 model Sale {
-  id        Int        @id @default(autoincrement())
-  date      DateTime   @default(now())
-  items     ProductSale[]
-  total     Int        @default(0)  // Store in cents
+  id         Int        @id @default(autoincrement())
+  date       DateTime   @default(now())
+  items      ProductSale[]
+  total      Int        @default(0)  // Store in cents
+  customerId Int
+  customer   Customer   @relation(fields: [customerId], references: [id])
 }
 
 model ProductSale {

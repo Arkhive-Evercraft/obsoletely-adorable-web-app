@@ -4,13 +4,12 @@ export const adminMockOrders = [
     id: 'ORD-001',
     customerName: 'John Smith',
     customerEmail: 'john.smith@email.com',
-    totalAmount: 159.97,
-    status: 'Pending',
+    totalAmount: 149.99,
     orderDate: '2025-06-05',
     lastUpdated: '2025-06-05',
     items: [
-      { name: 'Modern Slim Fit T-Shirt', quantity: 2, price: 29.99 },
-      { name: 'Wireless Noise-Cancelling Headphones', quantity: 1, price: 199.99 }
+      { name: 'Wireless Bluetooth Headphones', quantity: 1, price: 99.99 },
+      { name: 'Portable Phone Charger', quantity: 1, price: 49.99 }
     ],
     shippingAddress: '123 Main St, New York, NY 10001'
   },
@@ -19,9 +18,8 @@ export const adminMockOrders = [
     customerName: 'Sarah Johnson',
     customerEmail: 'sarah.j@email.com',
     totalAmount: 89.99,
-    status: 'Shipped',
     orderDate: '2025-06-04',
-    lastUpdated: '2025-06-04',
+    lastUpdated: '2025-06-05',
     items: [
       { name: 'Minimalist Watch', quantity: 1, price: 89.99 }
     ],
@@ -32,7 +30,6 @@ export const adminMockOrders = [
     customerName: 'Mike Davis',
     customerEmail: 'mike.davis@email.com',
     totalAmount: 164.98,
-    status: 'Delivered',
     orderDate: '2025-06-03',
     lastUpdated: '2025-06-04',
     items: [
@@ -46,7 +43,6 @@ export const adminMockOrders = [
     customerName: 'Emily Wilson',
     customerEmail: 'emily.w@email.com',
     totalAmount: 79.99,
-    status: 'Cancelled',
     orderDate: '2025-06-02',
     lastUpdated: '2025-06-03',
     items: [
@@ -59,7 +55,6 @@ export const adminMockOrders = [
     customerName: 'David Brown',
     customerEmail: 'david.brown@email.com',
     totalAmount: 179.98,
-    status: 'Processing',
     orderDate: '2025-06-01',
     lastUpdated: '2025-06-02',
     items: [
@@ -73,7 +68,6 @@ export const adminMockOrders = [
     customerName: 'Lisa Chen',
     customerEmail: 'lisa.chen@email.com',
     totalAmount: 249.99,
-    status: 'Shipped',
     orderDate: '2025-05-30',
     lastUpdated: '2025-06-01',
     items: [
@@ -87,7 +81,6 @@ export const adminMockOrders = [
     customerName: 'Robert Taylor',
     customerEmail: 'robert.t@email.com',
     totalAmount: 69.98,
-    status: 'Delivered',
     orderDate: '2025-05-28',
     lastUpdated: '2025-05-30',
     items: [
@@ -100,7 +93,6 @@ export const adminMockOrders = [
     customerName: 'Amanda Garcia',
     customerEmail: 'amanda.g@email.com',
     totalAmount: 129.99,
-    status: 'Pending',
     orderDate: '2025-05-25',
     lastUpdated: '2025-05-26',
     items: [

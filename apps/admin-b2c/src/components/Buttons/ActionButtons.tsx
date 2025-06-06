@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps } from './Button';
-import { EditIcon, SaveIcon, CancelIcon, PlusIcon, CategoriesIcon, SpinnerIcon, BackIcon, DeleteIcon } from './Icons';
+import { EditIcon, SaveIcon, CancelIcon, PlusIcon, CategoriesIcon, SpinnerIcon, BackIcon, DeleteIcon, CSVIcon, DetailedCSVIcon, JSONIcon } from './Icons';
 
 interface ActionButtonProps extends Omit<ButtonProps, 'icon' | 'children'> {
   children?: React.ReactNode;
@@ -71,6 +71,36 @@ export const DeleteButton: React.FC<ActionButtonProps> = ({ children = 'Delete',
   <Button
     variant="danger"
     icon={<DeleteIcon />}
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const ExportCSVButton: React.FC<ActionButtonProps> = ({ children = 'Export CSV', ...props }) => (
+  <Button
+    variant="primary"
+    icon={<CSVIcon />}
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const ExportDetailedCSVButton: React.FC<ActionButtonProps> = ({ children = 'Export Detailed CSV', ...props }) => (
+  <Button
+    variant="success"
+    icon={<DetailedCSVIcon />}
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const ExportJSONButton: React.FC<ActionButtonProps> = ({ children = 'Export JSON', ...props }) => (
+  <Button
+    variant="warning"
+    icon={<JSONIcon />}
     {...props}
   >
     {children}

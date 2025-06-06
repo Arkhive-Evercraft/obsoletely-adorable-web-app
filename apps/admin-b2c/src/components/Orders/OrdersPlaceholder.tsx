@@ -36,11 +36,13 @@ export function OrdersPlaceholder({ orders, filteredOrders }: OrdersPlaceholderP
         <div className={styles.comingSoon}>
           <h4 className={styles.comingSoonTitle}>Coming Soon:</h4>
           <ul className={styles.featureList}>
-            <li>Order status distribution charts</li>
-            <li>Revenue analytics</li>
-            <li>Customer insights</li>
-            <li>Performance metrics</li>
-            <li>Export functionality</li>
+            <li>Advanced order filtering and search</li>
+            <li>Real-time order updates</li>
+            <li>Bulk order operations</li>
+            <li>Customer communication tools</li>
+            <li>Order analytics and insights</li>
+            <li>Automated order processing</li>
+            <li>Integration with shipping providers</li>
           </ul>
         </div>
       </div>

@@ -1,15 +1,15 @@
 "use client";
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
-import type { TableColumn, TableAction } from '@repo/ui';
+import type { TableColumn } from '@repo/ui';
 
 interface Order {
   id: string;
   customerName: string;
   customerEmail: string;
   totalAmount: number;
-  status: string;
   orderDate: string;
   lastUpdated: string;
   items: Array<{ name: string; quantity: number; price: number }>;
@@ -22,68 +22,49 @@ interface OrdersTableProps {
 }
 
 export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) {
-  
+  const router = useRouter();
+
+  const handleOrderClick = (order: Order) => {
+    // Navigate to order detail page
+    router.push(`/orders/${order.id}`);
+  };
+
   const columns: TableColumn<Order>[] = [
     {
       key: 'id',
       title: 'Order ID',
       sortable: true,
-      width: '100px'
+      width: '120px',
+      align: 'center'
+    },
+    {
+      key: 'totalAmount',
+      title: 'Amount',
+      sortable: true,
+      width: '100px',
+      align: 'center',
+      render: (amount: number) => `$${amount.toFixed(2)}`
     },
     {
       key: 'customerName',
       title: 'Customer',
       sortable: true,
-      width: '140px'
+      width: '200px'
     },
     {
-      key: 'customerEmail',
-      title: 'Email',
-      sortable: true,
-      width: '160px',
-      render: (email: string) => (
-        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-          {email}
-        </span>
-      )
-    },
-    {
-      key: 'totalAmount',
-      title: 'Total',
+      key: 'items',
+      title: 'Items',
       sortable: true,
       width: '80px',
       align: 'center',
-      render: (amount: number) => `$${amount.toFixed(2)}`
-    },
-    {
-      key: 'status',
-      title: 'Status',
-      sortable: true,
-      width: '100px',
-      align: 'center',
-      render: (status: string) => {
-        const getStatusColor = (status: string) => {
-          switch (status.toLowerCase()) {
-            case 'pending': return { bg: '#fef3c7', color: '#d97706' };
-            case 'processing': return { bg: '#dbeafe', color: '#2563eb' };
-            case 'shipped': return { bg: '#e0e7ff', color: '#7c3aed' };
-            case 'delivered': return { bg: '#dcfce7', color: '#16a34a' };
-            case 'cancelled': return { bg: '#fecaca', color: '#dc2626' };
-            default: return { bg: '#f3f4f6', color: '#374151' };
-          }
-        };
-        
-        const colors = getStatusColor(status);
+      render: (items: Array<{ name: string; quantity: number; price: number }>) => {
+        const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
         return (
-          <span style={{
-            padding: '4px 8px',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            backgroundColor: colors.bg,
-            color: colors.color
+          <span style={{ 
+            fontWeight: '600',
+            color: '#374151'
           }}>
-            {status}
+            {totalItems}
           </span>
         );
       }
@@ -92,35 +73,9 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       key: 'orderDate',
       title: 'Order Date',
       sortable: true,
-      width: '100px',
+      width: '120px',
       align: 'center',
       render: (date: string) => new Date(date).toLocaleDateString()
-    },
-    {
-      key: 'items',
-      title: 'Items',
-      sortable: false,
-      width: '60px',
-      align: 'center',
-      render: (items: Array<{ name: string; quantity: number; price: number }>) => (
-        <span style={{ 
-          fontWeight: 'bold',
-          color: '#374151'
-        }}>
-          {items.reduce((total, item) => total + item.quantity, 0)}
-        </span>
-      )
-    }
-  ];
-
-  const actions: TableAction<Order>[] = [
-    {
-      label: 'Update',
-      variant: 'secondary',
-      onClick: (order: Order) => {
-        console.log('Update order:', order.id);
-        // TODO: Implement update functionality
-      }
     }
   ];
 
@@ -128,18 +83,14 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
     <Table
       data={orders}
       columns={columns}
-      actions={actions}
       searchable={true}
-      filterable={true}
+      filterable={false}
       sortable={true}
-      autoExtractCategories={false}
-      autoExtractStatuses={true}
-      statusKey="status"
-      dateKey="orderDate"
       emptyMessage="No orders found"
       maxHeight="100%"
       className="h-full"
       onFilteredDataChange={onFilteredDataChange}
+      onRowClick={handleOrderClick}
     />
   );
 }
