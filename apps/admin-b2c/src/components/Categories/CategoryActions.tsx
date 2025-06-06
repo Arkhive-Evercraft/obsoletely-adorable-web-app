@@ -1,11 +1,13 @@
 "use client";
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   EditButton,
   SaveButton,
   CancelButton,
-  AddButton
+  AddButton,
+  BackButton
 } from '@/components/Buttons';
 import styles from './CategoryActions.module.css';
 
@@ -26,8 +28,21 @@ export function CategoryActions({
   onCancel,
   onAddNewCategory,
 }: CategoryActionsProps) {
+  const router = useRouter();
+
+  const handleBackToProducts = () => {
+    router.push('/products');
+  };
+
   return (
     <div className={styles.actionsContainer}>
+      <BackButton 
+        onClick={handleBackToProducts}
+        className={styles.backButton}
+      >
+        Back to Products
+      </BackButton>
+
       <div className={styles.primaryActions}>
         {isEditing ? (
           <div className={styles.editActions}>
