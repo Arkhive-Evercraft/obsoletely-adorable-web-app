@@ -9,7 +9,8 @@
     "paths": {
       "@/components/*": ["src/components/*"],
       "@/api/*": ["src/app/api/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/utils/*": ["src/utils/*"],
+      "@/hooks/*": ["src/hooks/*"]
     },
     "baseUrl": "."
   },

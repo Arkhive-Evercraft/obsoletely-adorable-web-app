@@ -9,3 +9,7 @@ export { ActionsPanel } from './ProductDetail/ActionsPanel';
 
 // Export existing table and aggregation components
 export { ProductsTable } from './ProductTable/ProductsTable';
+
+// Export new extracted components
+export { ProductActions } from './ProductActions';
+export { ProductLoadingState, ProductErrorState } from './ProductStates';
