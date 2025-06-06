@@ -26,7 +26,14 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(product);
+    // Transform the database product to match the frontend interface
+    const transformedProduct = {
+      ...product,
+      price: product.price / 100, // Convert from cents to dollars
+      inStock: product.inventory > 0 // Compute inStock from inventory
+    };
+
+    return NextResponse.json(transformedProduct);
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(

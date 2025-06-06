@@ -115,7 +115,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
 
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
     if (!isEditing) {
-      if (field === 'price') return `$${((value as number) / 100).toFixed(2)}`;
+      if (field === 'price') return `$${Number(value).toFixed(2)}`;
       if (field === 'inventory') return `${value} ${value === 1 ? 'item' : 'items'}`;
       return value;
     }
@@ -156,24 +156,18 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
 
     if (type === 'number') {
-      // For price fields, display in dollars but store in cents
-      const displayValue = field === 'price' ? (value / 100) : value;
-      
       return (
         <div className={hasError ? styles.tableCellWithError : ''}>
           <input
             type="number"
-            value={displayValue}
+            value={value}
             onChange={(e) => {
               const inputValue = parseFloat(e.target.value) || 0;
-              // Convert dollars back to cents for price field
-              const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
-              handleFieldChange(productId, field, storeValue);
+              handleFieldChange(productId, field, inputValue);
             }}
             onBlur={(e) => {
               const inputValue = parseFloat(e.target.value) || 0;
-              const storeValue = field === 'price' ? Math.round(inputValue * 100) : inputValue;
-              handleFieldBlur(productId, field, storeValue);
+              handleFieldBlur(productId, field, inputValue);
             }}
             onFocus={() => handleFieldFocus(productId, field)}
             className={`${styles.tableInput} ${hasError ? styles.error : ''}`}

@@ -25,14 +25,13 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
   const entityId = product.id?.toString() || '0';
 
   const handlePriceChange = (value: number) => {
-    // Convert dollars to cents for storage
-    const priceInCents = Math.round(value * 100);
-    onFieldChange('price', priceInCents);
+    // Work with dollars directly - no conversion needed
+    onFieldChange('price', value);
   };
 
   const handlePriceBlur = () => {
     if (isEditing) {
-      // Validate with the price in cents
+      // Validate with the price in dollars
       validateField(entityId, 'price', product.price);
     }
   };
@@ -90,7 +89,7 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
                 type="number"
                 step="0.01"
                 min="0"
-                value={(product.price / 100).toFixed(2)}
+                value={(product.price).toFixed(2)}
                 onChange={(e) => handlePriceChange(parseFloat(e.target.value) || 0)}
                 onBlur={handlePriceBlur}
                 onFocus={handlePriceFocus}
@@ -102,7 +101,7 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
               )}
             </>
           ) : (
-            <div className={styles.price}>${(product.price / 100).toFixed(2)}</div>
+            <div className={styles.price}>${(product.price).toFixed(2)}</div>
           )}
         </div>
 
