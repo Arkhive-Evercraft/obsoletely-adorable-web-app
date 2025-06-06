@@ -39,7 +39,7 @@ export const products: Product[] = [
     name: "Smartphone",
     price: 79999,
     description: "Latest smartphone with amazing features",
-    imageUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02ff9",
+    imageUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
     inStock: true,
     featured: true,
     categoryName: "Electronics"

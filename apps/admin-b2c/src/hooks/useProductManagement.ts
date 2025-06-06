@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface Product {
   id: string;
@@ -22,11 +22,7 @@ export function useProductManagement() {
   const [editedProducts, setEditedProducts] = useState<Product[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('/api/products');
@@ -59,9 +55,13 @@ export function useProductManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const hasProductChanged = (original: Product, edited: Product): boolean => {
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const hasProductChanged = useCallback((original: Product, edited: Product): boolean => {
     return (
       original.name !== edited.name ||
       original.price !== edited.price ||
@@ -70,22 +70,9 @@ export function useProductManagement() {
       original.inStock !== edited.inStock ||
       original.imageUrl !== edited.imageUrl
     );
-  };
+  }, []);
 
-  const handleQuickEdit = () => {
-    if (isEditing) {
-      handleSaveChanges();
-    } else {
-      setIsEditing(true);
-      setEditedProducts([...products]);
-    }
-  };
-
-  const handleProductUpdate = (updatedProducts: Product[]) => {
-    setEditedProducts(updatedProducts);
-  };
-
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = useCallback(async () => {
     setIsSaving(true);
     try {
       for (const editedProduct of editedProducts) {
@@ -125,16 +112,29 @@ export function useProductManagement() {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [editedProducts, products, hasProductChanged]);
 
-  const handleCancelEdit = () => {
+  const handleQuickEdit = useCallback(() => {
+    if (isEditing) {
+      handleSaveChanges();
+    } else {
+      setIsEditing(true);
+      setEditedProducts([...products]);
+    }
+  }, [isEditing, handleSaveChanges, products]);
+
+  const handleProductUpdate = useCallback((updatedProducts: Product[]) => {
+    setEditedProducts(updatedProducts);
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
     setIsEditing(false);
     setEditedProducts([]);
-  };
+  }, []);
 
-  const handleFilteredDataChange = (filtered: Product[], original: Product[]) => {
+  const handleFilteredDataChange = useCallback((filtered: Product[], original: Product[]) => {
     setFilteredProducts(filtered);
-  };
+  }, []);
 
   return {
     products,

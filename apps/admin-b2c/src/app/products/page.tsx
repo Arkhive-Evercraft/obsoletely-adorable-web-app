@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState } from '@/components/Products';
@@ -22,15 +22,15 @@ export default function ProductsPage() {
     setError
   } = useProductManagement();
 
-  const handleAddNewProduct = () => {
+  const handleAddNewProduct = useCallback(() => {
     console.log('Add New Product clicked');
     // TODO: Implement add new product functionality
-  };
+  }, []);
 
-  const handleManageCategories = () => {
+  const handleManageCategories = useCallback(() => {
     console.log('Manage Categories clicked');
     // TODO: Navigate to categories page
-  };
+  }, []);
 
   if (loading) {
     return <ProductLoadingState />;
