@@ -46,10 +46,20 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   });
 
   const [editableProducts, setEditableProducts] = useState<Product[]>(products);
+  
+  // Price input values map to store the display values for price inputs
+  const [priceInputValues, setPriceInputValues] = useState<Record<string, string>>({});
 
   // Update editable products when products prop changes
   useEffect(() => {
     setEditableProducts(products);
+    
+    // Initialize price input values
+    const initialPriceValues: Record<string, string> = {};
+    products.forEach(product => {
+      initialPriceValues[product.id] = product.price.toFixed(2);
+    });
+    setPriceInputValues(initialPriceValues);
   }, [products]);
 
   const handleImageClick = (imageUrl: string, productName: string) => {
@@ -84,6 +94,37 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     );
     setEditableProducts(updatedProducts);
     onProductUpdate?.(updatedProducts);
+  };
+
+  // Special handler for price input changes
+  const handlePriceChange = (productId: string, value: string) => {
+    // Update the displayed value first
+    setPriceInputValues(prev => ({
+      ...prev,
+      [productId]: value
+    }));
+    
+    // Only update the product price if the value is valid
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+      handleFieldChange(productId, 'price', numericValue);
+    }
+  };
+
+  const handlePriceBlur = (productId: string) => {
+    if (isEditing) {
+      // Get the current product
+      const product = editableProducts.find(p => p.id === productId);
+      if (product) {
+        // Format the display value on blur
+        setPriceInputValues(prev => ({
+          ...prev,
+          [productId]: product.price.toFixed(2)
+        }));
+        // Validate the field
+        validateField(productId, 'price', product.price);
+      }
+    }
   };
 
   const handleFieldBlur = (productId: string, field: keyof Product, value: any) => {
@@ -156,6 +197,29 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
 
     if (type === 'number') {
+      // Special handling for price field to prevent focus loss
+      if (field === 'price') {
+        return (
+          <div className={hasError ? styles.tableCellWithError : ''}>
+            <input
+              id={`price-${productId}`}
+              type="number"
+              value={priceInputValues[productId] || value.toFixed(2)}
+              onChange={(e) => handlePriceChange(productId, e.target.value)}
+              onBlur={() => handlePriceBlur(productId)}
+              onFocus={() => handleFieldFocus(productId, field)}
+              className={`${styles.tableInput} ${hasError ? styles.error : ''}`}
+              step="0.01"
+              min="0"
+            />
+            {hasError && (
+              <span className={styles.tableErrorMessage}>{fieldError}</span>
+            )}
+          </div>
+        );
+      }
+      
+      // For other number fields (like inventory)
       return (
         <div className={hasError ? styles.tableCellWithError : ''}>
           <input
@@ -171,7 +235,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
             }}
             onFocus={() => handleFieldFocus(productId, field)}
             className={`${styles.tableInput} ${hasError ? styles.error : ''}`}
-            step={field === 'price' ? '0.01' : '1'}
+            step="1"
             min="0"
           />
           {hasError && (

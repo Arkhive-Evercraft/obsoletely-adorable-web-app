@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppData } from '@/components/AppDataProvider';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
@@ -23,14 +23,26 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
   const { categories, categoriesLoading } = useAppData();
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
   const entityId = product.id?.toString() || '0';
+  
+  // Add state for the displayed price value to prevent focus loss
+  const [priceInputValue, setPriceInputValue] = useState(product.price.toFixed(2));
 
-  const handlePriceChange = (value: number) => {
-    // Work with dollars directly - no conversion needed
-    onFieldChange('price', value);
+  const handlePriceChange = (value: string) => {
+    // Update the display value first
+    setPriceInputValue(value);
+    
+    // Only update the actual product price if the value is valid
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue)) {
+      // Work with dollars directly - no conversion needed
+      onFieldChange('price', numericValue);
+    }
   };
 
   const handlePriceBlur = () => {
     if (isEditing) {
+      // Format the display value on blur
+      setPriceInputValue(product.price.toFixed(2));
       // Validate with the price in dollars
       validateField(entityId, 'price', product.price);
     }
@@ -41,6 +53,13 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
       clearFieldError(entityId, 'price');
     }
   };
+
+  // Update the priceInputValue when product.price changes from external sources
+  React.useEffect(() => {
+    if (!document.activeElement || document.activeElement.id !== `price-${entityId}`) {
+      setPriceInputValue(product.price.toFixed(2));
+    }
+  }, [product.price, entityId]);
 
   const handleInventoryChange = (value: number) => {
     onFieldChange('inventory', value);
@@ -86,11 +105,12 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
           {isEditing ? (
             <>
               <input
+                id={`price-${entityId}`}
                 type="number"
                 step="0.01"
                 min="0"
-                value={(product.price).toFixed(2)}
-                onChange={(e) => handlePriceChange(parseFloat(e.target.value) || 0)}
+                value={priceInputValue}
+                onChange={(e) => handlePriceChange(e.target.value)}
                 onBlur={handlePriceBlur}
                 onFocus={handlePriceFocus}
                 className={`${styles.input} ${priceError ? styles.error : ''}`}
