@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   EditSaveButton, 
   CancelButton, 
@@ -15,7 +16,7 @@ interface ProductActionsProps {
   onSave: () => void;
   onCancel: () => void;
   onAddNewProduct: () => void;
-  onManageCategories: () => void;
+  onManageCategories?: () => void;
 }
 
 export function ProductActions({
@@ -27,6 +28,14 @@ export function ProductActions({
   onAddNewProduct,
   onManageCategories
 }: ProductActionsProps) {
+  const router = useRouter();
+  
+  // Direct navigation function with debugging
+  const navigateToCategories = () => {
+    console.log('Navigating to categories page...');
+    router.push('/categories');
+  };
+  
   return (
     <div className="flex flex-col gap-3 p-4">
       <EditSaveButton
@@ -47,8 +56,9 @@ export function ProductActions({
       
       {!isEditing && (
         <>
+          {/* Use direct navigation function */}
           <ManageCategoriesButton
-            onClick={onManageCategories}
+            onClick={navigateToCategories}
             fullWidth
           />
           
