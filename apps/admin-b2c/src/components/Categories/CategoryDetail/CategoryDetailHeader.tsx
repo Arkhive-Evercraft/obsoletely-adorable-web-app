@@ -3,7 +3,7 @@
 import React from 'react';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { CategoryDetailMetadata } from './CategoryDetailMetadata';
-import { useCategoryValidation } from '@/utils/categoryValidation';
+import { useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 import styles from './CategoryDetail.module.css';
 
 interface Category {
@@ -31,7 +31,7 @@ export function CategoryDetailHeader({
   onImageChange,
   children
 }: CategoryDetailHeaderProps) {
-  const { validateField, clearFieldError, getFieldError } = useCategoryValidation();
+  const { validateField, clearFieldError, getFieldError } = useCategoryValidationContext();
 
   const handleNameChange = (value: string) => {
     onFieldChange('name', value);

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useCategoryValidation } from '@/utils/categoryValidation';
+import { useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 import styles from './CategoryDetail.module.css';
 
 interface CategoryDetailDescriptionProps {
@@ -17,7 +17,7 @@ export function CategoryDetailDescription({
   onDescriptionChange,
   categoryName = 'category'
 }: CategoryDetailDescriptionProps) {
-  const { validateField, clearFieldError, getFieldError } = useCategoryValidation();
+  const { validateField, clearFieldError, getFieldError } = useCategoryValidationContext();
 
   const handleDescriptionChange = (value: string) => {
     onDescriptionChange(value);

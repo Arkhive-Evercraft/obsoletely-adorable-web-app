@@ -14,7 +14,7 @@ import {
   CategoryDetailMetadata,
   CategoryActionsPanel
 } from '@/components/Categories';
-import { useCategoryValidation } from '@/utils/categoryValidation';
+import { CategoryValidationProvider, useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 
 interface Category {
   name: string;
@@ -23,7 +23,7 @@ interface Category {
   productCount?: number;
 }
 
-export default function CategoryDetailPage() {
+function CategoryDetailPageContent() {
   const params = useParams();
   const categoryName = typeof params.name === 'string' 
     ? decodeURIComponent(params.name) 
@@ -39,7 +39,7 @@ export default function CategoryDetailPage() {
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
-  const { validateCategory, clearCategoryErrors } = useCategoryValidation();
+  const { validateCategory, clearCategoryErrors } = useCategoryValidationContext();
 
   // Fetch category data from API
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function CategoryDetailPage() {
   const handleSave = async () => {
     if (!currentCategory) return;
     
-    // Validate the category using the new category validator
+    // Validate the category using the context
     const isValid = validateCategory(currentCategory.name, {
       name: currentCategory.name,
       description: currentCategory.description,
@@ -129,7 +129,7 @@ export default function CategoryDetailPage() {
       // Clean up states
       setSelectedImageFile(null);
       setImagePreviewUrl('');
-      clearCategoryErrors(currentCategory.name); // Clear validation errors using category validator
+      clearCategoryErrors(currentCategory.name); // Clear validation errors using context
       
       setIsEditing(false);
     } catch (error) {
@@ -249,11 +249,19 @@ export default function CategoryDetailPage() {
     <AppLayout>
       <Main
         pageHeading="Categories Management"
-        leftColumnTitle={`Categories | ${currentCategory.name}`}
+        leftColumnTitle={currentCategory ? `Categories | ${currentCategory.name}` : "Categories"}
         rightColumnTitle="Actions"
         leftColumn={categoryDetailContent}
         rightColumn={renderActionsPanel()}
       />
     </AppLayout>
+  );
+}
+
+export default function CategoryDetailPage() {
+  return (
+    <CategoryValidationProvider>
+      <CategoryDetailPageContent />
+    </CategoryValidationProvider>
   );
 }
