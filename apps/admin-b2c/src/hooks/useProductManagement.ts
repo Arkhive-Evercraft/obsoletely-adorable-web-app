@@ -131,7 +131,14 @@ export function useProductManagement() {
   }, []);
 
   const handleFilteredDataChange = useCallback((filtered: Product[], original: Product[]) => {
-    setFilteredProducts(filtered);
+    setFilteredProducts(prevFiltered => {
+      // Only update if the filtered data has actually changed
+      if (prevFiltered.length !== filtered.length || 
+          !prevFiltered.every((item, index) => item.id === filtered[index]?.id)) {
+        return filtered;
+      }
+      return prevFiltered;
+    });
   }, []);
 
   return {

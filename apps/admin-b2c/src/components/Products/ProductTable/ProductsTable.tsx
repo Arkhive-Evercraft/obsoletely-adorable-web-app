@@ -60,7 +60,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     if (isEditing && categories.length === 0) {
       fetchCategories();
     }
-  }, [isEditing]);
+  }, [isEditing, categories.length]);
 
   const fetchCategories = async () => {
     setCategoriesLoading(true);
@@ -269,10 +269,16 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
   ];
 
+  // Add computed inStock property to products for status filtering
+  const productsWithInStock = (isEditing ? editableProducts : products).map(product => ({
+    ...product,
+    inStock: product.inventory > 0
+  }));
+
   return (
     <>
       <Table
-        data={isEditing ? editableProducts : products}
+        data={productsWithInStock}
         columns={columns}
         searchable={true}
         filterable={true}
