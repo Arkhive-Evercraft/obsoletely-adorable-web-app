@@ -34,7 +34,8 @@ export function ProductDetailHeader({
   
   // Check if this is a new product (ID 0 or falsy)
   const isNewProduct = !product.id || product.id === 0;
-  const entityId = product.id.toString();
+  // Use a stable identifier for new products to prevent re-renders
+  const entityId = isNewProduct ? 'new-product' : product.id.toString();
 
   const handleNameChange = (value: string) => {
     onFieldChange('name', value);

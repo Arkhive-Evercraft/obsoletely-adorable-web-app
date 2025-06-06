@@ -18,7 +18,9 @@ export function ProductDescription({
   productId = '0'
 }: ProductDescriptionProps) {
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
-  const entityId = productId.toString();
+  // Use a stable identifier for new products to prevent re-renders
+  const isNewProduct = !productId || productId === '0';
+  const entityId = isNewProduct ? 'new-product' : productId.toString();
 
   const handleDescriptionChange = (value: string) => {
     onDescriptionChange(value);

@@ -16,11 +16,14 @@ interface ProductMetaGridProps {
   isEditing: boolean;
   onFieldChange: (field: string, value: any) => void;
   categories?: { name: string; description: string }[];
+  categoriesLoading?: boolean;
 }
 
-export function ProductMetaGrid({ product, isEditing, onFieldChange, categories = [] }: ProductMetaGridProps) {
+export function ProductMetaGrid({ product, isEditing, onFieldChange, categories = [], categoriesLoading = false }: ProductMetaGridProps) {
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
-  const entityId = product.id?.toString() || '0';
+  // Use a stable identifier for new products to prevent re-renders
+  const isNewProduct = !product.id || product.id === 0;
+  const entityId = isNewProduct ? 'new-product' : (product.id || 0).toString();
   
   // Add state for the displayed price value to prevent focus loss
   const [priceInputValue, setPriceInputValue] = useState(product.price.toFixed(2));
@@ -94,8 +97,6 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange, categories 
   const priceError = getFieldError(entityId, 'price');
   const inventoryError = getFieldError(entityId, 'inventory');
   const categoryError = getFieldError(entityId, 'categoryName');
-  
-  const categoriesLoading = categories.length === 0;
 
   return (
     <div className={`${styles.field} ${styles.fullWidth}`}>

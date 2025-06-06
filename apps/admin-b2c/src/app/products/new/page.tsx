@@ -29,7 +29,7 @@ interface Product {
 
 function AddNewProductPageContent() {
   const router = useRouter();
-  const { refreshProducts } = useAppData();
+  const { refreshProducts, categories, categoriesLoading } = useAppData();
   const [isSaving, setIsSaving] = useState(false);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
@@ -78,7 +78,8 @@ function AddNewProductPageContent() {
   };
 
   const handleSave = async () => {
-    const entityId = newProduct.id.toString(); // Use '0' for new products
+    // Use stable identifier for new products
+    const entityId = 'new-product';
     
     // Validate the entire product using the product validation context
     const isValid = validateProduct(entityId, newProduct);
@@ -146,7 +147,7 @@ function AddNewProductPageContent() {
     setImagePreviewUrl('');
     
     // Clean up validation states
-    clearProductErrors('0'); // Clear validation errors for new product
+    clearProductErrors('new-product'); // Clear validation errors for new product
     
     // Clean up any object URLs to prevent memory leaks
     if (imagePreviewUrl) {
@@ -166,7 +167,8 @@ function AddNewProductPageContent() {
     };
   }, [imagePreviewUrl]);
 
-  const ProductDetailContent = () => (
+  // Create a stable component to prevent re-renders
+  const productDetailContent = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <ProductDetailHeader
         product={newProduct}
@@ -178,6 +180,8 @@ function AddNewProductPageContent() {
           product={newProduct}
           isEditing={true} // Always in editing mode for new products
           onFieldChange={handleFieldChange}
+          categories={categories} // Pass categories from AppDataProvider
+          categoriesLoading={categoriesLoading} // Pass loading state explicitly
         />
         <ProductDescription
           description={newProduct.description}
@@ -195,7 +199,7 @@ function AddNewProductPageContent() {
         pageHeading="Products Management"
         leftColumnTitle="Add New Product"
         rightColumnTitle="Actions"
-        leftColumn={<ProductDetailContent />}
+        leftColumn={productDetailContent}
         rightColumn={
           <NewProductActionsPanel
             isSaving={isSaving}
