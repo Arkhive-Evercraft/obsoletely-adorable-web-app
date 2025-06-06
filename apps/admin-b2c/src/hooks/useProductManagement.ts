@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAppData } from '@/components/AppDataProvider';
 
 interface Product {
   id: string;
@@ -8,10 +9,13 @@ interface Product {
   imageUrl: string;
   categoryName: string;
   featured: boolean;
-  inventory: number; // Remove inStock since it's computed from inventory
+  inventory: number;
+  dateAdded: string;
+  lastUpdated: string;
 }
 
 export function useProductManagement() {
+  const { products: appProducts, productsLoading, refreshProducts } = useAppData();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,44 +24,34 @@ export function useProductManagement() {
   const [editedProducts, setEditedProducts] = useState<Product[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
-  const fetchProducts = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/products');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
-      
-      const data = await response.json();
-      
-      // Transform API response to match the admin interface
-      const transformedProducts = data.map((product: any) => ({
-        id: product.id.toString(),
-        name: product.name,
-        price: product.price,
-        description: product.description || '',
-        imageUrl: product.imageUrl,
-        categoryName: product.categoryName,
-        featured: product.inStock,
-        inventory: product.inventory || 0, // Use actual inventory from API
-        dateAdded: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        lastUpdated: new Date().toISOString().split('T')[0]
-      }));
-      
-      setProducts(transformedProducts);
-      setFilteredProducts(transformedProducts);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      setError('Failed to load products');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
+  // Transform products from AppDataProvider to match the admin interface format
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if (!productsLoading && appProducts) {
+      try {
+        // Transform API response to match the admin interface
+        const transformedProducts = appProducts.map((product: any) => ({
+          id: product.id.toString(),
+          name: product.name,
+          price: product.price,
+          description: product.description || '',
+          imageUrl: product.imageUrl || '',
+          categoryName: product.categoryName || '',
+          featured: Boolean(product.featured),
+          inventory: product.inventory || 0,
+          dateAdded: product.createdAt ? new Date(product.createdAt).toISOString().split('T')[0] : '',
+          lastUpdated: product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : ''
+        })) as Product[];
+        
+        setProducts(transformedProducts);
+        setFilteredProducts(transformedProducts);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error processing products data:', error);
+        setError('Failed to process products data');
+        setLoading(false);
+      }
+    }
+  }, [appProducts, productsLoading]);
 
   const hasProductChanged = useCallback((original: Product, edited: Product): boolean => {
     return (
@@ -102,6 +96,9 @@ export function useProductManagement() {
       setFilteredProducts(editedProducts);
       setIsEditing(false);
       
+      // Refresh products in the AppDataProvider to keep data in sync
+      await refreshProducts();
+      
       console.log('Products updated successfully');
       
     } catch (error) {
@@ -110,7 +107,7 @@ export function useProductManagement() {
     } finally {
       setIsSaving(false);
     }
-  }, [editedProducts, products, hasProductChanged]);
+  }, [editedProducts, products, hasProductChanged, refreshProducts]);
 
   const handleQuickEdit = useCallback(() => {
     if (isEditing) {

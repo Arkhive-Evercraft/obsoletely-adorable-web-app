@@ -6,6 +6,7 @@ import { Table } from '@repo/ui';
 import type { TableColumn } from '@repo/ui';
 import { ImageModal } from '../../ImageModal/ImageModal';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
+import { useAppData } from '@/components/AppDataProvider';
 import styles from './ProductsTable.module.css';
 
 interface Product {
@@ -21,12 +22,6 @@ interface Product {
   lastUpdated: string;
 }
 
-interface Category {
-  name: string;
-  description: string;
-  imageUrl: string;
-}
-
 interface ProductsTableProps {
   products: Product[];
   onFilteredDataChange?: (filteredProducts: Product[], originalProducts: Product[]) => void;
@@ -36,6 +31,9 @@ interface ProductsTableProps {
 
 export function ProductsTable({ products, onFilteredDataChange, isEditing = false, onProductUpdate }: ProductsTableProps) {
   const router = useRouter();
+  // Use the app data context instead of fetching categories locally
+  const { categories, categoriesLoading } = useAppData();
+  
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     imageUrl: string;
@@ -47,37 +45,11 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   });
 
   const [editableProducts, setEditableProducts] = useState<Product[]>(products);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   // Update editable products when products prop changes
   useEffect(() => {
     setEditableProducts(products);
   }, [products]);
-
-  // Fetch categories when editing mode is enabled
-  useEffect(() => {
-    if (isEditing && categories.length === 0) {
-      fetchCategories();
-    }
-  }, [isEditing, categories.length]);
-
-  const fetchCategories = async () => {
-    setCategoriesLoading(true);
-    try {
-      const response = await fetch('/api/categories');
-      if (response.ok) {
-        const fetchedCategories = await response.json();
-        setCategories(fetchedCategories);
-      } else {
-        console.error('Failed to fetch categories');
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    } finally {
-      setCategoriesLoading(false);
-    }
-  };
 
   const handleImageClick = (imageUrl: string, productName: string) => {
     setModalState({

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@repo/ui/components"
+import { AppDataProvider } from "@/components/AppDataProvider";
 
 
 const geistSans = localFont({
@@ -28,7 +29,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider>
-          {children}
+          <AppDataProvider>
+            {children}
+          </AppDataProvider>
         </ThemeProvider>
       </body>
     </html>
