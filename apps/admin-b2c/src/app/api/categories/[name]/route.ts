@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     // Await params before accessing its properties (Next.js 15 requirement)
@@ -37,7 +37,7 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     // Await params before accessing its properties (Next.js 15 requirement)
@@ -84,7 +84,7 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { name: string } }
+  { params }: { params: Promise<{ name: string }> }
 ) {
   try {
     // Await params before accessing its properties (Next.js 15 requirement)

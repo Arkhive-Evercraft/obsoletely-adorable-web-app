@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Await params before accessing its properties (Next.js 15 requirement)
+    // Get the ID from params
     const { id: idParam } = await params;
     const id = parseInt(idParam);
     
