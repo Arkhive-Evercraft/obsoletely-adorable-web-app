@@ -1,17 +1,23 @@
 // import jwt from "jsonwebtoken";
 // import { env } from "@repo/env/admin"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../lib/auth";
 
-import { cookies } from "next/headers";
 export async function isLoggedIn() {
-  const userCookies = await cookies();
+  try {
+    const session = await getServerSession(authOptions);
+    return !!session;
+  } catch (error) {
+    console.error("Error checking authentication:", error);
+    return false;
+  }
+}
 
-  // ASSIGNMENT 2
-  // check only that "auth_token" cookie exists
-  return userCookies.has("auth_token");
-
-  // ASSIGNMENT 3
-  // check that auth_token cookie exists and is valid
-  // const token = userCookies.get("auth_token")?.value;
-
-  // return token && jwt.verify(token, env.JWT_SECRET || "");
+export async function getSession() {
+  try {
+    return await getServerSession(authOptions);
+  } catch (error) {
+    console.error("Error getting session:", error);
+    return null;
+  }
 }

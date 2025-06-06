@@ -2,6 +2,7 @@ import type { PropsWithChildren, ReactNode } from "react";
 import React from "react";
 import { Header, Footer } from "@/components/Layout";
 import { Content } from "@/components/Content";
+import { AuthWrapper } from "@/components/AuthWrapper";
 
 interface AppLayoutProps {
     children?: ReactNode;
@@ -14,13 +15,15 @@ export function AppLayout({
     query,
 }: AppLayoutProps) {
     return (
-        <div className="grid grid-cols-5 grid-rows-11 gap-4" style={{ height: '95vh' }}>
-            <MemoizedHeader className="col-span-5 row-span-1 flex flex-col"/>
-            <Content className="col-span-5 row-span-9 row-start-2">
-                {children}
-            </Content>
-            <MemoizedFooter className="col-span-5 col-start-1 row-start-11" />
-        </div>
+        <AuthWrapper>
+            <div className="grid grid-cols-5 grid-rows-11 gap-4" style={{ height: '95vh' }}>
+                <MemoizedHeader className="col-span-5 row-span-1 flex flex-col"/>
+                <Content className="col-span-5 row-span-9 row-start-2">
+                    {children}
+                </Content>
+                <MemoizedFooter className="col-span-5 col-start-1 row-start-11" />
+            </div>
+        </AuthWrapper>
     );
 }
 
