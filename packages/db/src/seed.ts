@@ -81,18 +81,21 @@ export async function seed() {
       });
     }
     
-    // Create customers
+    // Create customers and store their actual IDs
     console.log("Creating customers...");
+    const createdCustomers = [];
     for (const customer of customers) {
-      await client.db.customer.create({
+      const createdCustomer = await client.db.customer.create({
         data: customer,
       });
+      createdCustomers.push(createdCustomer);
     }
     
     // Create 20 sample sales
     for (let i = 1; i <= 20; i++) {
-      // Pick random customer
-      const customerId = Math.floor(Math.random() * customers.length) + 1;
+      // Pick random customer from the actually created customers
+      const randomCustomer = createdCustomers[Math.floor(Math.random() * createdCustomers.length)];
+      const customerId = randomCustomer.id;
       
       // Pick random date within last 90 days
       const daysAgo = Math.floor(Math.random() * 90);
