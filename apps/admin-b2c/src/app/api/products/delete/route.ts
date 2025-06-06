@@ -12,7 +12,17 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const result = await deleteProduct(id);
+    // Convert string ID to number for database function
+    const productId = parseInt(id, 10);
+    
+    if (isNaN(productId)) {
+      return NextResponse.json(
+        { error: 'Invalid product ID format' },
+        { status: 400 }
+      );
+    }
+
+    const result = await deleteProduct(productId);
     
     if (result) {
       return NextResponse.json({ success: true });
