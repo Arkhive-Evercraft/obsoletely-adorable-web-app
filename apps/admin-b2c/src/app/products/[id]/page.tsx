@@ -77,34 +77,13 @@ export default function ProductDetailPage() {
     fetchProduct();
   }, [id]);
 
-  if (isLoading) {
-    return (
-      <AppLayout>
-        <Main
-          pageHeading="Products Management"
-          leftColumnTitle="Products"
-          leftColumn={<LoadingState />}
-        />
-      </AppLayout>
-    );
-  }
-
-  if (error || !product || !currentProduct) {
-    return (
-      <AppLayout>
-        <Main
-          pageHeading="Product Not Found"
-          leftColumn={<NotFoundState error={error || undefined} />}
-        />
-      </AppLayout>
-    );
-  }
-
   const handleEdit = () => {
     setIsEditing(true);
   };
 
   const handleSave = async () => {
+    if (!currentProduct) return; // Guard clause
+    
     setIsSaving(true);
     try {
       let updatedProduct = { ...currentProduct };
@@ -150,6 +129,44 @@ export default function ProductDetailPage() {
     
     setIsEditing(false);
   };
+
+  // Create a function to render the ActionsPanel that's always available
+  const renderActionsPanel = () => (
+    <ActionsPanel
+      isEditing={isEditing}
+      isSaving={isSaving}
+      isLoading={isLoading || !product} // Loading OR no product data yet
+      onEdit={handleEdit}
+      onSave={handleSave}
+      onCancel={handleCancel}
+    />
+  );
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <Main
+          pageHeading="Products Management"
+          leftColumnTitle="Products"
+          rightColumnTitle="Actions"
+          leftColumn={<LoadingState />}
+          rightColumn={renderActionsPanel()}
+        />
+      </AppLayout>
+    );
+  }
+
+  if (error || !product || !currentProduct) {
+    return (
+      <AppLayout>
+        <Main
+          pageHeading="Product Not Found"
+          leftColumn={<NotFoundState error={error || undefined} />}
+          rightColumn={renderActionsPanel()}
+        />
+      </AppLayout>
+    );
+  }
 
   const handleFieldChange = (field: string, value: any) => {
     setCurrentProduct(prev => prev ? { ...prev, [field]: value } : null);
@@ -208,15 +225,7 @@ export default function ProductDetailPage() {
         leftColumnTitle={`Products | ${currentProduct.name}`}
         rightColumnTitle="Actions"
         leftColumn={<ProductDetailContent />}
-        rightColumn={
-          <ActionsPanel
-            isEditing={isEditing}
-            isSaving={isSaving}
-            onEdit={handleEdit}
-            onSave={handleSave}
-            onCancel={handleCancel}
-          />
-        }
+        rightColumn={renderActionsPanel()}
       />
     </AppLayout>
   );

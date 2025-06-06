@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import React from "react";
 import { Column } from "@/components/Layout";
 
 interface MainProps {
@@ -7,22 +8,18 @@ interface MainProps {
   pageHeading: string;
   leftColumn?: ReactNode;
   rightColumn?: ReactNode;
-  leftColumnTitle?: string; // Add optional title for left column
-  rightColumnTitle?: string; // Add optional title for right column
-  products?: any[]; // Add products prop for data passing
-  categories?: any[]; // Add categories prop for data passing
+  leftColumnTitle?: string;
+  rightColumnTitle?: string;
 }
 
-export function Main({ 
+export const Main = React.memo(function Main({ 
   children, 
   className, 
   pageHeading, 
   leftColumn, 
   rightColumn, 
-  leftColumnTitle = "Products", // Default to "Products" for backward compatibility
-  rightColumnTitle = "Categories", // Default to "Categories" for backward compatibility
-  products,
-  categories 
+  leftColumnTitle = "",
+  rightColumnTitle = ""
 }: MainProps) {
   return (
     <main className={`w-full h-full grid grid-cols-4 grid-rows-9 gap-4 p-4 ${className || ''}`}>
@@ -33,30 +30,12 @@ export function Main({
       {/* Left Column */}
       <Column title={leftColumnTitle} className="col-span-3 row-span-8 row-start-2">
         {leftColumn || children}
-        {products && (
-          <div className="space-y-2">
-            {products.map((product, index) => (
-              <div key={index} className="p-2 border rounded">
-                {typeof product === 'string' ? product : product.name || `Product ${index + 1}`}
-              </div>
-            ))}
-          </div>
-        )}
       </Column>
 
       {/* Right Column */}
       <Column title={rightColumnTitle} className="col-span-1 row-span-8 row-start-2">
         {rightColumn}
-        {categories && (
-          <div className="space-y-2">
-            {categories.map((category, index) => (
-              <div key={index} className="p-2 border rounded">
-                {typeof category === 'string' ? category : category.name || `Category ${index + 1}`}
-              </div>
-            ))}
-          </div>
-        )}
       </Column>
     </main>
   );
-}
+});

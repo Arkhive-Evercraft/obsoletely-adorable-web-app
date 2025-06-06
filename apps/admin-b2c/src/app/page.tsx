@@ -22,8 +22,6 @@ export default function Home() {
       <AppLayout>
         <Main 
           pageHeading='Dashboard'
-          products={sampleProducts}
-          categories={sampleCategories}
         />
       </AppLayout>
   );

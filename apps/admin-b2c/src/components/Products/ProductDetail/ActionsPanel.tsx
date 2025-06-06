@@ -13,6 +13,7 @@ import styles from '@/components/Products/ProductDetail/ProductDetail.module.css
 interface ActionsPanelProps {
   isEditing: boolean;
   isSaving: boolean;
+  isLoading?: boolean; // Add loading prop
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
@@ -21,6 +22,7 @@ interface ActionsPanelProps {
 export function ActionsPanel({ 
   isEditing, 
   isSaving, 
+  isLoading = false, // Default to false
   onEdit, 
   onSave, 
   onCancel 
@@ -33,12 +35,17 @@ export function ActionsPanel({
 
   return (
     <div className={styles.actionsPanel}>
-      <BackButton onClick={handleBackToProducts}>
+      <BackButton 
+        onClick={handleBackToProducts}
+      >
         Back to Products
       </BackButton>
 
       {!isEditing ? (
-        <EditButton onClick={onEdit}>
+        <EditButton 
+          onClick={onEdit}
+          disabled={isLoading} // Disable when loading
+        >
           Edit Product
         </EditButton>
       ) : (
@@ -46,14 +53,14 @@ export function ActionsPanel({
           <SaveButton
             onClick={onSave}
             loading={isSaving}
-            disabled={isSaving}
+            disabled={isSaving || isLoading} // Disable when saving or loading
           >
             Save Changes
           </SaveButton>
           
           <CancelButton
             onClick={onCancel}
-            disabled={isSaving}
+            disabled={isSaving || isLoading} // Disable when saving or loading
           >
             Cancel
           </CancelButton>
