@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
-import type { TableColumn } from '@repo/ui';
+import type { TableColumn, TableAction } from '@repo/ui';
 import { ImageModal } from '../../ImageModal/ImageModal';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { useAppData } from '@/components/AppDataProvider';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductsTable.module.css';
+import { DeleteButton } from '@/components/Buttons';
 
 interface Product {
   id: string;
@@ -46,6 +47,16 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   });
 
   const [editableProducts, setEditableProducts] = useState<Product[]>(products);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    isOpen: boolean;
+    productId: string;
+    productName: string;
+  }>({
+    isOpen: false,
+    productId: '',
+    productName: ''
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Price input values map to store the display values for price inputs
   const [priceInputValues, setPriceInputValues] = useState<Record<string, string>>({});
@@ -152,6 +163,58 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     
     // TODO: In a real implementation, you would upload the file here
     // and then update with the actual URL
+  };
+
+  const handleDelete = (productId: string) => {
+    const product = editableProducts.find(p => p.id === productId);
+    if (product) {
+      setDeleteConfirmation({
+        isOpen: true,
+        productId,
+        productName: product.name
+      });
+    }
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch('/api/products/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: deleteConfirmation.productId }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      
+      // Update the products list by removing the deleted product
+      const updatedProducts = editableProducts.filter(p => p.id !== deleteConfirmation.productId);
+      setEditableProducts(updatedProducts);
+      onProductUpdate?.(updatedProducts);
+
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      // You could add a toast notification here for the error
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmation({
+        isOpen: false,
+        productId: '',
+        productName: ''
+      });
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmation({
+      isOpen: false,
+      productId: '',
+      productName: ''
+    });
   };
 
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
@@ -344,6 +407,17 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     }
   ];
 
+  // Add actions for edit mode
+  const tableActions: TableAction<Product>[] = isEditing 
+    ? [
+        {
+          label: 'Delete',
+          variant: 'danger',
+          onClick: (product: Product) => handleDelete(product.id),
+        }
+      ] 
+    : [];
+
   // Add computed inStock property to products for status filtering
   const productsWithInStock = (isEditing ? editableProducts : products).map(product => ({
     ...product,
@@ -355,6 +429,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       <Table
         data={productsWithInStock}
         columns={columns}
+        actions={tableActions}
         searchable={true}
         filterable={true}
         sortable={!isEditing}
@@ -378,6 +453,34 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
         imageName={modalState.imageName}
         onClose={closeModal}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirmation.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete <strong>{deleteConfirmation.productName}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

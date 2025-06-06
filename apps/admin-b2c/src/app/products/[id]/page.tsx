@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { 
@@ -23,13 +23,14 @@ interface Product {
   imageUrl: string;
   categoryName: string;
   featured: boolean;
-  inventory: number; // Remove inStock since it's computed from inventory
+  inventory: number;
   createdAt: string;
   updatedAt: string;
 }
 
 function ProductDetailPageContent() {
   const params = useParams();
+  const router = useRouter();
   const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
   
   const [product, setProduct] = useState<Product | null>(null);
@@ -37,6 +38,8 @@ function ProductDetailPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
@@ -89,6 +92,7 @@ function ProductDetailPageContent() {
     const isValid = validateProduct(entityId, currentProduct);
     
     if (!isValid) {
+      console.log('Validation failed, not saving');
       setIsSaving(false);
       return; // Don't save if there are validation errors
     }
@@ -145,15 +149,51 @@ function ProductDetailPageContent() {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!product) return;
+    
+    setIsDeleting(true);
+    try {
+      const response = await fetch('/api/products/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: product.id }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      
+      // Navigate back to products list
+      router.push('/products');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      setError('Failed to delete product. Please try again.');
+      setIsDeleting(false);
+      setShowDeleteConfirmation(false);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   // Create a function to render the ActionsPanel that's always available
   const renderActionsPanel = () => (
     <ActionsPanel
       isEditing={isEditing}
       isSaving={isSaving}
-      isLoading={isLoading || !product}
+      isLoading={isLoading || !product || isDeleting}
       onEdit={handleEdit}
       onSave={handleSave}
       onCancel={handleCancel}
+      onDelete={handleDelete}
     />
   );
 
@@ -232,6 +272,34 @@ function ProductDetailPageContent() {
           productId={currentProduct.id}
         />
       </ProductDetailHeader>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete <strong>{product.name}</strong>? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 

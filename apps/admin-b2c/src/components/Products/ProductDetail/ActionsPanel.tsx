@@ -6,17 +6,19 @@ import {
   BackButton,
   EditButton, 
   SaveButton, 
-  CancelButton 
+  CancelButton,
+  DeleteButton 
 } from '@/components/Buttons';
 import styles from '@/components/Products/ProductDetail/ProductDetail.module.css';
 
 interface ActionsPanelProps {
   isEditing: boolean;
   isSaving: boolean;
-  isLoading?: boolean; // Add loading prop
+  isLoading?: boolean; // Default to false
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
+  onDelete?: () => void;
 }
 
 export function ActionsPanel({ 
@@ -25,7 +27,8 @@ export function ActionsPanel({
   isLoading = false, // Default to false
   onEdit, 
   onSave, 
-  onCancel 
+  onCancel,
+  onDelete
 }: ActionsPanelProps) {
   const router = useRouter();
 
@@ -42,12 +45,23 @@ export function ActionsPanel({
       </BackButton>
 
       {!isEditing ? (
-        <EditButton 
-          onClick={onEdit}
-          disabled={isLoading} // Disable when loading
-        >
-          Edit Product
-        </EditButton>
+        <>
+          <EditButton 
+            onClick={onEdit}
+            disabled={isLoading} // Disable when loading
+          >
+            Edit Product
+          </EditButton>
+
+          {onDelete && (
+            <DeleteButton
+              onClick={onDelete}
+              disabled={isLoading}
+            >
+              Delete Product
+            </DeleteButton>
+          )}
+        </>
       ) : (
         <div className={styles.editActions}>
           <SaveButton

@@ -1,12 +1,13 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   EditSaveButton, 
   CancelButton, 
   AddButton, 
-  ManageCategoriesButton 
+  ManageCategoriesButton,
+  DeleteButton 
 } from '@/components/Buttons';
 
 interface ProductActionsProps {
@@ -17,6 +18,8 @@ interface ProductActionsProps {
   onCancel: () => void;
   onAddNewProduct: () => void;
   onManageCategories?: () => void;
+  onDelete?: () => void;
+  showDelete?: boolean;
 }
 
 export function ProductActions({
@@ -26,14 +29,24 @@ export function ProductActions({
   onSave,
   onCancel,
   onAddNewProduct,
-  onManageCategories
+  onManageCategories,
+  onDelete,
+  showDelete = false
 }: ProductActionsProps) {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
   
   // Direct navigation function with debugging
   const navigateToCategories = () => {
     console.log('Navigating to categories page...');
     router.push('/categories');
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      setIsDeleting(true);
+      onDelete();
+    }
   };
   
   return (
@@ -66,6 +79,16 @@ export function ProductActions({
             onClick={onAddNewProduct}
             fullWidth
           />
+
+          {showDelete && (
+            <DeleteButton
+              onClick={handleDelete}
+              disabled={isDeleting}
+              fullWidth
+            >
+              Delete Product
+            </DeleteButton>
+          )}
         </>
       )}
     </div>

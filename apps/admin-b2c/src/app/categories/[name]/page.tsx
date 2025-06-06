@@ -1,41 +1,40 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { 
-  LoadingState, 
-  NotFoundState 
-} from '@/components/Products';
-import { 
-  CategoryDetailHeader,
-  CategoryDetailDescription,
-  CategoryDetailMetadata,
-  CategoryActionsPanel
+  CategoryDetailHeader, 
+  CategoryDetailDescription, 
+  CategoryActionsPanel 
 } from '@/components/Categories';
-import { CategoryValidationProvider, useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
+import { LoadingState } from '@/components/Products';
+import { NotFoundState } from '@/components/Products';
+import { useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 
 interface Category {
   name: string;
   description: string;
   imageUrl: string;
+  id?: string;
+  createdAt?: string;
+  updatedAt?: string;
   productCount?: number;
 }
 
 function CategoryDetailPageContent() {
   const params = useParams();
-  const categoryName = typeof params.name === 'string' 
-    ? decodeURIComponent(params.name) 
-    : Array.isArray(params.name) 
-      ? decodeURIComponent(params.name[0] || '') 
-      : '';
+  const router = useRouter();
+  const categoryName = typeof params.name === 'string' ? decodeURIComponent(params.name) : '';
   
   const [category, setCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string>('');
@@ -82,15 +81,11 @@ function CategoryDetailPageContent() {
   const handleSave = async () => {
     if (!currentCategory) return;
     
-    // Validate the category using the context
-    const isValid = validateCategory(currentCategory.name, {
-      name: currentCategory.name,
-      description: currentCategory.description,
-      imageUrl: currentCategory.imageUrl
-    });
+    // Validate the category using the category validation context
+    const isValid = validateCategory(currentCategory.name, currentCategory);
     
     if (!isValid) {
-      setIsSaving(false);
+      console.log('Validation failed, not saving');
       return; // Don't save if there are validation errors
     }
     
@@ -104,8 +99,8 @@ function CategoryDetailPageContent() {
         updatedCategory.imageUrl = uploadedImageUrl;
       }
       
-      // Update category via API
-      const response = await fetch(`/api/categories/${encodeURIComponent(category!.name)}`, {
+      // Call the API to update the category
+      const response = await fetch(`/api/categories/${encodeURIComponent(category?.name || '')}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -115,11 +110,11 @@ function CategoryDetailPageContent() {
           imageUrl: updatedCategory.imageUrl,
         }),
       });
-
+      
       if (!response.ok) {
         throw new Error('Failed to update category');
       }
-
+      
       const savedCategory = await response.json();
       
       // Update the original category data with the saved changes
@@ -160,43 +155,37 @@ function CategoryDetailPageContent() {
     setIsEditing(false);
   };
 
-  // Create a function to render the ActionsPanel that's always available
-  const renderActionsPanel = () => (
-    <CategoryActionsPanel
-      isEditing={isEditing}
-      isSaving={isSaving}
-      isLoading={isLoading || !category}
-      onEdit={handleEdit}
-      onSave={handleSave}
-      onCancel={handleCancel}
-    />
-  );
+  const handleDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
 
-  if (isLoading) {
-    return (
-      <AppLayout>
-        <Main
-          pageHeading="Categories Management"
-          leftColumnTitle="Categories"
-          rightColumnTitle="Actions"
-          leftColumn={<LoadingState />}
-          rightColumn={renderActionsPanel()}
-        />
-      </AppLayout>
-    );
-  }
+  const confirmDelete = async () => {
+    if (!category) return;
+    
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/categories/${encodeURIComponent(category.name)}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete category');
+      }
+      
+      // Navigate back to categories list
+      router.push('/categories');
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      setError(error instanceof Error ? error.message : 'Failed to delete category. Please try again.');
+      setIsDeleting(false);
+      setShowDeleteConfirmation(false);
+    }
+  };
 
-  if (error || !category || !currentCategory) {
-    return (
-      <AppLayout>
-        <Main
-          pageHeading="Category Not Found"
-          leftColumn={<NotFoundState error={error || undefined} />}
-          rightColumn={renderActionsPanel()}
-        />
-      </AppLayout>
-    );
-  }
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   const handleFieldChange = (field: string, value: any) => {
     setCurrentCategory(prev => prev ? { ...prev, [field]: value } : null);
@@ -226,6 +215,45 @@ function CategoryDetailPageContent() {
     });
   };
 
+  // Create a function to render the ActionsPanel that's always available
+  const renderActionsPanel = () => (
+    <CategoryActionsPanel
+      isEditing={isEditing}
+      isSaving={isSaving}
+      isLoading={isLoading || !category || isDeleting}
+      onEdit={handleEdit}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      onDelete={handleDelete}
+    />
+  );
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <Main
+          pageHeading="Categories Management"
+          leftColumnTitle="Categories"
+          rightColumnTitle="Actions"
+          leftColumn={<LoadingState />}
+          rightColumn={renderActionsPanel()}
+        />
+      </AppLayout>
+    );
+  }
+
+  if (error || !category || !currentCategory) {
+    return (
+      <AppLayout>
+        <Main
+          pageHeading="Category Not Found"
+          leftColumn={<NotFoundState error={error || undefined} />}
+          rightColumn={renderActionsPanel()}
+        />
+      </AppLayout>
+    );
+  }
+
   // Move CategoryDetailContent to be a stable component reference
   const categoryDetailContent = (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -242,6 +270,40 @@ function CategoryDetailPageContent() {
           categoryName={currentCategory.name}
         />
       </CategoryDetailHeader>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete the <strong>{category.name}</strong> category? This action cannot be undone.
+            </p>
+            {category.productCount && category.productCount > 0 ? (
+              <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded">
+                <strong>Warning:</strong> This category has {category.productCount} associated products.
+                You cannot delete a category with products. Please reassign or delete the products first.
+              </div>
+            ) : null}
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={isDeleting || (!!category.productCount && category.productCount > 0)}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -259,9 +321,5 @@ function CategoryDetailPageContent() {
 }
 
 export default function CategoryDetailPage() {
-  return (
-    <CategoryValidationProvider>
-      <CategoryDetailPageContent />
-    </CategoryValidationProvider>
-  );
+  return <CategoryDetailPageContent />;
 }

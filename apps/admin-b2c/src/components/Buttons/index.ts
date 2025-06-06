@@ -5,7 +5,8 @@ export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
 export { 
   EditButton, 
   SaveButton, 
-  CancelButton, 
+  CancelButton,
+  DeleteButton,
   AddButton, 
   ManageCategoriesButton,
   EditSaveButton,

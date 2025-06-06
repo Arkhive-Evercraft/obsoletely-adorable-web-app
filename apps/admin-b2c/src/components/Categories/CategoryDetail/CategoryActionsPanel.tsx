@@ -6,7 +6,8 @@ import {
   BackButton,
   EditButton, 
   SaveButton, 
-  CancelButton 
+  CancelButton,
+  DeleteButton 
 } from '@/components/Buttons';
 import styles from './CategoryDetail.module.css';
 
@@ -17,6 +18,7 @@ interface CategoryActionsPanelProps {
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
+  onDelete?: () => void;
 }
 
 export function CategoryActionsPanel({ 
@@ -25,7 +27,8 @@ export function CategoryActionsPanel({
   isLoading = false,
   onEdit, 
   onSave, 
-  onCancel 
+  onCancel,
+  onDelete
 }: CategoryActionsPanelProps) {
   const router = useRouter();
 
@@ -42,12 +45,23 @@ export function CategoryActionsPanel({
       </BackButton>
 
       {!isEditing ? (
-        <EditButton 
-          onClick={onEdit}
-          disabled={isLoading}
-        >
-          Edit Category
-        </EditButton>
+        <>
+          <EditButton 
+            onClick={onEdit}
+            disabled={isLoading}
+          >
+            Edit Category
+          </EditButton>
+
+          {onDelete && (
+            <DeleteButton
+              onClick={onDelete}
+              disabled={isLoading}
+            >
+              Delete Category
+            </DeleteButton>
+          )}
+        </>
       ) : (
         <div className={styles.editActions}>
           <SaveButton

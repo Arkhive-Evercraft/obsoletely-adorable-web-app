@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
-import type { TableColumn } from '@repo/ui';
+import type { TableColumn, TableAction } from '@repo/ui';
 import { ImageModal } from '../../ImageModal/ImageModal';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { useAppData } from '@/components/AppDataProvider';
@@ -43,6 +43,17 @@ export function CategoriesTable({
     imageUrl: '',
     imageName: ''
   });
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    isOpen: boolean;
+    categoryName: string;
+    productCount: number;
+  }>({
+    isOpen: false,
+    categoryName: '',
+    productCount: 0
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const [editableCategories, setEditableCategories] = useState<Category[]>(categories);
 
@@ -116,6 +127,59 @@ export function CategoriesTable({
     
     // TODO: In a real implementation, you would upload the file here
     // and then update with the actual URL
+  };
+
+  const handleDelete = (category: Category) => {
+    const productCount = products.filter(product => product.categoryName === category.name).length;
+    
+    setDeleteConfirmation({
+      isOpen: true,
+      categoryName: category.name,
+      productCount
+    });
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      // Check if the category has products
+      if (deleteConfirmation.productCount > 0) {
+        throw new Error('Cannot delete a category with associated products');
+      }
+
+      const response = await fetch(`/api/categories/${encodeURIComponent(deleteConfirmation.categoryName)}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete category');
+      }
+      
+      // Update the categories list by removing the deleted category
+      const updatedCategories = editableCategories.filter(c => c.name !== deleteConfirmation.categoryName);
+      setEditableCategories(updatedCategories);
+      onCategoryUpdate?.(updatedCategories);
+
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      // You could add a toast notification here for the error
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirmation({
+        isOpen: false,
+        categoryName: '',
+        productCount: 0
+      });
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirmation({
+      isOpen: false,
+      categoryName: '',
+      productCount: 0
+    });
   };
 
   const renderEditableField = (value: any, categoryName: string, field: keyof Category, type: 'text' | 'textarea' = 'text') => {
@@ -215,11 +279,28 @@ export function CategoriesTable({
     }
   ];
 
+  // Add actions for edit mode
+  const tableActions: TableAction<Category>[] = isEditing 
+    ? [
+        {
+          label: 'Delete',
+          variant: 'danger',
+          onClick: (category: Category) => handleDelete(category),
+          disabled: (category: Category) => {
+            // Disable delete for categories with products
+            const productCount = products.filter(p => p.categoryName === category.name).length;
+            return productCount > 0;
+          }
+        }
+      ] 
+    : [];
+
   return (
     <>
       <Table
         data={categoriesWithProductCount}
         columns={columns}
+        actions={tableActions}
         searchable={true}
         filterable={true}
         sortable={!isEditing}
@@ -238,6 +319,40 @@ export function CategoriesTable({
         imageName={modalState.imageName}
         onClose={closeModal}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {deleteConfirmation.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+            <p className="mb-6">
+              Are you sure you want to delete the <strong>{deleteConfirmation.categoryName}</strong> category? This action cannot be undone.
+            </p>
+            {deleteConfirmation.productCount > 0 ? (
+              <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded">
+                <strong>Warning:</strong> This category has {deleteConfirmation.productCount} associated products.
+                You cannot delete a category with products. Please reassign or delete the products first.
+              </div>
+            ) : null}
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                disabled={isDeleting || deleteConfirmation.productCount > 0}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

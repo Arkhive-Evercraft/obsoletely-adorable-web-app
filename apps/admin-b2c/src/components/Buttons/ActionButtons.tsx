@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonProps } from './Button';
-import { EditIcon, SaveIcon, CancelIcon, PlusIcon, CategoriesIcon, SpinnerIcon, BackIcon } from './Icons';
+import { EditIcon, SaveIcon, CancelIcon, PlusIcon, CategoriesIcon, SpinnerIcon, BackIcon, DeleteIcon } from './Icons';
 
 interface ActionButtonProps extends Omit<ButtonProps, 'icon' | 'children'> {
   children?: React.ReactNode;
@@ -61,6 +61,16 @@ export const BackButton: React.FC<ActionButtonProps> = ({ children = 'Back', ...
   <Button
     variant="secondary"
     icon={<BackIcon />}
+    {...props}
+  >
+    {children}
+  </Button>
+);
+
+export const DeleteButton: React.FC<ActionButtonProps> = ({ children = 'Delete', ...props }) => (
+  <Button
+    variant="danger"
+    icon={<DeleteIcon />}
     {...props}
   >
     {children}
