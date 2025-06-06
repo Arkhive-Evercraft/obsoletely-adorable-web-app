@@ -7,10 +7,8 @@ interface Product {
   description: string;
   imageUrl: string;
   categoryName: string;
-  inStock: boolean;
-  inventory: number;
-  dateAdded: string;
-  lastUpdated: string;
+  featured: boolean;
+  inventory: number; // Remove inStock since it's computed from inventory
 }
 
 export function useProductManagement() {
@@ -41,7 +39,7 @@ export function useProductManagement() {
         description: product.description || '',
         imageUrl: product.imageUrl,
         categoryName: product.categoryName,
-        inStock: product.inStock,
+        featured: product.inStock,
         inventory: Math.floor(Math.random() * 50) + 1,
         dateAdded: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         lastUpdated: new Date().toISOString().split('T')[0]
@@ -67,7 +65,7 @@ export function useProductManagement() {
       original.price !== edited.price ||
       original.description !== edited.description ||
       original.categoryName !== edited.categoryName ||
-      original.inStock !== edited.inStock ||
+      original.featured !== edited.featured ||
       original.imageUrl !== edited.imageUrl
     );
   }, []);
@@ -89,7 +87,7 @@ export function useProductManagement() {
               price: Math.round(editedProduct.price * 100),
               description: editedProduct.description,
               categoryName: editedProduct.categoryName,
-              inStock: editedProduct.inStock,
+              inStock: editedProduct.featured,
               imageUrl: editedProduct.imageUrl
             }),
           });

@@ -11,6 +11,7 @@ interface Product {
   imageUrl: string;
   createdAt: string;
   updatedAt: string;
+  inventory: number; // Remove inStock, use inventory to compute stock status
 }
 
 interface ProductDetailHeaderProps {
@@ -52,7 +53,16 @@ export function ProductDetailHeader({
               className={styles.input}
             />
           ) : (
-            <h1 className={styles.productName}>{product.name}</h1>
+            <div className={styles.productNameWithStatus}>
+              <h1 className={styles.productName}>{product.name}</h1>
+              <div className={styles.stock}>
+                {product.inventory > 0 ? (
+                  <span className={styles.inStock}>In Stock</span>
+                ) : (
+                  <span className={styles.outOfStock}>Out of Stock</span>
+                )}
+              </div>
+            </div>
           )}
         </div>
         {children}

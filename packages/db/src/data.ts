@@ -13,6 +13,7 @@ export type Product = {
   inStock: boolean;
   featured: boolean;
   categoryName: string;
+  inventory: number; // Add inventory field
 }
 
 export const categories: Category[] = [
@@ -42,7 +43,8 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97",
     inStock: true,
     featured: true,
-    categoryName: "Electronics"
+    categoryName: "Electronics",
+    inventory: 50
   },
   {
     id: 2,
@@ -52,7 +54,8 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
     inStock: true,
     featured: true,
-    categoryName: "Electronics"
+    categoryName: "Electronics",
+    inventory: 30
   },
   {
     id: 3,
@@ -62,7 +65,8 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
     inStock: true,
     featured: false,
-    categoryName: "Clothing"
+    categoryName: "Clothing",
+    inventory: 100
   },
   {
     id: 4,
@@ -72,7 +76,8 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1542272604-787c3835535d",
     inStock: true,    
     featured: false,
-    categoryName: "Clothing"
+    categoryName: "Clothing",
+    inventory: 80
   },
   {
     id: 5,
@@ -82,7 +87,8 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
     inStock: true,
     featured: false,
-    categoryName: "Home & Garden"
+    categoryName: "Home & Garden",
+    inventory: 70
   },
   {
     id: 6,
@@ -92,6 +98,7 @@ export const products: Product[] = [
     imageUrl: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
     inStock: false,
     featured: false,
-    categoryName: "Home & Garden"
+    categoryName: "Home & Garden",
+    inventory: 0
   }
 ];

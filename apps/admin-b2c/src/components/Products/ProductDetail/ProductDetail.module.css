@@ -74,6 +74,15 @@
   font-weight: 700;
   color: #111827;
   margin: 0;
+  flex: 1;
+}
+
+.productNameWithStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
 }
 
 /* ==============================================
@@ -123,8 +132,8 @@
    ============================================== */
 .productMetaGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
   margin-top: 0.5rem;
 }
 
@@ -147,6 +156,15 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #059669;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.inventory {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -365,6 +383,16 @@
 
   .productImage {
     max-width: 100%;
+  }
+
+  .productNameWithStatus {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .productNameWithStatus .productName {
+    flex: none;
   }
 
   .metadata {

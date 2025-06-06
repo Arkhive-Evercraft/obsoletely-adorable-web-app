@@ -14,9 +14,9 @@ interface Product {
   price: number;
   description: string;
   imageUrl: string;
-  categoryName: string; // Changed from 'category' to 'categoryName'
-  inStock: boolean;
-  inventory: number;
+  categoryName: string;
+  featured: boolean;
+  inventory: number; // Remove inStock since it's computed from inventory
   dateAdded: string;
   lastUpdated: string;
 }
@@ -127,34 +127,23 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   const renderEditableField = (value: any, productId: string, field: keyof Product, type: 'text' | 'number' | 'select' = 'text') => {
     if (!isEditing) {
       if (field === 'price') return `$${((value as number) / 100).toFixed(2)}`;
-      if (field === 'inStock') {
+      if (field === 'inventory') {
+        const product = editableProducts.find(p => p.id === productId);
+        const inStock = product ? product.inventory > 0 : false;
         return (
           <span style={{
             padding: '4px 8px',
             borderRadius: '12px',
             fontSize: '12px',
             fontWeight: 'bold',
-            backgroundColor: value ? '#dcfce7' : '#fef2f2',
-            color: value ? '#16a34a' : '#dc2626'
+            backgroundColor: inStock ? '#dcfce7' : '#fef2f2',
+            color: inStock ? '#16a34a' : '#dc2626'
           }}>
-            {value ? 'In Stock' : 'Out of Stock'}
+            {inStock ? 'In Stock' : 'Out of Stock'}
           </span>
         );
       }
       return value;
-    }
-
-    if (field === 'inStock') {
-      return (
-        <select
-          value={value ? 'true' : 'false'}
-          onChange={(e) => handleFieldChange(productId, field, e.target.value === 'true')}
-          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-        >
-          <option value="true">In Stock</option>
-          <option value="false">Out of Stock</option>
-        </select>
-      );
     }
 
     if (field === 'categoryName') {
@@ -257,26 +246,33 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
     },
     {
       key: 'inventory',
-      title: 'Stock',
+      title: 'Stock Level',
       sortable: true,
-      width: '70px',
+      width: '100px',
       align: 'center',
-      render: (inventory: number, product: Product) => (
-        <span style={{ 
-          color: product.inStock ? '#16a34a' : '#dc2626',
-          fontWeight: 'bold'
-        }}>
-          {renderEditableField(inventory, product.id, 'inventory', 'number')}
-        </span>
-      )
+      render: (inventory: number, product: Product) => renderEditableField(inventory, product.id, 'inventory', 'number')
     },
     {
-      key: 'inStock',
+      key: 'inventory',
       title: 'Status',
       sortable: true,
       width: '90px',
       align: 'center',
-      render: (inStock: boolean, product: Product) => renderEditableField(inStock, product.id, 'inStock')
+      render: (inventory: number, product: Product) => {
+        const inStock = inventory > 0;
+        return (
+          <span style={{
+            padding: '4px 8px',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            backgroundColor: inStock ? '#dcfce7' : '#fef2f2',
+            color: inStock ? '#16a34a' : '#dc2626'
+          }}>
+            {inStock ? 'In Stock' : 'Out of Stock'}
+          </span>
+        );
+      }
     },
     {
       key: 'lastUpdated',

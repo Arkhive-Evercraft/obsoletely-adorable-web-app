@@ -5,8 +5,8 @@ import styles from './ProductDetail.module.css';
 
 interface Product {
   price: number;
-  inStock: boolean;
   categoryName: string;
+  inventory: number; // Remove inStock since it's computed from inventory
 }
 
 interface ProductMetaGridProps {
@@ -37,23 +37,19 @@ export function ProductMetaGrid({ product, isEditing, onFieldChange }: ProductMe
         </div>
 
         <div className={styles.metaField}>
-          <label className={styles.fieldLabel}>Status</label>
+          <label className={styles.fieldLabel}>Stock Level</label>
           {isEditing ? (
-            <select
-              value={product.inStock ? 'true' : 'false'}
-              onChange={(e) => onFieldChange('inStock', e.target.value === 'true')}
-              className={styles.select}
-            >
-              <option value="true">In Stock</option>
-              <option value="false">Out of Stock</option>
-            </select>
+            <input
+              type="number"
+              min="0"
+              value={product.inventory}
+              onChange={(e) => onFieldChange('inventory', parseInt(e.target.value) || 0)}
+              className={styles.input}
+              placeholder="0"
+            />
           ) : (
-            <div className={styles.stock}>
-              {product.inStock ? (
-                <span className={styles.inStock}>In Stock</span>
-              ) : (
-                <span className={styles.outOfStock}>Out of Stock</span>
-              )}
+            <div className={styles.inventory}>
+              {product.inventory} {product.inventory === 1 ? 'item' : 'items'}
             </div>
           )}
         </div>

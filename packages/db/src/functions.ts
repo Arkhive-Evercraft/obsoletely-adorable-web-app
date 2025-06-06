@@ -43,6 +43,7 @@ export async function createProduct(data: {
   categoryName: string;
   inStock?: boolean;
   featured?: boolean;
+  inventory: number;
 }): Promise<Product | null> {
   try {
     const product = await client.db.product.create({

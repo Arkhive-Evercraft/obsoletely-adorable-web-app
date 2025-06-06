@@ -33,9 +33,9 @@ export async function seed() {
           price: product.price,
           description: product.description || "",
           imageUrl: product.imageUrl,
-          inStock: product.inStock ?? true,
-          featured: product.featured ?? false,
           categoryName: product.categoryName,
+          featured: product.featured ?? false,
+          inventory: product.inventory || 0, // Add inventory field with fallback
         },
       });
     }

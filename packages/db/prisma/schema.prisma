@@ -26,8 +26,8 @@ model Product {
   categoryName String
   category    Category      @relation(fields: [categoryName], references: [name])
   sales       ProductSale[]
-  inStock     Boolean       @default(true)
   featured    Boolean       @default(false)
+  inventory   Int           @default(0)  // Stock status will be computed from this field (inStock = inventory > 0)
 }
 
 model Sale {

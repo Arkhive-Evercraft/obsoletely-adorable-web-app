@@ -34,7 +34,9 @@ export async function GET(
       description: product.description || '',
       imageUrl: product.imageUrl,
       categoryName: product.categoryName || 'Uncategorized',
-      inStock: product.inStock,
+      //featured: product.featured,
+      inventory: product.inventory, // Access inventory field directly
+      inStock: product.inventory > 0, // Compute inStock from inventory
       // Use current date as fallback since database doesn't have these fields
       createdAt: (product as any).createdAt?.toISOString() || new Date().toISOString(),
       updatedAt: (product as any).updatedAt?.toISOString() || new Date().toISOString(),

@@ -20,14 +20,10 @@ interface Product {
   description: string;
   imageUrl: string;
   categoryName: string;
-  inStock: boolean;
+  featured: boolean;
+  inventory: number; // Remove inStock since it's computed from inventory
   createdAt: string;
   updatedAt: string;
-  category?: {
-    name: string;
-    description: string;
-    imageUrl: string;
-  };
 }
 
 export default function ProductDetailPage() {
