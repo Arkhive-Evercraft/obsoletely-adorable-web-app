@@ -16,6 +16,51 @@ export type Product = {
   updatedAt: Date;
 }
 
+// Order types - centralized definition
+export type OrderItem = {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export type Order = {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  totalAmount: number;
+  orderDate: string;
+  items: OrderItem[];
+  shippingAddress: string;
+}
+
+// Database-related types that map to Prisma models
+export type Customer = {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type Sale = {
+  id: number;
+  date: Date;
+  total: number; // in cents
+  customerId: number;
+  customer?: Customer;
+  items?: ProductSale[];
+}
+
+export type ProductSale = {
+  saleId: number;
+  itemId: number;
+  quantity: number;
+  priceAtSale: number; // in cents
+  item?: Product;
+}
+
 export const categories: Category[] = [
   {
     name: "Electronics",

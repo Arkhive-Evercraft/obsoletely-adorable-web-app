@@ -4,17 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { BackButton, ExportPDFButton } from '@/components/Buttons';
 import styles from './OrderDetail.module.css';
-
-interface Order {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  totalAmount: number;
-  orderDate: string;
-  lastUpdated: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
-  shippingAddress: string;
-}
+import type { Order } from '@repo/db/data';
 
 interface OrderActionsPanelProps {
   order: Order;
@@ -45,10 +35,6 @@ export function OrderActionsPanel({ order, onExportPDF }: OrderActionsPanelProps
       >
         Export Order to PDF
       </ExportPDFButton>
-
-      <div className={styles.metadata}>
-        <p className={styles.fieldLabel}>Additional order actions will be available here</p>
-      </div>
     </div>
   );
 }

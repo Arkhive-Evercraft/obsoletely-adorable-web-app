@@ -1,17 +1,7 @@
 "use client";
 
 import React from 'react';
-
-export interface Order {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  totalAmount: number;
-  orderDate: string;
-  lastUpdated: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
-  shippingAddress: string;
-}
+import type { Order } from '@repo/db/data';
 
 interface OrderSummaryPDFProps {
   orders: Order[];

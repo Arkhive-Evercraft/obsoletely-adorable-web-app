@@ -1,13 +1,19 @@
 import type { PropsWithChildren } from "react";
+import React from "react";
+import styles from "@/components/Layout/Layout.module.css";
 
 interface ContentProps {
   className?: string;
 }
 
-export function Content({ children, className }: PropsWithChildren<ContentProps>) {
+// Memoize the Content component to prevent unnecessary re-renders
+export const Content = React.memo(function Content({ 
+  children, 
+  className 
+}: PropsWithChildren<ContentProps>) {
   return (
-    <div className={className}>
+    <div className={`${styles.content} ${className || ''}`}>
       {children}
     </div>
   );
-}
+});

@@ -4,17 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Table } from '@repo/ui';
 import type { TableColumn } from '@repo/ui';
-
-interface Order {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  totalAmount: number;
-  orderDate: string;
-  lastUpdated: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
-  shippingAddress: string;
-}
+import type { Order } from '@repo/db/data';
 
 interface OrdersTableProps {
   orders: Order[];

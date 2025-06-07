@@ -1,17 +1,7 @@
 "use client";
 
 import React from 'react';
-
-export interface Order {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  totalAmount: number;
-  orderDate: string;
-  lastUpdated: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
-  shippingAddress: string;
-}
+import type { Order } from '@repo/db/data';
 
 interface OrderDetailPDFProps {
   order: Order;
@@ -132,7 +122,6 @@ export class OrderDetailPDF {
         <div class="header">
           <div class="order-id">Order #${order.id}</div>
           <div class="order-date">Order Date: ${order.orderDate}</div>
-          <div class="order-date">Last Updated: ${order.lastUpdated}</div>
         </div>
 
         <div class="section">

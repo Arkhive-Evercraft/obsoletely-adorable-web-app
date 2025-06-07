@@ -1,5 +1,8 @@
 import { client } from "@repo/db/client"
-import { Product, Category, Sale, ProductSale } from "@prisma/client";
+import { Product, Category, Sale, ProductSale, Order, OrderItem, Customer } from "@prisma/client";
+
+// Export types from data.ts for convenience
+export type { Order, OrderItem, Customer, Sale, ProductSale } from "./data";
 
 // Get all products from the database
 export async function getProducts(): Promise<Product[]> {
