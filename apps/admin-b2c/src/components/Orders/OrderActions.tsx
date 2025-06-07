@@ -18,10 +18,13 @@ interface OrderActionsProps {
   filteredOrders: Order[];
 }
 
-export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
+export const OrderActions = React.memo(function OrderActions({ 
+  orders, 
+  filteredOrders 
+}: OrderActionsProps) {
   const router = useRouter();
 
-  const exportOrdersToCSV = () => {
+  const exportOrdersToCSV = React.useCallback(() => {
     const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Total Amount', 'Order Date', 'Items Count'];
     
     const csvData = filteredOrders.map(order => [
@@ -47,9 +50,9 @@ export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-  };
+  }, [filteredOrders]);
 
-  const exportOrdersDetailedToCSV = () => {
+  const exportOrdersDetailedToCSV = React.useCallback(() => {
     const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Product Name', 'Quantity', 'Unit Price', 'Line Total', 'Order Total', 'Order Date'];
     const rows: string[] = [];
     
@@ -79,9 +82,9 @@ export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-  };
+  }, [filteredOrders]);
 
-  const exportOrdersToJSON = () => {
+  const exportOrdersToJSON = React.useCallback(() => {
     const jsonContent = JSON.stringify(filteredOrders, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
@@ -92,15 +95,15 @@ export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-  };
+  }, [filteredOrders]);
 
-  const exportOrdersToPDF = () => {
+  const exportOrdersToPDF = React.useCallback(() => {
     OrderSummaryPDF.exportToPDF(filteredOrders, "Orders Report");
-  };
+  }, [filteredOrders]);
 
-  const hasOrders = filteredOrders.length > 0;
+  const hasOrders = React.useMemo(() => filteredOrders.length > 0, [filteredOrders.length]);
 
-  const buttons: ActionButton[] = [
+  const buttons: ActionButton[] = React.useMemo(() => [
     {
       key: 'export-csv',
       element: (
@@ -157,7 +160,7 @@ export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
       ),
       group: 'secondary'
     }
-  ];
+  ], [exportOrdersToCSV, exportOrdersDetailedToCSV, exportOrdersToJSON, exportOrdersToPDF, hasOrders]);
 
   return (
     <>
@@ -173,4 +176,4 @@ export function OrderActions({ orders, filteredOrders }: OrderActionsProps) {
       )}
     </>
   );
-}
+});

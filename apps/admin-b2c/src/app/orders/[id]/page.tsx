@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
@@ -19,7 +19,6 @@ interface Order {
   customerEmail: string;
   totalAmount: number;
   orderDate: string;
-  lastUpdated: string;
   items: Array<{ name: string; quantity: number; price: number }>;
   shippingAddress: string;
 }
@@ -58,45 +57,37 @@ export default function OrderDetailPage() {
     }
   }, [params.id]);
 
-  const exportOrderToPDF = () => {
+  const exportOrderToPDF = useCallback(() => {
     if (!order) return;
     OrderDetailPDF.exportToPDF(order);
-  };
+  }, [order]);
 
-  if (loading) {
-    return (
-      <AppLayout>
+  // Memoize the main content to prevent unnecessary re-renders
+  const mainContent = useMemo(() => {
+    if (loading) {
+      return (
         <Main
           pageHeading="Order Management"
-          leftColumn={<OrderLoadingState />}
+          leftColumn={<OrderLoadingState message="Loading order details..." />}
         />
-      </AppLayout>
-    );
-  }
+      );
+    }
 
-  if (error || !order) {
-    return (
-      <AppLayout>
+    if (error || !order) {
+      return (
         <Main
           pageHeading="Order Management"
           leftColumn={<OrderErrorState error={error ?? undefined} />}
         />
-      </AppLayout>
-    );
-  }
+      );
+    }
 
-  // Order detail content using structured components
-  const orderDetailContent = (
-      <OrderDetailHeader order={order} />
-  );
-
-  return (
-    <AppLayout>
+    return (
       <Main
         pageHeading="Order Management"
         leftColumnTitle={`Order ${order.id}`}
         rightColumnTitle="Actions"
-        leftColumn={orderDetailContent}
+        leftColumn={<OrderDetailHeader order={order} />}
         rightColumn={
           <OrderActionsPanel 
             order={order} 
@@ -104,6 +95,12 @@ export default function OrderDetailPage() {
           />
         }
       />
+    );
+  }, [loading, error, order, exportOrderToPDF]);
+
+  return (
+    <AppLayout>
+      {mainContent}
     </AppLayout>
   );
 }

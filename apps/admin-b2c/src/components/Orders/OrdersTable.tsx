@@ -11,15 +11,19 @@ interface OrdersTableProps {
   onFilteredDataChange?: (filteredOrders: Order[], originalOrders: Order[]) => void;
 }
 
-export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) {
+export const OrdersTable = React.memo(function OrdersTable({ 
+  orders, 
+  onFilteredDataChange 
+}: OrdersTableProps) {
   const router = useRouter();
 
-  const handleOrderClick = (order: Order) => {
+  const handleOrderClick = React.useCallback((order: Order) => {
     // Navigate to order detail page
     router.push(`/orders/${order.id}`);
-  };
+  }, [router]);
 
-  const columns: TableColumn<Order>[] = [
+  // Memoize column configuration to prevent recreation on every render
+  const columns: TableColumn<Order>[] = React.useMemo(() => [
     {
       key: 'id',
       title: 'Order ID',
@@ -67,7 +71,7 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       align: 'center',
       render: (date: string) => new Date(date).toLocaleDateString()
     }
-  ];
+  ], []);
 
   return (
     <Table
@@ -83,4 +87,4 @@ export function OrdersTable({ orders, onFilteredDataChange }: OrdersTableProps) 
       onRowClick={handleOrderClick}
     />
   );
-}
+});

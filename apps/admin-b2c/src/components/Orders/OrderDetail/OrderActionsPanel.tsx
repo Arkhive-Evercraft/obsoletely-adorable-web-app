@@ -11,12 +11,15 @@ interface OrderActionsPanelProps {
   onExportPDF: () => void;
 }
 
-export function OrderActionsPanel({ order, onExportPDF }: OrderActionsPanelProps) {
+export const OrderActionsPanel = React.memo(function OrderActionsPanel({ 
+  order, 
+  onExportPDF 
+}: OrderActionsPanelProps) {
   const router = useRouter();
 
-  const handleBackToOrders = () => {
+  const handleBackToOrders = React.useCallback(() => {
     router.push('/orders');
-  };
+  }, [router]);
 
   return (
     <div className={styles.actionsPanel}>
@@ -37,4 +40,4 @@ export function OrderActionsPanel({ order, onExportPDF }: OrderActionsPanelProps
       </ExportPDFButton>
     </div>
   );
-}
+});

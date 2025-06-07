@@ -8,23 +8,41 @@ interface OrderDetailMetadataProps {
   order: Order;
 }
 
-export function OrderDetailMetadata({ order }: OrderDetailMetadataProps) {
-  const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
+export const OrderDetailMetadata = React.memo(function OrderDetailMetadata({ 
+  order 
+}: OrderDetailMetadataProps) {
+  // Memoize expensive calculations
+  const totalItems = React.useMemo(() => 
+    order.items.reduce((sum, item) => sum + item.quantity, 0), 
+    [order.items]
+  );
+
+  const formattedOrderDate = React.useMemo(() => 
+    new Date(order.orderDate).toLocaleDateString(), 
+    [order.orderDate]
+  );
+
+  const formattedTotal = React.useMemo(() => 
+    order.totalAmount.toFixed(2), 
+    [order.totalAmount]
+  );
   
   return (
-    <div className={styles.metadata}>
-      <div className={styles.metadataItem}>
-        <span className={styles.fieldLabel}>Total Amount</span>
-        <span className={styles.emphasisValue}>${order.totalAmount.toFixed(2)}</span>
+    <>
+      <div className={styles.metadataRow}>
+        <div className={styles.metadataItem}>
+          <span className={styles.summaryLabel}>Items Count</span>
+          <span className={styles.summaryValue}>{totalItems}</span>
+        </div>
+        <div className={styles.metadataItem}>
+          <span className={styles.summaryLabel}>Order Date</span>
+          <span className={styles.summaryValue}>{formattedOrderDate}</span>
+        </div>
       </div>
-      <div className={styles.metadataItem}>
-        <span className={styles.fieldLabel}>Items Count</span>
-        <span className={styles.fieldValue}>{totalItems}</span>
+      <div className={styles.summaryTotal}>
+        <span className={styles.summaryLabel}>Total</span>
+        <span className={styles.summaryValue}>${formattedTotal}</span>
       </div>
-      <div className={styles.metadataItem}>
-        <span className={styles.fieldLabel}>Order Date</span>
-        <span className={styles.fieldValue}>{new Date(order.orderDate).toLocaleDateString()}</span>
-      </div>
-    </div>
+    </>
   );
-}
+});

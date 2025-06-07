@@ -2,38 +2,43 @@
 
 import React from 'react';
 import styles from './OrderDetail.module.css';
-import type { OrderItem } from '@repo/db/data';
+import type { OrderItem, Order } from '@repo/db/data';
+import { OrderDetailMetadata } from './OrderDetailMetadata';
 
 interface OrderDetailItemsProps {
   items: OrderItem[];
-  totalAmount: number;
+  order: Order;
 }
 
-export function OrderDetailItems({ items, totalAmount }: OrderDetailItemsProps) {
+export const OrderDetailItems = React.memo(function OrderDetailItems({ 
+  items, 
+  order 
+}: OrderDetailItemsProps) {
+  // Memoize the rendered items to prevent unnecessary re-renders
+  const renderedItems = React.useMemo(() => 
+    items.map((item, index) => (
+      <div key={`${item.name}-${item.price}-${index}`} className={styles.orderItem}>
+        <div className={styles.itemInfo}>
+          <span className={styles.itemName}>{item.name}</span>
+          <div className={styles.itemDetails}>
+            <span className={styles.itemQuantity}>Qty: {item.quantity}</span>
+            <span className={styles.itemPrice}>@${item.price.toFixed(2)}</span>
+          </div>
+        </div>
+        <div className={styles.itemTotal}>
+          ${(item.quantity * item.price).toFixed(2)}
+        </div>
+      </div>
+    )), [items]);
+
   return (
     <>
       <h3 className={styles.sectionTitle}>Order Items</h3>
       <div className={styles.itemsList}>
-        {items.map((item, index) => (
-          <div key={index} className={styles.orderItem}>
-            <div className={styles.itemInfo}>
-              <span className={styles.itemName}>{item.name}</span>
-              <div className={styles.itemDetails}>
-                <span className={styles.itemQuantity}>Qty: {item.quantity}</span>
-                <span className={styles.itemPrice}>@${item.price.toFixed(2)}</span>
-              </div>
-            </div>
-            <div className={styles.itemTotal}>
-              ${(item.quantity * item.price).toFixed(2)}
-            </div>
-          </div>
-        ))}
+        {renderedItems}
       </div>
       
-        <div className={styles.summaryTotal}>
-          <span className={styles.summaryLabel}>Total</span>
-          <span className={styles.summaryValue}>${totalAmount.toFixed(2)}</span>
-        </div>
+      <OrderDetailMetadata order={order} />
     </>
   );
-}
+});
