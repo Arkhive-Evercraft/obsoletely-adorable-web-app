@@ -1,0 +1,40 @@
+/* Column component styles with theme support */
+.column {
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--accent-primary);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.header {
+  flex-shrink: 0;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--accent-primary);
+  padding: 0.75rem 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  transition: background-color 0.3s ease;
+}
+
+/* Dark mode shadows adjustment */
+html[data-theme="dark"] .column {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}

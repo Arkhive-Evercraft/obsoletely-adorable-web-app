@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import styles from "./Column.module.css";
 
 interface ColumnProps {
   className?: string;
@@ -11,13 +12,13 @@ export function Column({
   title
 }: PropsWithChildren<ColumnProps>) {
   return (
-    <div className={`${className} bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden ${className} flex flex-col`}>
+    <div className={`${styles.column} ${className}`}>
       {title && (
-        <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4 py-3">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <div className={styles.header}>
+          <h3 className={styles.title}>{title}</h3>
         </div>
       )}
-      <div className="flex-1 overflow-hidden p-4">
+      <div className={styles.content}>
         {children}
       </div>
     </div>

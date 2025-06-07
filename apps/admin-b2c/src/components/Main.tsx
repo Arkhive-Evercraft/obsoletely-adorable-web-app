@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import React from "react";
 import { Column } from "@/components/Layout";
+import styles from "./Main.module.css";
 
 interface MainProps {
   children?: React.ReactNode;
@@ -22,18 +23,18 @@ export const Main = React.memo(function Main({
   rightColumnTitle = ""
 }: MainProps) {
   return (
-    <main className={`w-full h-full grid grid-cols-4 grid-rows-9 gap-4 p-4 ${className || ''}`}>
-      <h2 className="col-span-6 row-span-1 text-2xl font-bold text-gray-800 py-4 px-4 border-b border-gray-200 w-full">
+    <main className={`${styles.main} ${className || ''}`}>
+      <h2 className={styles.pageHeading}>
         {pageHeading}
       </h2>
       
       {/* Left Column */}
-      <Column title={leftColumnTitle} className="col-span-3 row-span-8 row-start-2">
+      <Column title={leftColumnTitle} className={styles.leftColumn}>
         {leftColumn || children}
       </Column>
 
       {/* Right Column */}
-      <Column title={rightColumnTitle} className="col-span-1 row-span-8 row-start-2">
+      <Column title={rightColumnTitle} className={styles.rightColumn}>
         {rightColumn}
       </Column>
     </main>

@@ -6,7 +6,7 @@ interface ContentProps {
 
 export function Content({ children, className }: PropsWithChildren<ContentProps>) {
   return (
-    <div className={`w-full h-full ${className || ''}`}>
+    <div className={className}>
       {children}
     </div>
   );

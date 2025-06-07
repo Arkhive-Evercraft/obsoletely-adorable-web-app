@@ -18,7 +18,7 @@ export function AppLayout({
         <AuthWrapper>
             <div className="grid grid-cols-5 grid-rows-11 gap-4" style={{ height: '95vh' }}>
                 <MemoizedHeader className="col-span-5 row-span-1 flex flex-col"/>
-                <Content className="col-span-5 row-span-9 row-start-2">
+                <Content className="w-full h-full col-span-5 row-span-9 row-start-2">
                     {children}
                 </Content>
                 <MemoizedFooter className="col-span-5 col-start-1 row-start-11" />
