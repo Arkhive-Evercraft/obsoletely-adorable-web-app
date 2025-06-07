@@ -1,20 +1,18 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { 
-  BackButton,
   EditButton, 
   SaveButton, 
   CancelButton,
   DeleteButton 
 } from '@/components/Buttons';
-import styles from '@/components/Products/ProductDetail/ProductDetail.module.css';
+import { ActionPanel, ActionButton } from '@/components/Common';
 
 interface ActionsPanelProps {
   isEditing: boolean;
   isSaving: boolean;
-  isLoading?: boolean; // Default to false
+  isLoading?: boolean;
   onEdit: () => void;
   onSave: () => void;
   onCancel: () => void;
@@ -24,62 +22,80 @@ interface ActionsPanelProps {
 export function ActionsPanel({ 
   isEditing, 
   isSaving, 
-  isLoading = false, // Default to false
+  isLoading = false,
   onEdit, 
   onSave, 
   onCancel,
   onDelete
 }: ActionsPanelProps) {
-  const router = useRouter();
 
-  const handleBackToProducts = () => {
-    router.push('/products');
-  };
+  // Configure buttons based on editing state
+  const buttons: ActionButton[] = [];
+
+  if (!isEditing) {
+    buttons.push({
+      key: 'edit',
+      element: (
+        <EditButton 
+          onClick={onEdit}
+          disabled={isLoading}
+          fullWidth
+        >
+          Edit Product
+        </EditButton>
+      ),
+      group: 'primary'
+    });
+
+    if (onDelete) {
+      buttons.push({
+        key: 'delete',
+        element: (
+          <DeleteButton
+            onClick={onDelete}
+            disabled={isLoading}
+            fullWidth
+          >
+            Delete Product
+          </DeleteButton>
+        ),
+        group: 'secondary'
+      });
+    }
+  } else {
+    buttons.push({
+      key: 'save',
+      element: (
+        <SaveButton
+          onClick={onSave}
+          loading={isSaving}
+          disabled={isSaving || isLoading}
+          fullWidth
+        >
+          Save Changes
+        </SaveButton>
+      ),
+      group: 'primary'
+    });
+
+    buttons.push({
+      key: 'cancel',
+      element: (
+        <CancelButton
+          onClick={onCancel}
+          disabled={isSaving || isLoading}
+          fullWidth
+        >
+          Cancel
+        </CancelButton>
+      ),
+      group: 'primary'
+    });
+  }
 
   return (
-    <div className={styles.actionsPanel}>
-      <BackButton 
-        onClick={handleBackToProducts}
-      >
-        Back to Products
-      </BackButton>
-
-      {!isEditing ? (
-        <>
-          <EditButton 
-            onClick={onEdit}
-            disabled={isLoading} // Disable when loading
-          >
-            Edit Product
-          </EditButton>
-
-          {onDelete && (
-            <DeleteButton
-              onClick={onDelete}
-              disabled={isLoading}
-            >
-              Delete Product
-            </DeleteButton>
-          )}
-        </>
-      ) : (
-        <div className={styles.editActions}>
-          <SaveButton
-            onClick={onSave}
-            loading={isSaving}
-            disabled={isSaving || isLoading} // Disable when saving or loading
-          >
-            Save Changes
-          </SaveButton>
-          
-          <CancelButton
-            onClick={onCancel}
-            disabled={isSaving || isLoading} // Disable when saving or loading
-          >
-            Cancel
-          </CancelButton>
-        </div>
-      )}
-    </div>
+    <ActionPanel
+      buttons={buttons}
+    />
   );
 }

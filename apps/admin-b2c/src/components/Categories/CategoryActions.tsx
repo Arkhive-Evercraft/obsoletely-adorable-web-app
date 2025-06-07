@@ -6,10 +6,9 @@ import {
   EditButton,
   SaveButton,
   CancelButton,
-  AddButton,
-  BackButton
+  AddButton
 } from '@/components/Buttons';
-import styles from './CategoryActions.module.css';
+import { ActionPanel, ActionButton } from '@/components/Common';
 
 interface CategoryActionsProps {
   isEditing: boolean;
@@ -30,57 +29,70 @@ export function CategoryActions({
 }: CategoryActionsProps) {
   const router = useRouter();
 
-  const handleBackToProducts = () => {
-    router.push('/products');
-  };
+  // Configure buttons based on editing state
+  const buttons: ActionButton[] = [];
 
-  return (
-    <div className={styles.actionsContainer}>
-      <BackButton 
-        onClick={handleBackToProducts}
-        className={styles.backButton}
-      >
-        Back to Products
-      </BackButton>
+  if (isEditing) {
+    buttons.push({
+      key: 'save',
+      element: (
+        <SaveButton
+          onClick={onSave}
+          disabled={isSaving}
+          loading={isSaving}
+          fullWidth
+        >
+          Save Changes
+        </SaveButton>
+      ),
+      group: 'primary'
+    });
 
-      <div className={styles.primaryActions}>
-        {isEditing ? (
-          <div className={styles.editActions}>
-            <SaveButton
-              onClick={onSave}
-              disabled={isSaving}
-              loading={isSaving}
-              className={styles.saveButton}
-            >
-              Save Changes
-            </SaveButton>
-            <CancelButton
-              onClick={onCancel}
-              disabled={isSaving}
-              className={styles.cancelButton}
-            >
-              Cancel
-            </CancelButton>
-          </div>
-        ) : (
-          <EditButton
-            onClick={onEdit}
-            className={styles.editButton}
-          >
-            Edit Categories
-          </EditButton>
-        )}
-      </div>
-      
-      <div className={styles.secondaryActions}>
+    buttons.push({
+      key: 'cancel',
+      element: (
+        <CancelButton
+          onClick={onCancel}
+          disabled={isSaving}
+          fullWidth
+        >
+          Cancel
+        </CancelButton>
+      ),
+      group: 'primary'
+    });
+  } else {
+    buttons.push({
+      key: 'edit',
+      element: (
+        <EditButton
+          onClick={onEdit}
+          fullWidth
+        >
+          Edit Categories
+        </EditButton>
+      ),
+      group: 'primary'
+    });
+
+    buttons.push({
+      key: 'add',
+      element: (
         <AddButton
           onClick={onAddNewCategory}
-          className={styles.addButton}
           disabled={isEditing}
+          fullWidth
         >
           Add New Category
         </AddButton>
-      </div>
-    </div>
+      ),
+      group: 'secondary'
+    });
+  }
+
+  return (
+    <ActionPanel
+      buttons={buttons}
+    />
   );
 }

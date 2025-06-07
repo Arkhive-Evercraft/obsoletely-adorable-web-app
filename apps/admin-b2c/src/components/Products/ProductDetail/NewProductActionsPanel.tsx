@@ -1,12 +1,11 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { 
-  BackButton,
   SaveButton, 
   CancelButton 
 } from '@/components/Buttons';
+import { ActionPanel, ActionButton } from '@/components/Common';
 import styles from './ProductDetail.module.css';
 
 interface NewProductActionsPanelProps {
@@ -20,36 +19,40 @@ export function NewProductActionsPanel({
   onSave, 
   onCancel 
 }: NewProductActionsPanelProps) {
-  const router = useRouter();
 
-  const handleBackToProducts = () => {
-    router.push('/products');
-  };
-
-  return (
-    <div className={styles.actionsPanel}>
-      <BackButton 
-        onClick={handleBackToProducts}
-      >
-        Back to Products
-      </BackButton>
-
-      <div className={styles.editActions}>
+  const buttons: ActionButton[] = [
+    {
+      key: 'save',
+      element: (
         <SaveButton
           onClick={onSave}
           loading={isSaving}
           disabled={isSaving}
+          fullWidth
         >
           Create Product
         </SaveButton>
-        
+      ),
+      group: 'primary'
+    },
+    {
+      key: 'cancel',
+      element: (
         <CancelButton
           onClick={onCancel}
           disabled={isSaving}
+          fullWidth
         >
           Cancel
         </CancelButton>
-      </div>
-    </div>
+      ),
+      group: 'primary'
+    }
+  ];
+
+  return (
+    <ActionPanel
+      buttons={buttons}
+    />
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   EditSaveButton, 
@@ -9,6 +9,7 @@ import {
   ManageCategoriesButton,
   DeleteButton 
 } from '@/components/Buttons';
+import { ActionPanel, ActionButton } from '@/components/Common';
 
 interface ProductActionsProps {
   isEditing: boolean;
@@ -34,23 +35,18 @@ export function ProductActions({
   showDelete = false
 }: ProductActionsProps) {
   const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-  
-  // Direct navigation function with debugging
+
   const navigateToCategories = () => {
-    console.log('Navigating to categories page...');
     router.push('/categories');
   };
 
-  const handleDelete = () => {
-    if (onDelete) {
-      setIsDeleting(true);
-      onDelete();
-    }
-  };
-  
-  return (
-    <div className="flex flex-col gap-3 p-4">
+  // Configure buttons based on editing state
+  const buttons: ActionButton[] = [];
+
+  // Primary actions
+  buttons.push({
+    key: 'edit-save',
+    element: (
       <EditSaveButton
         isEditing={isEditing}
         isSaving={isSaving}
@@ -58,39 +54,67 @@ export function ProductActions({
         onSave={onSave}
         fullWidth
       />
-      
-      {isEditing && (
+    ),
+    group: 'primary'
+  });
+
+  if (isEditing) {
+    buttons.push({
+      key: 'cancel',
+      element: (
         <CancelButton
           onClick={onCancel}
           disabled={isSaving}
           fullWidth
         />
-      )}
-      
-      {!isEditing && (
-        <>
-          {/* Use direct navigation function */}
-          <ManageCategoriesButton
-            onClick={navigateToCategories}
-            fullWidth
-          />
-          
-          <AddButton
-            onClick={onAddNewProduct}
-            fullWidth
-          />
+      ),
+      group: 'primary'
+    });
+  }
 
-          {showDelete && (
-            <DeleteButton
-              onClick={handleDelete}
-              disabled={isDeleting}
-              fullWidth
-            >
-              Delete Product
-            </DeleteButton>
-          )}
-        </>
-      )}
-    </div>
+  // Secondary actions (only when not editing)
+  if (!isEditing) {
+    buttons.push({
+      key: 'manage-categories',
+      element: (
+        <ManageCategoriesButton
+          onClick={navigateToCategories}
+          fullWidth
+        />
+      ),
+      group: 'secondary'
+    });
+
+    buttons.push({
+      key: 'add-product',
+      element: (
+        <AddButton
+          onClick={onAddNewProduct}
+          fullWidth
+        />
+      ),
+      group: 'secondary'
+    });
+
+    if (showDelete && onDelete) {
+      buttons.push({
+        key: 'delete',
+        element: (
+          <DeleteButton
+            onClick={onDelete}
+            fullWidth
+          >
+            Delete Product
+          </DeleteButton>
+        ),
+        group: 'secondary'
+      });
+    }
+  }
+
+  return (
+    <ActionPanel
+      buttons={buttons}
+    />
   );
 }

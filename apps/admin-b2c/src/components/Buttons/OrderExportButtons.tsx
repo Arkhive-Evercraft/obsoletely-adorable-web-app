@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { ExportCSVButton, ExportDetailedCSVButton, ExportJSONButton } from '@/components/Buttons/ActionButtons';
-import styles from '@/components/Buttons/Button.module.css';
+import { ExportCSVButton, ExportDetailedCSVButton, ExportJSONButton } from './ActionButtons';
+import styles from './Button.module.css';
 
 interface Order {
   id: string;
@@ -15,15 +15,15 @@ interface Order {
   shippingAddress: string;
 }
 
-interface ActionButtonsProps {
-  filteredOrders: Order[];
+interface OrderExportButtonsProps {
+  orders: Order[];
 }
 
-export function ActionButtons({ filteredOrders }: ActionButtonsProps) {
-  const exportToCSV = () => {
+export const OrderExportButtons: React.FC<OrderExportButtonsProps> = ({ orders }) => {
+  const exportOrdersToCSV = () => {
     const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Total Amount', 'Order Date', 'Items Count'];
     
-    const csvData = filteredOrders.map(order => [
+    const csvData = orders.map(order => [
       order.id,
       order.customerName,
       order.customerEmail,
@@ -48,11 +48,11 @@ export function ActionButtons({ filteredOrders }: ActionButtonsProps) {
     window.URL.revokeObjectURL(url);
   };
 
-  const exportDetailedToCSV = () => {
+  const exportOrdersDetailedToCSV = () => {
     const headers = ['Order ID', 'Customer Name', 'Customer Email', 'Product Name', 'Quantity', 'Unit Price', 'Line Total', 'Order Total', 'Order Date'];
     const rows: string[] = [];
     
-    filteredOrders.forEach(order => {
+    orders.forEach(order => {
       order.items.forEach(item => {
         rows.push([
           order.id,
@@ -80,8 +80,8 @@ export function ActionButtons({ filteredOrders }: ActionButtonsProps) {
     window.URL.revokeObjectURL(url);
   };
 
-  const exportToJSON = () => {
-    const jsonContent = JSON.stringify(filteredOrders, null, 2);
+  const exportOrdersToJSON = () => {
+    const jsonContent = JSON.stringify(orders, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -96,37 +96,37 @@ export function ActionButtons({ filteredOrders }: ActionButtonsProps) {
   return (
     <div className={styles.buttonsContainer}>
       <ExportCSVButton
-        onClick={exportToCSV}
+        onClick={exportOrdersToCSV}
         size="medium"
         fullWidth={true}
-        disabled={filteredOrders.length === 0}
+        disabled={orders.length === 0}
       >
         Export Orders Summary (CSV)
       </ExportCSVButton>
       
       <ExportDetailedCSVButton
-        onClick={exportDetailedToCSV}
+        onClick={exportOrdersDetailedToCSV}
         size="medium"
         fullWidth={true}
-        disabled={filteredOrders.length === 0}
+        disabled={orders.length === 0}
       >
         Export Detailed Orders (CSV)
       </ExportDetailedCSVButton>
       
       <ExportJSONButton
-        onClick={exportToJSON}
+        onClick={exportOrdersToJSON}
         size="medium"
         fullWidth={true}
-        disabled={filteredOrders.length === 0}
+        disabled={orders.length === 0}
       >
         Export Orders Data (JSON)
       </ExportJSONButton>
       
-      {filteredOrders.length === 0 && (
+      {orders.length === 0 && (
         <p className={styles.disabledText}>
           No orders to export. Adjust your filters to show orders.
         </p>
       )}
     </div>
   );
-}
+};

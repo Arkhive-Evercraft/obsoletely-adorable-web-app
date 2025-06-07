@@ -1,14 +1,13 @@
 "use client";
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { 
-  BackButton,
   EditButton, 
   SaveButton, 
   CancelButton,
   DeleteButton 
 } from '@/components/Buttons';
+import { ActionPanel, ActionButton } from '@/components/Common';
 import styles from './CategoryDetail.module.css';
 
 interface CategoryActionsPanelProps {
@@ -30,56 +29,74 @@ export function CategoryActionsPanel({
   onCancel,
   onDelete
 }: CategoryActionsPanelProps) {
-  const router = useRouter();
 
-  const handleBackToCategories = () => {
-    router.push('/categories');
-  };
+  // Configure buttons based on editing state
+  const buttons: ActionButton[] = [];
+
+  if (!isEditing) {
+    buttons.push({
+      key: 'edit',
+      element: (
+        <EditButton 
+          onClick={onEdit}
+          disabled={isLoading}
+          fullWidth
+        >
+          Edit Category
+        </EditButton>
+      ),
+      group: 'primary'
+    });
+
+    if (onDelete) {
+      buttons.push({
+        key: 'delete',
+        element: (
+          <DeleteButton
+            onClick={onDelete}
+            disabled={isLoading}
+            fullWidth
+          >
+            Delete Category
+          </DeleteButton>
+        ),
+        group: 'secondary'
+      });
+    }
+  } else {
+    buttons.push({
+      key: 'save',
+      element: (
+        <SaveButton
+          onClick={onSave}
+          loading={isSaving}
+          disabled={isSaving || isLoading}
+          fullWidth
+        >
+          Save Changes
+        </SaveButton>
+      ),
+      group: 'primary'
+    });
+
+    buttons.push({
+      key: 'cancel',
+      element: (
+        <CancelButton
+          onClick={onCancel}
+          disabled={isSaving || isLoading}
+          fullWidth
+        >
+          Cancel
+        </CancelButton>
+      ),
+      group: 'primary'
+    });
+  }
 
   return (
-    <div className={styles.actionsPanel}>
-      <BackButton 
-        onClick={handleBackToCategories}
-      >
-        Back to Categories
-      </BackButton>
-
-      {!isEditing ? (
-        <>
-          <EditButton 
-            onClick={onEdit}
-            disabled={isLoading}
-          >
-            Edit Category
-          </EditButton>
-
-          {onDelete && (
-            <DeleteButton
-              onClick={onDelete}
-              disabled={isLoading}
-            >
-              Delete Category
-            </DeleteButton>
-          )}
-        </>
-      ) : (
-        <div className={styles.editActions}>
-          <SaveButton
-            onClick={onSave}
-            loading={isSaving}
-            disabled={isSaving || isLoading}
-          >
-            Save Changes
-          </SaveButton>
-          
-          <CancelButton
-            onClick={onCancel}
-            disabled={isSaving}
-          >
-            Cancel
-          </CancelButton>
-        </div>
-      )}
-    </div>
+    <ActionPanel
+      buttons={buttons}
+    />
   );
 }
