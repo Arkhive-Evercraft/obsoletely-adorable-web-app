@@ -48,17 +48,16 @@ export type Sale = {
   id: number;
   date: Date;
   total: number; // in cents
-  customerId: number;
-  customer?: Customer;
-  items?: ProductSale[];
+  customer: Customer;
+  items: ProductSale[];
 }
 
 export type ProductSale = {
   saleId: number;
   itemId: number;
   quantity: number;
-  priceAtSale: number; // in cents
-  item?: Product;
+  price: number; // in cents
+  item: Product;
 }
 
 export const categories: Category[] = [

@@ -95,6 +95,7 @@ export async function seed() {
     for (let i = 1; i <= 20; i++) {
       // Pick random customer from the actually created customers
       const randomCustomer = createdCustomers[Math.floor(Math.random() * createdCustomers.length)];
+      if (!randomCustomer) continue; // Skip if no customer is found
       const customerId = randomCustomer.id;
       
       // Pick random date within last 90 days
@@ -132,22 +133,22 @@ export async function seed() {
         }
         
         usedProductIds.add(productId);
-        const product = products.find(p => p.id === productId);
+        const product = products.find((p: any) => p.id === productId);
         
         if (product) {
           const quantity = Math.floor(Math.random() * 3) + 1;
-          const priceAtSale = product.price;
+          const price = product.price;
           
           await client.db.productSale.create({
             data: {
               saleId: sale.id,
               itemId: productId,
               quantity,
-              priceAtSale,
+              price,
             },
           });
           
-          saleTotal += priceAtSale * quantity;
+          saleTotal += price * quantity;
         }
       }
       

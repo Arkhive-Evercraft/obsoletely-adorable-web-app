@@ -1,8 +1,6 @@
-import { client } from "@repo/db/client"
-import { Product, Category, Sale, ProductSale, Order, OrderItem, Customer } from "@prisma/client";
-
-// Export types from data.ts for convenience
-export type { Order, OrderItem, Customer, Sale, ProductSale } from "./data";
+import { client } from "@repo/db/client";
+import { Product, Category, Sale, ProductSale, Customer } from "@prisma/client";
+import { Order } from '@repo/db/data'
 
 // Get all products from the database
 export async function getProducts(): Promise<Product[]> {
@@ -221,5 +219,100 @@ export async function deleteCategory(name: string): Promise<boolean> {
   } catch (error) {
     console.error(`Error deleting category with name ${name}:`, error);
     return false;
+  }
+}
+
+// Get all sales with customer and product details
+export async function getSales(): Promise<Sale[]> {
+  try {
+    const sales = await client.db.sale.findMany({
+      include: {
+        customer: true,
+        items: {
+          include: {
+            item: {
+              include: {
+                category: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        date: 'desc'
+      }
+    });
+    
+    return sales;
+  } catch (error) {
+    console.error("Error fetching sales:", error);
+    return [];
+  }
+}
+
+// Get a single sale by ID
+export async function getSaleById(id: number): Promise<Sale | null> {
+  try {
+    const sale = await client.db.sale.findUnique({
+      where: { id },
+      include: {
+        customer: true,
+        items: {
+          include: {
+            item: {
+              include: {
+                category: true
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    return sale;
+  } catch (error) {
+    console.error(`Error fetching sale with ID ${id}:`, error);
+    return null;
+  }
+}
+
+// Create a new sale
+export async function createSale(data: {
+  customerId: number;
+  total: number;
+  items: {
+    itemId: number;
+    quantity: number;
+    price: number;
+  }[];
+}): Promise<Sale | null> {
+  try {
+    const sale = await client.db.sale.create({
+      data: {
+        customerId: data.customerId,
+        total: data.total,
+        date: new Date(),
+        items: {
+          create: data.items.map(item => ({
+            itemId: item.itemId,
+            quantity: item.quantity,
+            price: item.price
+          }))
+        }
+      },
+      include: {
+        customer: true,
+        items: {
+          include: {
+            item: true
+          }
+        }
+      }
+    });
+    
+    return sale;
+  } catch (error) {
+    console.error("Error creating sale:", error);
+    return null;
   }
 }

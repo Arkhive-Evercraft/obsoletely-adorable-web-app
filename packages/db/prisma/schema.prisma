@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -57,7 +57,7 @@ model ProductSale {
   item      Product     @relation(fields: [itemId], references: [id])
   itemId    Int
   quantity  Int      @default(1)
-  priceAtSale Int    // Store price at time of sale in cents
+  price     Int    // Store price at time of sale in cents
 
   @@id([saleId, itemId])
 }
