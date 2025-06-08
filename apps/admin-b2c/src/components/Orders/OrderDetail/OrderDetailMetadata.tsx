@@ -22,10 +22,11 @@ export const OrderDetailMetadata = React.memo(function OrderDetailMetadata({
     [order.orderDate]
   );
 
-  const formattedTotal = React.useMemo(() => 
-    order.totalAmount.toFixed(2), 
-    [order.totalAmount]
-  );
+  const formattedTotal = React.useMemo(() => {
+    // Handle case when totalAmount is null or undefined
+    const amount = order.totalAmount || 0;
+    return amount.toFixed(2);
+  }, [order.totalAmount]);
   
   return (
     <>

@@ -1,4 +1,4 @@
-import { deleteProduct } from '@repo/db/functions';
+import { deleteProduct } from '../../../../../../../packages/db/dist/functions';
 import { NextResponse } from 'next/server';
 
 export async function DELETE(request: Request) {

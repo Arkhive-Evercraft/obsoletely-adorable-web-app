@@ -1,4 +1,4 @@
-import { getCategories, createCategory } from '@repo/db/functions';
+import { getCategories, createCategory } from '../../../../../../packages/db/dist/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET() {

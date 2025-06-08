@@ -3,20 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useProductValidation } from '../contexts/ProductValidationContext';
 import { useAppData } from '../components/AppDataProvider';
-
-// Interface to match the structure expected by the components
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  imageUrl: string;
-  categoryName: string;
-  featured: boolean;
-  inventory: number;
-  dateAdded?: string;
-  lastUpdated?: string;
-}
+import { Product } from '@repo/db/data';
 
 export function useProductManagement() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -127,7 +114,7 @@ export function useProductManagement() {
     
     // Validate all products before saving
     const productsToValidate = currentProducts.map(product => ({
-      id: product.id,
+      id: product.id.toString(),
       data: product
     }));
     

@@ -9,20 +9,7 @@ import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { useAppData } from '@/components/AppDataProvider';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductsTable.module.css';
-import { DeleteButton } from '@/components/Buttons';
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  imageUrl: string;
-  categoryName: string;
-  featured: boolean;
-  inventory: number; // Remove inStock since it's computed from inventory
-  dateAdded: string;
-  lastUpdated: string;
-}
+import { Product } from '@repo/db/data';
 
 interface ProductsTableProps {
   products: Product[];
@@ -99,7 +86,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
 
   const handleFieldChange = (productId: string, field: keyof Product, value: any) => {
     const updatedProducts = editableProducts.map(product => 
-      product.id === productId 
+      product.id.toString() === productId 
         ? { ...product, [field]: value }
         : product
     );
@@ -125,7 +112,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   const handlePriceBlur = (productId: string) => {
     if (isEditing) {
       // Get the current product
-      const product = editableProducts.find(p => p.id === productId);
+      const product = editableProducts.find(p => p.id.toString() === productId);
       if (product) {
         // Format the display value on blur
         setPriceInputValues(prev => ({
@@ -166,7 +153,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
   };
 
   const handleDelete = (productId: string) => {
-    const product = editableProducts.find(p => p.id === productId);
+    const product = editableProducts.find(p => p.id.toString() === productId);
     if (product) {
       setDeleteConfirmation({
         isOpen: true,
@@ -195,7 +182,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       await refreshProducts();
       
       // Update the products list by removing the deleted product
-      const updatedProducts = editableProducts.filter(p => p.id !== deleteConfirmation.productId);
+      const updatedProducts = editableProducts.filter(p => p.id.toString() !== deleteConfirmation.productId);
       setEditableProducts(updatedProducts);
       onProductUpdate?.(updatedProducts);
 
@@ -341,8 +328,8 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
           alt={product.name}
           size="small"
           isEditing={isEditing}
-          productId={product.id}
-          onImageChange={isEditing ? (file) => handleImageChange(product.id, file) : undefined}
+          productId={product.id.toString()}
+          onImageChange={isEditing ? (file) => handleImageChange(product.id.toString(), file) : undefined}
           onImageClick={!isEditing ? () => handleImageClick(imageUrl, product.name) : undefined}
         />
       )
@@ -352,7 +339,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       title: 'Product Name',
       sortable: true,
       width: '200px',
-      render: (name: string, product: Product) => renderEditableField(name, product.id, 'name')
+      render: (name: string, product: Product) => renderEditableField(name, product.id.toString(), 'name')
     },
     {
       key: 'categoryName',
@@ -360,7 +347,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       sortable: true,
       width: '100px',
       align: 'center',
-      render: (category: string, product: Product) => renderEditableField(category, product.id, 'categoryName')
+      render: (category: string, product: Product) => renderEditableField(category, product.id.toString(), 'categoryName')
     },
     {
       key: 'price',
@@ -368,7 +355,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       sortable: true,
       width: '80px',
       align: 'center',
-      render: (price: number, product: Product) => renderEditableField(price, product.id, 'price', 'number')
+      render: (price: number, product: Product) => renderEditableField(price, product.id.toString(), 'price', 'number')
     },
     {
       key: 'inventory',
@@ -376,7 +363,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
       sortable: true,
       width: '100px',
       align: 'center',
-      render: (inventory: number, product: Product) => renderEditableField(inventory, product.id, 'inventory', 'number')
+      render: (inventory: number, product: Product) => renderEditableField(inventory, product.id.toString(), 'inventory', 'number')
     },
     {
       key: 'status', // Changed from 'inventory' to 'status' to make it unique
@@ -416,7 +403,7 @@ export function ProductsTable({ products, onFilteredDataChange, isEditing = fals
         {
           label: 'Delete',
           variant: 'danger',
-          onClick: (product: Product) => handleDelete(product.id),
+          onClick: (product: Product) => handleDelete(product.id.toString()),
         }
       ] 
     : [];

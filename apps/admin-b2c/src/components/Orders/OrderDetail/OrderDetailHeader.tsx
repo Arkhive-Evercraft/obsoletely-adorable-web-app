@@ -7,13 +7,10 @@ import type { Order } from '@repo/db/data';
 
 interface OrderDetailHeaderProps {
   order: Order;
-  children?: React.ReactNode;
 }
 
-export const OrderDetailHeader = React.memo(function OrderDetailHeader({ 
-  order, 
-  children
-}: OrderDetailHeaderProps) {
+export const OrderDetailHeader = React.memo(function OrderDetailHeader(
+  { order } : OrderDetailHeaderProps) {
   // Memoize customer details to prevent unnecessary recalculation
   const customerDetails = React.useMemo(() => ({
     name: order.customerName,
@@ -43,7 +40,7 @@ export const OrderDetailHeader = React.memo(function OrderDetailHeader({
         </div>
           
       <div className={`row-start-1 col-start-2 row-span-4 col-span-2 h-full ${styles.orderMetaInfo}`}>
-        <OrderDetailItems items={order.items} order={order} />
+        <OrderDetailItems {...order} />
       </div>
 
       </div>

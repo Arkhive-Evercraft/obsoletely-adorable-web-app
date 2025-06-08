@@ -1,4 +1,4 @@
-import { getCategoryByName, updateCategory, deleteCategory } from '@repo/db/functions';
+import { getCategoryByName, updateCategory, deleteCategory } from '../../../../../../../packages/db/dist/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET(
