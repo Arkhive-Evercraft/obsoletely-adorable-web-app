@@ -9,7 +9,7 @@ import {
   ManageCategoriesButton,
   DeleteButton 
 } from '@/components/Buttons';
-import { ActionPanel, ActionButton } from '@/components/Common';
+import { ActionPanel, ActionButton } from '@/components/ActionPanel';
 
 interface ProductActionsProps {
   isEditing: boolean;

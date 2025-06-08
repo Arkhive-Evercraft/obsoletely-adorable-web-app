@@ -8,7 +8,7 @@ import {
   CancelButton,
   AddButton
 } from '@/components/Buttons';
-import { ActionPanel, ActionButton } from '@/components/Common';
+import { ActionPanel, ActionButton } from '@/components/ActionPanel';
 
 interface CategoryActionsProps {
   isEditing: boolean;

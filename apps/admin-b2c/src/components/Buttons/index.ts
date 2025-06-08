@@ -31,6 +31,8 @@ export {
   CSVIcon,
   DetailedCSVIcon,
   JSONIcon,
-  PDFIcon
+  PDFIcon,
+  UserIcon,
+  LogoutIcon
 } from './Icons';
 export type { IconProps } from './Icons';

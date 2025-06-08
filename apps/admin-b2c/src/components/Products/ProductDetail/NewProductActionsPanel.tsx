@@ -5,7 +5,7 @@ import {
   SaveButton, 
   CancelButton 
 } from '@/components/Buttons';
-import { ActionPanel, ActionButton } from '@/components/Common';
+import { ActionPanel, ActionButton } from '@/components/ActionPanel';
 import styles from './ProductDetail.module.css';
 
 interface NewProductActionsPanelProps {

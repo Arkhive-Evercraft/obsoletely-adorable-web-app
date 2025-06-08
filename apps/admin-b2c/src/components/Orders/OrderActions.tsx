@@ -8,7 +8,7 @@ import {
   ExportJSONButton,
   ExportPDFButton 
 } from '@/components/Buttons';
-import { ActionPanel, ActionButton } from '@/components/Common';
+import { ActionPanel, ActionButton } from '@/components/ActionPanel';
 import { OrderSummaryPDF } from './OrderReport';
 import type { Order } from '@repo/db/data';
 import styles from './OrderActions.module.css';
