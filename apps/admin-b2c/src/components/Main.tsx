@@ -24,10 +24,6 @@ export const Main = React.memo(function Main({
 }: MainProps) {
   return (
     <main className={`${styles.main} ${className || ''}`}>
-      <h2 className={styles.pageHeading}>
-        {pageHeading}
-      </h2>
-      
       {/* Left Column */}
       <Column title={leftColumnTitle} className={styles.leftColumn}>
         {leftColumn || children}

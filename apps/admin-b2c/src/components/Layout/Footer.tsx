@@ -1,4 +1,4 @@
-import styles from './Layout.module.css';
+import styles from './Footer.module.css';
 import Link from 'next/link';
 
 interface FooterProps {
@@ -8,12 +8,16 @@ interface FooterProps {
 export function Footer({ className }: FooterProps) {
     return (
       <footer className={`${styles.footer} ${className || ''}`}>
-        <ul className={styles.footerLinks}>
-          <li><Link href="/about">About</Link></li>
-          <li><Link href="/contact">Contact Support</Link></li>
-          <li><Link href="/help">Help</Link></li>
-          <li><Link href="/privacy">Privacy</Link></li>
-        </ul>
+        <div className={styles.container}>
+          <nav className={styles.nav}>
+            <ul className={styles.navList}>
+              <li><Link href="/about" className={styles.navLink}>About</Link></li>
+              <li><Link href="/contact" className={styles.navLink}>Contact Support</Link></li>
+              <li><Link href="/help" className={styles.navLink}>Help</Link></li>
+              <li><Link href="/privacy" className={styles.navLink}>Privacy</Link></li>
+            </ul>
+          </nav>
+        </div>
       </footer>
     );
   }

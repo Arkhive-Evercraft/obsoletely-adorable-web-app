@@ -9,8 +9,6 @@ export function TopNavigation() {
           <li><Link href="/products">Products</Link></li>
           <li><Link href="/orders">Orders</Link></li>
           <li><Link href="/settings">Settings</Link></li>
-          <li><Link href="/account">Account</Link></li>
-          <li><Link href="/auth">Login/Logout</Link></li>
         </ul>
       </nav>
     );
