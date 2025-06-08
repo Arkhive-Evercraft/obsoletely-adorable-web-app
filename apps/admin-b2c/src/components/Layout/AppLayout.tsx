@@ -1,6 +1,6 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import React from "react";
-import { Header, Footer } from "@/components/Layout";
+import { Header, Footer } from "@repo/ui/components";
 import { Content } from "@/components/Content";
 import { AuthWrapper } from "@/components/AuthWrapper";
 

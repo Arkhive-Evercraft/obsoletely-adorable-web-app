@@ -4,8 +4,8 @@ import React from 'react';
 import { ThemeProvider } from "@repo/ui";
 import { CartProvider } from "@/contexts/CartContext";
 import { ToastProvider } from "@/contexts/ToastContext";
-import { Header } from "@/components/Layout/Header";
-import { Footer } from "@/components/Layout/Footer";
+import { Header } from "@repo/ui/components";
+import { Footer } from "@repo/ui/components";
 import styles from "./AppLayout.module.css";
 
 interface ProvidersProps {

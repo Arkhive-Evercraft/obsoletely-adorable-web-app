@@ -6,3 +6,4 @@ export * from './SearchFilter';
 export * from './Theme';
 export * from './Product';
 export * from './Table';
+export * from './Layout';
