@@ -5,6 +5,12 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import styles from './UserActions.module.css';
 
+interface DropdownMenuItem {
+  label: string;
+  href: string;
+  icon?: React.ReactNode;
+}
+
 interface UserActionsProps {
   className?: string;
   signInUrl?: string;
@@ -12,6 +18,7 @@ interface UserActionsProps {
   showAvatar?: boolean;
   userIcon?: React.ReactNode;
   logoutIcon?: React.ReactNode;
+  additionalMenuItems?: DropdownMenuItem[];
 }
 
 export function UserActions({ 
@@ -20,7 +27,8 @@ export function UserActions({
   signInText = 'Sign In',
   showAvatar = true,
   userIcon,
-  logoutIcon
+  logoutIcon,
+  additionalMenuItems = []
 }: UserActionsProps) {
   const { data: session, status } = useSession();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -105,6 +113,20 @@ export function UserActions({
           
           {isDropdownOpen && (
             <div className={styles.dropdownMenu}>
+              {additionalMenuItems.map((item, index) => (
+                <Link 
+                  key={index}
+                  href={item.href}
+                  className={styles.dropdownItem}
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+              {additionalMenuItems.length > 0 && (
+                <div className={styles.divider}></div>
+              )}
               <button 
                 onClick={handleSignOut}
                 className={styles.dropdownItem}

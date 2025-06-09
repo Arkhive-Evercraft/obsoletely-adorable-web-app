@@ -136,6 +136,16 @@
   background-color: #4b5563;
 }
 
+.divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 0.25rem 0;
+}
+
+:global(.dark) .divider {
+  background-color: #4b5563;
+}
+
 .userAvatar {
   width: 2rem;
   height: 2rem;
