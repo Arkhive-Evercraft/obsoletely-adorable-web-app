@@ -4,7 +4,9 @@ import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
+import { SquareClient, SquareEnvironment, SquareError } from "square"
+import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
+import { env } from "@repo/env/web"; // Import the env object
 
 interface CheckoutFormData {
   firstName: string;
@@ -15,10 +17,6 @@ interface CheckoutFormData {
   state: string;
   zipCode: string;
   country: string;
-  cardName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
 }
 
 interface FormErrors {
@@ -30,8 +28,9 @@ export function CheckoutForm() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const appId = "YOUR_APP_ID";
-  const locationId = "YOUR_LOCATION_ID";
+  // Replace direct process.env access with env object
+  const appId = env.NEXT_PUBLIC_SQUARE_APP_ID;
+  const locationId = env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = totalPrice * 0.1;
@@ -46,16 +45,14 @@ export function CheckoutForm() {
     state: '',
     zipCode: '',
     country: '',
-    cardName: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
+  const [paymentToken, setPaymentToken] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   // Function to parse address string into components for checkout form
   const parseAddressForCheckout = (addressString: string) => {
@@ -226,43 +223,91 @@ export function CheckoutForm() {
     }
     if (!formData.country.trim()) newErrors.country = 'Country is required';
 
-
-    // // Payment info validation
-    // if (!formData.cardName.trim()) newErrors.cardName = 'Name on card is required';
-    // if (!formData.cardNumber.trim()) {
-    //   newErrors.cardNumber = 'Card number is required';
-    // } else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
-    //   newErrors.cardNumber = 'Please enter a valid 16-digit card number';
-    // }
-    // if (!formData.expiryDate.trim()) {
-    //   newErrors.expiryDate = 'Expiry date is required';
-    // } else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
-    //   newErrors.expiryDate = 'Please use MM/YY format';
-    // }
-    // if (!formData.cvv.trim()) {
-    //   newErrors.cvv = 'CVV is required';
-    // } else if (!/^\d{3,4}$/.test(formData.cvv)) {
-    //   newErrors.cvv = 'CVV must be 3 or 4 digits';
-    // }
+    // Payment validation
+    if (!paymentToken) {
+      newErrors.payment = 'Please enter valid payment information';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const processPayment = async () => {
+    if (!paymentToken) {
+      throw new Error('Payment token is required');
+    }
+
+    // Convert to cents and round to ensure it's a whole number
+    const amountInCents = Math.round(orderTotal * 100);
+    
+    const response = await fetch('/api/payments/process', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Use custom JSON serializer to handle BigInt values
+      body: JSON.stringify({
+        token: paymentToken,
+        amount: amountInCents,
+        currency: 'AUD',
+        orderItems: cartItems.map(item => ({
+          ...item,
+          // Ensure price is correctly formatted and rounded to avoid floating point issues
+          price: Number(item.price.toFixed(2))
+        })),
+        shippingInfo: formData,
+      }, (key, value) => 
+        // Convert BigInt to string during serialization
+        typeof value === 'bigint' ? value.toString() : value
+      ),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Payment processing failed');
+    }
+
+    return response.json();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPaymentError(null);
 
     if (validateForm()) {
       setIsSubmitting(true);
 
-      // Simulate API call to process order
-      setTimeout(() => {
-        setIsSubmitting(false);
-
-        // Instead of showing success content in the same component,
-        // redirect to a dedicated success page
+      try {
+        // Process payment
+        const paymentResult = await processPayment();
+        
+        // Clear cart and redirect to success page
+        clearCart();
         router.push('/checkout/success');
-      }, 1500);
+      } catch (error) {
+        console.error('Payment error:', error);
+        setPaymentError(error instanceof Error ? error.message : 'Payment processing failed');
+        setIsSubmitting(false);
+      }
+    }
+  };
+
+  const handlePaymentTokenReceived = async (token: any) => {
+    try {
+      setPaymentError(null);
+      setPaymentToken(token.token);
+      
+      // Clear any existing payment errors
+      if (errors.payment) {
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors };
+          delete newErrors.payment;
+          return newErrors;
+        });
+      }
+    } catch (error) {
+      console.error('Payment tokenization error:', error);
+      setPaymentError('Failed to process payment information');
     }
   };
 
@@ -294,10 +339,9 @@ export function CheckoutForm() {
       </div>
     );
   }
-
+  
   return (
     <div className={styles.checkoutContainer}>
-      <h1 className={styles.title}>Checkout</h1>
       
       {isLoadingUserData && (
         <div className={styles.loadingMessage}>
@@ -452,87 +496,53 @@ export function CheckoutForm() {
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Payment Information</h2>
 
-            {/* <div className={styles.formGroup}>
-              <label htmlFor="cardName" className={styles.label}>Name on Card</label>
-              <input
-                type="text"
-                id="cardName"
-                name="cardName"
-                value={formData.cardName}
-                onChange={handleInputChange}
-                className={`${styles.input} ${errors.cardName ? styles.error : ''}`}
-              />
-              {errors.cardName && <div className={styles.errorText}>{errors.cardName}</div>}
-            </div>
-            
-            <div className={styles.formGroup}>
-              <label htmlFor="cardNumber" className={styles.label}>Card Number</label>
-              <input
-                type="text"
-                id="cardNumber"
-                name="cardNumber"
-                value={formData.cardNumber}
-                onChange={handleInputChange}
-                placeholder="XXXX XXXX XXXX XXXX"
-                maxLength={19}
-                className={`${styles.input} ${errors.cardNumber ? styles.error : ''}`}
-              />
-              {errors.cardNumber && <div className={styles.errorText}>{errors.cardNumber}</div>}
-            </div>
-            
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label htmlFor="expiryDate" className={styles.label}>Expiry Date</label>
-                <input
-                  type="text"
-                  id="expiryDate"
-                  name="expiryDate"
-                  value={formData.expiryDate}
-                  onChange={handleInputChange}
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  className={`${styles.input} ${errors.expiryDate ? styles.error : ''}`}
-                />
-                {errors.expiryDate && <div className={styles.errorText}>{errors.expiryDate}</div>}
+            {paymentError && (
+              <div className={styles.paymentError}>
+                {paymentError}
               </div>
-              
-              <div className={styles.formGroup}>
-                <label htmlFor="cvv" className={styles.label}>CVV</label>
-                <input
-                  type="text"
-                  id="cvv"
-                  name="cvv"
-                  value={formData.cvv}
-                  onChange={handleInputChange}
-                  placeholder="XXX"
-                  maxLength={4}
-                  className={`${styles.input} ${errors.cvv ? styles.error : ''}`}
-                />
-                {errors.cvv && <div className={styles.errorText}>{errors.cvv}</div>}
-              </div>
-            </div> */}
+            )}
+
+            {errors.payment && (
+              <div className={styles.errorText}>{errors.payment}</div>
+            )}
 
             <PaymentForm
               applicationId={appId}
               locationId={locationId}
-              cardTokenizeResponseReceived={async (token) => {
-                // we’ll come back to this soon
-                console.log(token);
-              }}
+              cardTokenizeResponseReceived={handlePaymentTokenReceived}
+              createPaymentRequest={() => ({
+                countryCode: 'AU',
+                currencyCode: 'AUD',
+                total: {
+                  amount: Math.round(orderTotal * 100).toString(), // Convert to cents and to string
+                  label: 'Total',
+                },
+              })}
             >
-              <CreditCard />
+              <CreditCard
+                includeInputLabels
+                style={{
+                  input: {
+                    fontSize: '16px',
+                    fontFamily: 'Arial, sans-serif',
+                  },
+                  '.message-text': {
+                    color: '#dc3545',
+                  },
+                }}
+              />
             </PaymentForm>
           </div>
 
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={isSubmitting || cartItems.length === 0}
+            disabled={isSubmitting || cartItems.length === 0 || !paymentToken}
           >
             {isSubmitting ? (
               <>
                 <span className={styles.spinner}></span>
-                Processing...
+                Processing Payment...
               </>
             ) : (
               `Place Order - $${orderTotal.toFixed(2)}`

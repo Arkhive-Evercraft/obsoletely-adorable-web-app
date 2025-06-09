@@ -26,25 +26,26 @@ export const authOptions: NextAuthOptions = {
           
           if (!existingCustomer) {
             // Create new customer if they don't exist
-            const newCustomer = await createCustomer({
+            await createCustomer({
               name: user.name,
               email: user.email,
               phone: undefined, // Will be set when user updates their profile
               address: undefined, // Will be set when user updates their profile
+            }).then((newCustomer) => {
+              if (newCustomer) {
+                console.log(`Created new customer: ${newCustomer.email}`);
+              }
+            }).catch((error) => {
+              console.error(`Failed to create customer for ${user.email}:`, error);
             });
-            
-            if (newCustomer) {
-              console.log(`Created new customer: ${newCustomer.email}`);
-            } else {
-              console.error(`Failed to create customer for ${user.email}`);
-            }
           }
         } catch (error) {
-          console.error('Error creating customer during sign in:', error);
-          // Continue with sign in even if customer creation fails
+          console.error('Error during customer operations in sign in:', error);
+          // Don't block authentication even if database operations fail
         }
       }
       
+      // Always return true to allow sign in to proceed
       return true;
     },
     async session({ session, token }) {
@@ -58,6 +59,8 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   secret: env.NEXTAUTH_SECRET,
+  // Add debug logging in development
+  debug: process.env.NODE_ENV === 'development',
 }
 
 export async function isLoggedIn() {

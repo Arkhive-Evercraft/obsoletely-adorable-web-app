@@ -493,3 +493,12 @@
 .dark .productsButton:focus {
   box-shadow: 0 0 0 2px #6b7280;
 }
+
+.paymentError {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #fcc;
+}

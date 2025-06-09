@@ -8,6 +8,9 @@ import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState }
 import { useProductManagement } from '@/hooks/useProductManagement';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 
+// Disable static generation for this auth-dependent page
+export const dynamic = 'force-dynamic';
+
 function ProductsPageContent() {
   const router = useRouter();
   const {

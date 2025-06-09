@@ -30,9 +30,22 @@ export function UserActions({
   logoutIcon,
   additionalMenuItems = []
 }: UserActionsProps) {
-  const { data: session, status } = useSession();
+  const sessionResult = useSession();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Handle case where useSession returns undefined during SSR/prerendering
+  if (!sessionResult) {
+    return (
+      <div className={`${styles.userActions} ${className}`}>
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+        </div>
+      </div>
+    );
+  }
+
+  const { data: session, status } = sessionResult;
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: '/' });
