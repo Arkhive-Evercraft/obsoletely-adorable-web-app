@@ -17,8 +17,8 @@ export function AppLayout({
     const navList = [
         { href: "/", label: "Home" },
         { href: "/products", label: "Products" },
-        { href: "/orders", label: "Orders" },
-        { href: "/settings", label: "Settings" },
+        { href: "/categories", label: "Categories" },
+        { href: "/checkout", label: "Checkout" },
     ]
     return (
         <AuthWrapper>

@@ -11,11 +11,9 @@ import { CartProvider } from '@/contexts/CartContext';
 export default function Home() {
   return (
     <AppLayout>
-      <CartProvider>
         <Main pageHeading='Dashboard'>
           <ProductGrid />
         </Main>
-      </CartProvider>
     </AppLayout>
   );
 }
