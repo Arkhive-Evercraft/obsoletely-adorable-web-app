@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import React from "react";
-import styles from "./Main.module.css";
+import styles from "./Main.module.css"
 
 interface MainProps {
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ export const Main = React.memo(function Main({
   pageHeading, 
 }: MainProps) {
   return (
-    <main className={`${styles.main} ${className || ''}`}>
+    <main className={className || ''}>
       <h1 className={styles.pageHeading}>{pageHeading}</h1>
       {children}
     </main>
