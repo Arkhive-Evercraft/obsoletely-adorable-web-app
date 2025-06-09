@@ -85,6 +85,31 @@ export async function POST(request: NextRequest) {
     const paymentResponse = await paymentsApi.create(paymentRequest);
 
     if (paymentResponse.payment?.status === 'COMPLETED') {
+      // Update product inventory in the database
+      try {
+        const inventoryUpdateResponse = await fetch(new URL('/api/inventory/update', request.url), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: orderItems.map((item: any) => ({
+              itemId: Number(item.id),
+              quantity: Number(item.quantity)
+            }))
+          }),
+        });
+        
+        if (!inventoryUpdateResponse.ok) {
+          console.error('Failed to update inventory:', await inventoryUpdateResponse.text());
+          // We continue the process even if inventory update fails
+          // The order is already created and payment processed
+        }
+      } catch (inventoryError) {
+        console.error('Inventory update error:', inventoryError);
+        // Don't fail the transaction if inventory update fails
+      }
+
       return NextResponse.json({
         success: true,
         paymentId: paymentResponse.payment.id,

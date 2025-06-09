@@ -281,9 +281,11 @@ export function CheckoutForm() {
         // Process payment
         const paymentResult = await processPayment();
         
+        // Set order as placed
+        setIsOrderPlaced(true);
+        
         // Clear cart and redirect to success page
         clearCart();
-        router.push('/checkout/success');
       } catch (error) {
         console.error('Payment error:', error);
         setPaymentError(error instanceof Error ? error.message : 'Payment processing failed');
@@ -326,6 +328,9 @@ export function CheckoutForm() {
           </p>
           <p className={styles.successText}>
             A confirmation email has been sent to <strong>{formData.email}</strong>.
+          </p>
+          <p className={styles.successText}>
+            Your items have been reserved and inventory has been updated.
           </p>
           <div className={styles.successButtons}>
             <Link href="/" className={styles.homeButton}>

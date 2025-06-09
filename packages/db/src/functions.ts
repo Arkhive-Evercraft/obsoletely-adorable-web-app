@@ -287,27 +287,51 @@ export async function createSale(data: {
   }[];
 }): Promise<Sale | null> {
   try {
-    const sale = await client.db.sale.create({
-      data: {
-        customerId: data.customerId,
-        total: data.total,
-        date: new Date(),
-        items: {
-          create: data.items.map(item => ({
-            itemId: item.itemId,
-            quantity: item.quantity,
-            price: item.price
-          }))
-        }
-      },
-      include: {
-        customer: true,
-        items: {
-          include: {
-            item: true
+    // Use a transaction to ensure both sale creation and inventory updates succeed or fail together
+    const sale = await client.db.$transaction(async (tx) => {
+      // Create the sale first
+      const newSale = await tx.sale.create({
+        data: {
+          customerId: data.customerId,
+          total: data.total,
+          date: new Date(),
+          items: {
+            create: data.items.map(item => ({
+              itemId: item.itemId,
+              quantity: item.quantity,
+              price: item.price
+            }))
+          }
+        },
+        include: {
+          customer: true,
+          items: {
+            include: {
+              item: true
+            }
           }
         }
+      });
+      
+      // Update inventory for each product
+      for (const item of data.items) {
+        const product = await tx.product.findUnique({
+          where: { id: item.itemId }
+        });
+        
+        if (product) {
+          // Calculate new inventory level (ensure it doesn't go below 0)
+          const newInventory = Math.max(0, product.inventory - item.quantity);
+          
+          // Update the product's inventory
+          await tx.product.update({
+            where: { id: item.itemId },
+            data: { inventory: newInventory }
+          });
+        }
       }
+      
+      return newSale;
     });
     
     return sale;
@@ -425,5 +449,38 @@ export async function getSalesByCustomerEmail(email: string): Promise<Sale[]> {
   } catch (error) {
     console.error(`Error fetching sales for customer with email ${email}:`, error);
     return [];
+  }
+}
+
+// Update inventory for products after a sale
+export async function updateInventoryAfterSale(items: { itemId: number; quantity: number }[]): Promise<boolean> {
+  try {
+    // Use a transaction to ensure all inventory updates are atomic
+    await client.db.$transaction(async (tx) => {
+      for (const item of items) {
+        // Get current product
+        const product = await tx.product.findUnique({
+          where: { id: item.itemId }
+        });
+        
+        if (!product) {
+          throw new Error(`Product with ID ${item.itemId} not found`);
+        }
+        
+        // Calculate new inventory level (ensure it doesn't go below 0)
+        const newInventory = Math.max(0, product.inventory - item.quantity);
+        
+        // Update the product's inventory
+        await tx.product.update({
+          where: { id: item.itemId },
+          data: { inventory: newInventory }
+        });
+      }
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error updating inventory after sale:', error);
+    return false;
   }
 }
