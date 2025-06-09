@@ -357,6 +357,28 @@ export async function createCustomer(data: {
   }
 }
 
+// Update a customer
+export async function updateCustomer(
+  email: string,
+  data: Partial<{
+    name: string;
+    phone: string;
+    address: string;
+  }>
+): Promise<Customer | null> {
+  try {
+    const customer = await client.db.customer.update({
+      where: { email },
+      data
+    });
+    
+    return customer;
+  } catch (error) {
+    console.error(`Error updating customer with email ${email}:`, error);
+    return null;
+  }
+}
+
 // Get all customers
 export async function getCustomers(): Promise<Customer[]> {
   try {
