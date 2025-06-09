@@ -7,9 +7,7 @@ import { Main } from "@/components/Main"
 export default function Home() {
     return (
       <AppLayout>
-        <Main 
-          pageHeading='Dashboard'
-        />
+        <Main pageHeading='Dashboard' />
       </AppLayout>
   );
 }

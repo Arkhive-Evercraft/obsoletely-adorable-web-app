@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -15,7 +14,6 @@ export default function ProductDetail() {
   const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
   const product = mockProducts.find(p => p.id === id);
   const { addToCart } = useCart();
-  const { showToast } = useToast();
   const [quantity, setQuantity] = useState(1);
   
   // Find related products (same category)
@@ -41,7 +39,6 @@ export default function ProductDetail() {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
-    showToast(`Added ${quantity} × ${product.name} to cart`, 'success');
   };
   
   return (

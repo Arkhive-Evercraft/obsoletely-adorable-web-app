@@ -12,18 +12,14 @@ export interface NavItem {
 
 export interface HeaderProps {
   className?: string;
-  logo?: string;
   navItems?: NavItem[];
   renderUserActions?: () => React.ReactNode;
-  showThemeToggle?: boolean;
 }
 
 export function Header({ 
   className = '', 
-  logo = 'StyleStore', 
   navItems = [], 
   renderUserActions,
-  showThemeToggle = true
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -32,7 +28,7 @@ export function Header({
       <div className={styles.container}>
         <h1 className={styles.logo}>
           <Link href="/">
-            {logo}
+            StyleStore
           </Link>
         </h1>
         
@@ -60,12 +56,10 @@ export function Header({
         </div>
         
         <div className={styles.actions}>
-          {showThemeToggle && (
             <div className={styles.themeToggleWrapper}>
               <ThemeToggleButton size="sm" />
             </div>
-          )}
-          
+                
           {renderUserActions && renderUserActions()}
         </div>
       </div>

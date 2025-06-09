@@ -1,4 +1,4 @@
-import { getProductById, updateProduct } from '../../../../../../../packages/db/dist/functions';
+import { getProductById, updateProduct } from '@repo/db/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET(

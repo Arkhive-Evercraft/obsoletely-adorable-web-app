@@ -2,22 +2,12 @@
 
 import React, { useEffect } from 'react';
 import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
 import Link from 'next/link';
 import styles from './success.module.css';
 
 export default function CheckoutSuccess() {
   const { clearCart } = useCart();
-  const { showToast } = useToast();
-  
-  useEffect(() => {
-    // Clear the cart when the success page loads
-    clearCart();
     
-    // Show success message
-    showToast('Your order has been placed successfully!', 'success', 5000);
-  }, [clearCart, showToast]);
-  
   return (
     <div className={styles.container}>
       <div className={styles.successCard}>

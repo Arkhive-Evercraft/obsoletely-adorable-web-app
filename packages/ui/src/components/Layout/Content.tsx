@@ -1,6 +1,5 @@
 import type { PropsWithChildren } from "react";
 import React from "react";
-import styles from "@/components/Layout/Layout.module.css";
 
 interface ContentProps {
   className?: string;
@@ -12,7 +11,7 @@ export const Content = React.memo(function Content({
   className 
 }: PropsWithChildren<ContentProps>) {
   return (
-    <div className={`${styles.content} ${className || ''}`}>
+    <div className={className}>
       {children}
     </div>
   );

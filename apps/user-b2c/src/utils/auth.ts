@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import { NextAuthOptions } from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
-import { env } from "@repo/env/admin"
+import { env } from "@repo/env/web"
 import { getServerSession } from "next-auth/next";
 
 export const authOptions: NextAuthOptions = {

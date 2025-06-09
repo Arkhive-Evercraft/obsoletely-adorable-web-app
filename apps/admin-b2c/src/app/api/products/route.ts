@@ -1,4 +1,4 @@
-import { getProducts, createProduct } from '../../../../../../packages/db/dist/functions';
+import { getProducts, createProduct } from '@repo/db/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET() {

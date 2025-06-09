@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styles from './CheckoutForm.module.css';
 import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
 interface CheckoutFormData {
   firstName: string;
@@ -26,13 +26,15 @@ interface FormErrors {
 
 export function CheckoutForm() {
   const { cartItems, clearCart } = useCart();
-  const { showToast } = useToast();
   const router = useRouter();
-  
+
+  const appId = "YOUR_APP_ID";
+  const locationId = "YOUR_LOCATION_ID";
+
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = totalPrice * 0.1;
   const orderTotal = totalPrice + tax;
-  
+
   const [formData, setFormData] = useState<CheckoutFormData>({
     firstName: '',
     lastName: '',
@@ -47,18 +49,18 @@ export function CheckoutForm() {
     expiryDate: '',
     cvv: '',
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
-    
+
     // Clear error for this field when user types
     if (errors[name]) {
       setErrors((prevErrors) => {
@@ -68,10 +70,10 @@ export function CheckoutForm() {
       });
     }
   };
-  
+
   const validateForm = () => {
     const newErrors: FormErrors = {};
-    
+
     // Shipping info validation
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
@@ -85,53 +87,54 @@ export function CheckoutForm() {
     if (!formData.state.trim()) newErrors.state = 'State is required';
     if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
     if (!formData.country.trim()) newErrors.country = 'Country is required';
-    
-    // Payment info validation
-    if (!formData.cardName.trim()) newErrors.cardName = 'Name on card is required';
-    if (!formData.cardNumber.trim()) {
-      newErrors.cardNumber = 'Card number is required';
-    } else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
-      newErrors.cardNumber = 'Please enter a valid 16-digit card number';
-    }
-    if (!formData.expiryDate.trim()) {
-      newErrors.expiryDate = 'Expiry date is required';
-    } else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
-      newErrors.expiryDate = 'Please use MM/YY format';
-    }
-    if (!formData.cvv.trim()) {
-      newErrors.cvv = 'CVV is required';
-    } else if (!/^\d{3,4}$/.test(formData.cvv)) {
-      newErrors.cvv = 'CVV must be 3 or 4 digits';
-    }
-    
+
+
+    // // Payment info validation
+    // if (!formData.cardName.trim()) newErrors.cardName = 'Name on card is required';
+    // if (!formData.cardNumber.trim()) {
+    //   newErrors.cardNumber = 'Card number is required';
+    // } else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
+    //   newErrors.cardNumber = 'Please enter a valid 16-digit card number';
+    // }
+    // if (!formData.expiryDate.trim()) {
+    //   newErrors.expiryDate = 'Expiry date is required';
+    // } else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
+    //   newErrors.expiryDate = 'Please use MM/YY format';
+    // }
+    // if (!formData.cvv.trim()) {
+    //   newErrors.cvv = 'CVV is required';
+    // } else if (!/^\d{3,4}$/.test(formData.cvv)) {
+    //   newErrors.cvv = 'CVV must be 3 or 4 digits';
+    // }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       setIsSubmitting(true);
-      
+
       // Simulate API call to process order
       setTimeout(() => {
         setIsSubmitting(false);
-        
+
         // Instead of showing success content in the same component,
         // redirect to a dedicated success page
         router.push('/checkout/success');
       }, 1500);
     }
   };
-  
+
   if (isOrderPlaced) {
     return (
       <div className={styles.successContainer}>
         <div className={styles.success}>
           <div className={styles.checkIcon}>
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
             </svg>
           </div>
           <h2 className={styles.successTitle}>Order Placed Successfully!</h2>
@@ -153,16 +156,16 @@ export function CheckoutForm() {
       </div>
     );
   }
-  
+
   return (
     <div className={styles.checkoutContainer}>
       <h1 className={styles.title}>Checkout</h1>
-      
+
       <div className={styles.checkoutContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Shipping Information</h2>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label htmlFor="firstName" className={styles.label}>First Name</label>
@@ -176,7 +179,7 @@ export function CheckoutForm() {
                 />
                 {errors.firstName && <div className={styles.errorText}>{errors.firstName}</div>}
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="lastName" className={styles.label}>Last Name</label>
                 <input
@@ -190,7 +193,7 @@ export function CheckoutForm() {
                 {errors.lastName && <div className={styles.errorText}>{errors.lastName}</div>}
               </div>
             </div>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="email" className={styles.label}>Email Address</label>
               <input
@@ -203,7 +206,7 @@ export function CheckoutForm() {
               />
               {errors.email && <div className={styles.errorText}>{errors.email}</div>}
             </div>
-            
+
             <div className={styles.formGroup}>
               <label htmlFor="address" className={styles.label}>Street Address</label>
               <input
@@ -216,7 +219,7 @@ export function CheckoutForm() {
               />
               {errors.address && <div className={styles.errorText}>{errors.address}</div>}
             </div>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label htmlFor="city" className={styles.label}>City</label>
@@ -230,7 +233,7 @@ export function CheckoutForm() {
                 />
                 {errors.city && <div className={styles.errorText}>{errors.city}</div>}
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="state" className={styles.label}>State</label>
                 <input
@@ -244,7 +247,7 @@ export function CheckoutForm() {
                 {errors.state && <div className={styles.errorText}>{errors.state}</div>}
               </div>
             </div>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label htmlFor="zipCode" className={styles.label}>ZIP Code</label>
@@ -258,7 +261,7 @@ export function CheckoutForm() {
                 />
                 {errors.zipCode && <div className={styles.errorText}>{errors.zipCode}</div>}
               </div>
-              
+
               <div className={styles.formGroup}>
                 <label htmlFor="country" className={styles.label}>Country</label>
                 <select
@@ -279,11 +282,11 @@ export function CheckoutForm() {
               </div>
             </div>
           </div>
-          
+
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Payment Information</h2>
-            
-            <div className={styles.formGroup}>
+
+            {/* <div className={styles.formGroup}>
               <label htmlFor="cardName" className={styles.label}>Name on Card</label>
               <input
                 type="text"
@@ -341,11 +344,22 @@ export function CheckoutForm() {
                 />
                 {errors.cvv && <div className={styles.errorText}>{errors.cvv}</div>}
               </div>
-            </div>
+            </div> */}
+
+            <PaymentForm
+              applicationId={appId}
+              locationId={locationId}
+              cardTokenizeResponseReceived={async (token) => {
+                // we’ll come back to this soon
+                console.log(token);
+              }}
+            >
+              <CreditCard />
+            </PaymentForm>
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className={styles.submitButton}
             disabled={isSubmitting || cartItems.length === 0}
           >
@@ -359,10 +373,10 @@ export function CheckoutForm() {
             )}
           </button>
         </form>
-        
+
         <div className={styles.orderSummary}>
           <h2 className={styles.summaryTitle}>Order Summary</h2>
-          
+
           <div className={styles.orderItems}>
             {cartItems.map((item) => (
               <div key={item.id} className={styles.orderItem}>
@@ -380,7 +394,7 @@ export function CheckoutForm() {
               </div>
             ))}
           </div>
-          
+
           <div className={styles.summaryDetails}>
             <div className={styles.summaryRow}>
               <span>Subtotal</span>

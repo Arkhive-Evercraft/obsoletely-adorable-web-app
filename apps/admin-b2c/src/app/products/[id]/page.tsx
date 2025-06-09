@@ -259,7 +259,7 @@ function ProductDetailPageContent() {
     return (
       <AppLayout>
         <Main
-          pageHeading="Products Management"
+          pageHeading="Products"
           leftColumnTitle="Products"
           rightColumnTitle="Actions"
           leftColumn={<LoadingState />}
@@ -366,7 +366,7 @@ function ProductDetailPageContent() {
     <AppLayout>
       <Main
         pageHeading="Products Management"
-        leftColumnTitle={`Products | ${currentProduct.name}`}
+        leftColumnTitle={`Product List | ${currentProduct.name}`}
         rightColumnTitle="Actions"
         leftColumn={productDetailContent}
         rightColumn={renderActionsPanel()}

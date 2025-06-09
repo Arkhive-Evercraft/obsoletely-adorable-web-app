@@ -1,32 +1,38 @@
-"use client";
-
-/**
- * @deprecated This file has been replaced with the Next.js layout system
- * The implementation has been moved to src/components/Layout/Providers.tsx and src/app/layout.tsx
- * 
- * For import compatibility, you should now:
- * - Import useCart directly from @/contexts/CartContext
- * - No need to wrap your components in AppLayout anymore as it's handled by the root layout
- */
-
-import React from 'react';
-import { useCart as _useCart } from '@/contexts/CartContext';
-import { Providers } from './Providers';
-
-// Export useCart for backward compatibility
-export const useCart = _useCart;
+import type { PropsWithChildren, ReactNode } from "react";
+import React from "react";
+import { Header, Footer } from "@repo/ui/components";
+import { Content } from "@repo/ui/components";
+import { AuthWrapper } from "@/components/AuthWrapper";
 
 interface AppLayoutProps {
-  children: React.ReactNode;
+    children?: ReactNode;
+    query?: string;
 }
 
-// Wrapper component for backward compatibility
-export function AppLayout({ children }: AppLayoutProps) {
-  console.warn(
-    'AppLayout is deprecated and will be removed in a future version. ' +
-    'The layout is now handled automatically by Next.js layout system.'
-  );
-  
-  // Just render children directly since they're already wrapped by Providers in layout.tsx
-  return <>{children}</>;
+// Remove memo from AppLayout since children always change
+export function AppLayout({
+    children,
+    query,
+}: AppLayoutProps) {
+    const navList = [
+        { href: "/", label: "Home" },
+        { href: "/products", label: "Products" },
+        { href: "/orders", label: "Orders" },
+        { href: "/settings", label: "Settings" },
+    ]
+    return (
+        <AuthWrapper>
+            <div className="h-screen flex flex-col gap-4 overflow-hidden">
+                <MemoizedHeader className="flex-shrink-0" navItems={navList}/>
+                <Content className="flex-1 w-full overflow-auto">
+                    {children}
+                </Content>
+                <MemoizedFooter className="flex-shrink-0" />
+            </div>
+        </AuthWrapper>
+    );
 }
+
+// Memoize the stable parts instead
+const MemoizedHeader = React.memo(Header);
+const MemoizedFooter = React.memo(Footer);

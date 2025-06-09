@@ -1,13 +1,22 @@
-import { Hero } from "@/components/Layout/Hero"
+import type { ReactNode } from "react";
+import React from "react";
+import styles from "./Main.module.css";
 
-export function Main({
-  className,
-}: {
+interface MainProps {
+  children?: React.ReactNode;
   className?: string;
-}) {
+  pageHeading: string;
+}
+
+export const Main = React.memo(function Main({ 
+  children, 
+  className, 
+  pageHeading, 
+}: MainProps) {
   return (
-    <main className={className}>
-      <Hero />
+    <main className={`${styles.main} ${className || ''}`}>
+      <h1 className={styles.pageHeading}>{pageHeading}</h1>
+      {children}
     </main>
   );
-}
+});

@@ -45,9 +45,9 @@ function ProductsPageContent() {
   return (
     <AppLayout>
       <Main
-        pageHeading="Products Management"
+        pageHeading="Products"
         rightColumnTitle="Actions"
-        leftColumnTitle="Products"
+        leftColumnTitle="Product List"
         leftColumn={
           <ProductsTable 
             products={products}
