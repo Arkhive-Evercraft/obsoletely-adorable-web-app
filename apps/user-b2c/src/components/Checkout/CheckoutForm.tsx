@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './CheckoutForm.module.css';
 import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { CreditCard, PaymentForm } from "react-square-web-payments-sdk";
 
@@ -26,6 +27,7 @@ interface FormErrors {
 
 export function CheckoutForm() {
   const { cartItems, clearCart } = useCart();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const appId = "YOUR_APP_ID";
@@ -53,6 +55,136 @@ export function CheckoutForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+  const [isLoadingUserData, setIsLoadingUserData] = useState(false);
+
+  // Function to parse address string into components for checkout form
+  const parseAddressForCheckout = (addressString: string) => {
+    const parts = addressString.split(',').map(part => part.trim());
+    
+    if (parts.length >= 4) {
+      // Handle format: "Unit/StreetNumber StreetName, Suburb, State PostCode, Country"
+      // or: "StreetNumber StreetName, Suburb, State PostCode, Country"
+      const streetPart = parts[0] || '';
+      const suburb = parts[1] || '';
+      const statePostcodePart = parts[2] || '';
+      const country = parts[3] || '';
+      
+      // Extract state and postcode from "State PostCode" format
+      const stateMatch = statePostcodePart.match(/^(.+?)\s+(\d{4})$/);
+      const state = stateMatch ? stateMatch[1] : statePostcodePart;
+      const zipCode = stateMatch ? stateMatch[2] : '';
+      
+      return {
+        address: streetPart,
+        city: suburb,
+        state: state,
+        zipCode: zipCode,
+        country: country
+      };
+    } else if (parts.length === 3) {
+      // Handle format: "StreetAddress, Suburb State PostCode, Country"
+      const streetPart = parts[0] || '';
+      const suburbStatePostcodePart = parts[1] || '';
+      const country = parts[2] || '';
+      
+      // Try to extract suburb, state, and postcode
+      const match = suburbStatePostcodePart.match(/^(.+?)\s+([A-Z]{2,3})\s+(\d{4})$/);
+      if (match) {
+        return {
+          address: streetPart,
+          city: match[1],
+          state: match[2],
+          zipCode: match[3],
+          country: country
+        };
+      }
+    }
+    
+    // Fallback: treat entire string as address
+    return {
+      address: addressString,
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'Australia'
+    };
+  };
+
+  // Load user data when component mounts and user is signed in
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!session?.user?.email) {
+        return;
+      }
+
+      try {
+        setIsLoadingUserData(true);
+        const response = await fetch('/api/customer');
+        
+        if (response.ok) {
+          const customerData = await response.json();
+          
+          // Parse the name into first and last name
+          const nameParts = customerData.name ? customerData.name.split(' ') : [];
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          // Parse address if available
+          const addressComponents = customerData.address 
+            ? parseAddressForCheckout(customerData.address)
+            : { address: '', city: '', state: '', zipCode: '', country: 'Australia' };
+          
+          // Pre-fill the form with user data
+          setFormData(prevData => ({
+            ...prevData,
+            firstName,
+            lastName,
+            email: customerData.email || session.user?.email || '',
+            address: addressComponents.address || '',
+            city: addressComponents.city || '',
+            state: addressComponents.state || '',
+            zipCode: addressComponents.zipCode || '',
+            country: addressComponents.country || 'Australia',
+          }));
+        } else if (response.status === 404) {
+          // Customer not found in database, use basic session data
+          if (session.user?.name || session.user?.email) {
+            const nameParts = session.user.name ? session.user.name.split(' ') : [];
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+            
+            setFormData(prevData => ({
+              ...prevData,
+              firstName,
+              lastName,
+              email: session.user?.email || '',
+              country: 'Australia',
+            }));
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data for checkout:', error);
+        // Fallback to basic session data on error
+        if (session.user?.name || session.user?.email) {
+          const nameParts = session.user.name ? session.user.name.split(' ') : [];
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          setFormData(prevData => ({
+            ...prevData,
+            firstName,
+            lastName,
+            email: session.user?.email || '',
+            country: 'Australia',
+          }));
+        }
+      } finally {
+        setIsLoadingUserData(false);
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -85,7 +217,13 @@ export function CheckoutForm() {
     if (!formData.address.trim()) newErrors.address = 'Address is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.state.trim()) newErrors.state = 'State is required';
-    if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
+    if (!formData.zipCode.trim()) {
+      newErrors.zipCode = 'Postcode is required';
+    } else if (formData.country === 'Australia' && !/^\d{4}$/.test(formData.zipCode)) {
+      newErrors.zipCode = 'Australian postcode must be 4 digits';
+    } else if (formData.country !== 'Australia' && formData.zipCode.length < 3) {
+      newErrors.zipCode = 'Please enter a valid postcode';
+    }
     if (!formData.country.trim()) newErrors.country = 'Country is required';
 
 
@@ -160,6 +298,12 @@ export function CheckoutForm() {
   return (
     <div className={styles.checkoutContainer}>
       <h1 className={styles.title}>Checkout</h1>
+      
+      {isLoadingUserData && (
+        <div className={styles.loadingMessage}>
+          Loading your information...
+        </div>
+      )}
 
       <div className={styles.checkoutContent}>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -236,27 +380,49 @@ export function CheckoutForm() {
 
               <div className={styles.formGroup}>
                 <label htmlFor="state" className={styles.label}>State</label>
-                <input
-                  type="text"
-                  id="state"
-                  name="state"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                  className={`${styles.input} ${errors.state ? styles.error : ''}`}
-                />
+                {formData.country === 'Australia' ? (
+                  <select
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    className={`${styles.input} ${errors.state ? styles.error : ''}`}
+                  >
+                    <option value="">Select State</option>
+                    <option value="NSW">New South Wales</option>
+                    <option value="VIC">Victoria</option>
+                    <option value="QLD">Queensland</option>
+                    <option value="WA">Western Australia</option>
+                    <option value="SA">South Australia</option>
+                    <option value="TAS">Tasmania</option>
+                    <option value="ACT">Australian Capital Territory</option>
+                    <option value="NT">Northern Territory</option>
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    placeholder="State/Province"
+                    className={`${styles.input} ${errors.state ? styles.error : ''}`}
+                  />
+                )}
                 {errors.state && <div className={styles.errorText}>{errors.state}</div>}
               </div>
             </div>
 
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
-                <label htmlFor="zipCode" className={styles.label}>ZIP Code</label>
+                <label htmlFor="zipCode" className={styles.label}>Postcode</label>
                 <input
                   type="text"
                   id="zipCode"
                   name="zipCode"
                   value={formData.zipCode}
                   onChange={handleInputChange}
+                  placeholder={formData.country === 'Australia' ? '4000' : 'Postcode'}
                   className={`${styles.input} ${errors.zipCode ? styles.error : ''}`}
                 />
                 {errors.zipCode && <div className={styles.errorText}>{errors.zipCode}</div>}
