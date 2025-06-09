@@ -1,23 +1,30 @@
-import { getProducts, createProduct } from '@repo/db/functions';
+import { getProducts, createProduct, getAvailableInventory } from '@repo/db/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const products = await getProducts();
     
-    // Transform products to convert prices from cents to dollars and include date fields
-    const transformedProducts = products.map(product => ({
-      id: product.id,
-      name: product.name,
-      price: product.price / 100, // Convert from cents to dollars
-      description: product.description,
-      imageUrl: product.imageUrl,
-      categoryName: product.categoryName,
-      inventory: product.inventory,
-      inStock: product.inventory > 0, // Compute inStock from inventory
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt
-    }));
+    // Transform products to convert prices from cents to dollars and include real-time availability
+    const transformedProducts = await Promise.all(
+      products.map(async (product) => {
+        const availableInventory = await getAvailableInventory(product.id);
+        
+        return {
+          id: product.id,
+          name: product.name,
+          price: product.price / 100, // Convert from cents to dollars
+          description: product.description,
+          imageUrl: product.imageUrl,
+          categoryName: product.categoryName,
+          inventory: product.inventory,
+          availableInventory, // Real-time available inventory considering reservations
+          inStock: availableInventory > 0, // Compute inStock from available inventory
+          createdAt: product.createdAt,
+          updatedAt: product.updatedAt
+        };
+      })
+    );
     
     return NextResponse.json(transformedProducts);
   } catch (error) {

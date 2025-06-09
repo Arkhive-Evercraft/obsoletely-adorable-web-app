@@ -12,7 +12,7 @@ export const env = createEnv({
     GITHUB_SECRET: z.string().min(1),
     NEXTAUTH_SECRET: z.string().min(1),
     NEXTAUTH_URL: z.string().url().optional(),
-
+    CRON_API_KEY: z.string(),
     SQUARE_ACCESS_TOKEN: z.string().min(1),
   },
 
@@ -40,6 +40,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SQUARE_APP_ID: process.env.NEXT_PUBLIC_SQUARE_APP_ID,
     NEXT_PUBLIC_SQUARE_LOCATION_ID: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID,
     SQUARE_ACCESS_TOKEN: process.env.SQUARE_ACCESS_TOKEN,
+    CRON_API_KEY: process.env.CRON_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

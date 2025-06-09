@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SquareClient, SquareEnvironment } from 'square';
 import { randomUUID } from 'crypto';
 import { env } from "@repo/env/web"
+import { cookies } from 'next/headers';
+import { clearSessionReservations } from '@repo/db/functions';
 
 const client = new SquareClient({
   token: process.env.SQUARE_ACCESS_TOKEN,
-  environment: SquareEnvironment.Sandbox, // Change to Environment.Production for live
+  environment: SquareEnvironment.Sandbox,
 });
 
 export async function POST(request: NextRequest) {
@@ -22,12 +24,10 @@ export async function POST(request: NextRequest) {
     const paymentsApi = client.payments;
     const ordersApi = client.orders;
 
-    // Check if Square location ID is available
     if (!process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID) {
       throw new Error('Square location ID is not configured');
     }
 
-    // Create order in Square
     const orderRequest = {
       order: {
         locationId: process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID,
@@ -39,12 +39,11 @@ export async function POST(request: NextRequest) {
             currency: currency || 'AUD',
           },
         })),
-        // Add taxes to match the client-side tax calculation (10%)
         taxes: [
           {
             name: "GST",
             percentage: "10",
-            scope: "ORDER" as const,  // Use const assertion for proper type
+            scope: "ORDER" as const,
           }
         ]
       },
@@ -57,8 +56,6 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to create order');
     }
 
-    // Use the order's total amount rather than the client-provided amount
-    // to ensure they match exactly
     const orderAmount = orderResponse.order.totalMoney?.amount;
     
     if (!orderAmount) {
@@ -68,11 +65,10 @@ export async function POST(request: NextRequest) {
     console.log('Order total:', orderAmount.toString());
     console.log('Client-provided amount:', amount.toString());
 
-    // Process payment
     const paymentRequest = {
       sourceId: token,
       amountMoney: {
-        amount: orderAmount, // Always use the order amount
+        amount: orderAmount,
         currency: currency || 'AUD',
       },
       orderId: orderResponse.order.id,
@@ -85,7 +81,6 @@ export async function POST(request: NextRequest) {
     const paymentResponse = await paymentsApi.create(paymentRequest);
 
     if (paymentResponse.payment?.status === 'COMPLETED') {
-      // Update product inventory in the database
       try {
         const inventoryUpdateResponse = await fetch(new URL('/api/inventory/update', request.url), {
           method: 'POST',
@@ -102,12 +97,20 @@ export async function POST(request: NextRequest) {
         
         if (!inventoryUpdateResponse.ok) {
           console.error('Failed to update inventory:', await inventoryUpdateResponse.text());
-          // We continue the process even if inventory update fails
-          // The order is already created and payment processed
         }
       } catch (inventoryError) {
         console.error('Inventory update error:', inventoryError);
-        // Don't fail the transaction if inventory update fails
+      }
+
+      try {
+        const cookieStore = await cookies();
+        const sessionId = cookieStore.get('cart_session_id')?.value;
+
+        if (sessionId) {
+          await clearSessionReservations(sessionId);
+        }
+      } catch (cleanupError) {
+        console.error('Cart reservation cleanup error:', cleanupError);
       }
 
       return NextResponse.json({

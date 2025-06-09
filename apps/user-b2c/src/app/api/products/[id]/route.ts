@@ -1,4 +1,4 @@
-import { getProductById, updateProduct } from '@repo/db/functions';
+import { getProductById, updateProduct, getAvailableInventory } from '@repo/db/functions';
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -25,6 +25,9 @@ export async function GET(
       );
     }
 
+    // Get real-time available inventory
+    const availableInventory = await getAvailableInventory(id);
+
     // Transform the database product to match the frontend interface
     const transformedProduct = {
       id: product.id,
@@ -34,7 +37,8 @@ export async function GET(
       imageUrl: product.imageUrl,
       categoryName: product.categoryName,
       inventory: product.inventory,
-      inStock: product.inventory > 0, // Compute inStock from inventory
+      availableInventory, // Real-time available inventory considering reservations
+      inStock: availableInventory > 0, // Compute inStock from available inventory
       createdAt: product.createdAt,
       updatedAt: product.updatedAt
     };

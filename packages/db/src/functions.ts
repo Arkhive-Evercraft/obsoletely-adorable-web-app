@@ -1,6 +1,11 @@
 import { client } from "@repo/db/client";
-import { Product, Category, Sale, ProductSale, Customer } from "@prisma/client";
+import { Product, Category, Sale, ProductSale, Customer, CartReservation, Prisma } from "@prisma/client";
 import { Order } from '@repo/db/data'
+
+// Type for cart reservation with product relation
+type CartReservationWithProduct = Prisma.CartReservationGetPayload<{
+  include: { product: true }
+}>
 
 // Get all products from the database
 export async function getProducts(): Promise<Product[]> {
@@ -481,6 +486,348 @@ export async function updateInventoryAfterSale(items: { itemId: number; quantity
     return true;
   } catch (error) {
     console.error('Error updating inventory after sale:', error);
+    return false;
+  }
+}
+
+// Cart Reservation Functions - Note: These will be available after schema migration
+// Comment out until Prisma migrations are run
+
+// Create a new cart reservation
+export async function createCartReservation(data: {
+  productId: number;
+  quantity: number;
+  sessionId: string;
+  expiryWeeks?: number;
+}): Promise<boolean> {
+  try {
+    // Default expiry time is 1 week (7 days)
+    const expiryWeeks = data.expiryWeeks || 1;
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (expiryWeeks * 7));
+    
+    // Check available inventory (physical inventory minus active reservations)
+    const availableInventory = await getAvailableInventory(data.productId);
+    
+    if (availableInventory < data.quantity) {
+      return false;
+    }
+    
+    // Check if there's already a reservation for this product in this session
+    const existingReservation = await client.db.cartReservation.findFirst({
+      where: {
+        productId: data.productId,
+        sessionId: data.sessionId,
+        expiresAt: {
+          gt: new Date()
+        }
+      }
+    });
+    
+    if (existingReservation) {
+      // Update existing reservation
+      await client.db.cartReservation.update({
+        where: { id: existingReservation.id },
+        data: {
+          quantity: data.quantity,
+          expiresAt: expiresAt
+        }
+      });
+    } else {
+      // Create new reservation
+      await client.db.cartReservation.create({
+        data: {
+          productId: data.productId,
+          quantity: data.quantity,
+          sessionId: data.sessionId,
+          expiresAt: expiresAt
+        }
+      });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error creating cart reservation:', error);
+    return false;
+  }
+}
+
+// Get all active reservations for a session
+export async function getSessionReservations(sessionId: string): Promise<CartReservationWithProduct[]> {
+  try {
+    const reservations = await client.db.cartReservation.findMany({
+      where: {
+        sessionId: sessionId,
+        expiresAt: {
+          gt: new Date() // Only return non-expired reservations
+        }
+      },
+      include: {
+        product: true
+      }
+    });
+    
+    return reservations;
+  } catch (error) {
+    console.error('Error fetching session reservations:', error);
+    return [];
+  }
+}
+
+// Remove a specific reservation
+export async function removeCartReservation(productId: number, sessionId: string): Promise<boolean> {
+  try {
+    await client.db.cartReservation.deleteMany({
+      where: {
+        productId: productId,
+        sessionId: sessionId
+      }
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error removing cart reservation:', error);
+    return false;
+  }
+}
+
+// Clear all reservations for a session
+export async function clearSessionReservations(sessionId: string): Promise<boolean> {
+  try {
+    await client.db.cartReservation.deleteMany({
+      where: {
+        sessionId: sessionId
+      }
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error clearing session reservations:', error);
+    return false;
+  }
+}
+
+// Clean up expired reservations (run this periodically)
+export async function cleanupExpiredReservations(): Promise<number> {
+  try {
+    const result = await client.db.cartReservation.deleteMany({
+      where: {
+        expiresAt: {
+          lt: new Date()
+        }
+      }
+    });
+    
+    return result.count;
+  } catch (error) {
+    console.error('Error cleaning up expired reservations:', error);
+    return 0;
+  }
+}
+
+// Get real-time available inventory (physical inventory minus active reservations)
+export async function getAvailableInventory(productId: number): Promise<number> {
+  try {
+    const product = await client.db.product.findUnique({
+      where: { id: productId },
+      include: {
+        reservations: true
+      }
+    });
+    
+    if (!product) {
+      throw new Error(`Product with ID ${productId} not found`);
+    }
+    
+    // Calculate total reserved quantity from non-expired reservations
+    const reservedQuantity = product.reservations.reduce((total, res) => {
+      if (res.expiresAt > new Date()) {
+        return total + res.quantity;
+      }
+      return total;
+    }, 0);
+    
+    return Math.max(0, product.inventory - reservedQuantity);
+  } catch (error) {
+    console.error(`Error calculating available inventory for product ${productId}:`, error);
+    return 0;
+  }
+}
+
+// User-based Cart Functions
+
+// Create or update cart reservation with user ID
+export async function createUserCartReservation(data: {
+  productId: number;
+  quantity: number;
+  sessionId: string;
+  userId: string;
+  expiryWeeks?: number;
+}): Promise<boolean> {
+  try {
+    // Default expiry time is 1 week (7 days)
+    const expiryWeeks = data.expiryWeeks || 1;
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + (expiryWeeks * 7));
+    
+    // Check available inventory (physical inventory minus active reservations)
+    const availableInventory = await getAvailableInventory(data.productId);
+    
+    if (availableInventory < data.quantity) {
+      return false;
+    }
+    
+    // Check if there's already a reservation for this product for this user
+    const existingReservation = await client.db.cartReservation.findFirst({
+      where: {
+        productId: data.productId,
+        userId: data.userId,
+        expiresAt: {
+          gt: new Date()
+        }
+      }
+    });
+    
+    if (existingReservation) {
+      // Update existing reservation
+      await client.db.cartReservation.update({
+        where: { id: existingReservation.id },
+        data: {
+          quantity: data.quantity,
+          expiresAt: expiresAt,
+          sessionId: data.sessionId, // Update sessionId to current session
+        }
+      });
+    } else {
+      // Create new reservation
+      await client.db.cartReservation.create({
+        data: {
+          productId: data.productId,
+          quantity: data.quantity,
+          sessionId: data.sessionId,
+          userId: data.userId,
+          expiresAt: expiresAt
+        }
+      });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error creating user cart reservation:', error);
+    return false;
+  }
+}
+
+// Get all active reservations for a user
+export async function getUserReservations(userId: string): Promise<CartReservationWithProduct[]> {
+  try {
+    const reservations = await client.db.cartReservation.findMany({
+      where: {
+        userId: userId,
+        expiresAt: {
+          gt: new Date() // Only return non-expired reservations
+        }
+      },
+      include: {
+        product: true
+      }
+    });
+    
+    return reservations;
+  } catch (error) {
+    console.error('Error fetching user reservations:', error);
+    return [];
+  }
+}
+
+// Transfer session-based cart to user account (when user logs in)
+export async function transferSessionCartToUser(sessionId: string, userId: string): Promise<boolean> {
+  try {
+    // Get all active session reservations
+    const sessionReservations = await getSessionReservations(sessionId);
+    
+    if (sessionReservations.length === 0) {
+      return true; // Nothing to transfer
+    }
+    
+    // Get existing user reservations
+    const userReservations = await getUserReservations(userId);
+    const userReservationMap = new Map(
+      userReservations.map(res => [res.productId, res])
+    );
+    
+    // Process each session reservation
+    for (const sessionRes of sessionReservations) {
+      const existingUserRes = userReservationMap.get(sessionRes.productId);
+      
+      if (existingUserRes) {
+        // User already has this item, combine quantities
+        const newQuantity = existingUserRes.quantity + sessionRes.quantity;
+        
+        // Check if combined quantity is available
+        const availableInventory = await getAvailableInventory(sessionRes.productId);
+        const actualQuantity = Math.min(newQuantity, availableInventory);
+        
+        await client.db.cartReservation.update({
+          where: { id: existingUserRes.id },
+          data: {
+            quantity: actualQuantity,
+            sessionId: sessionId, // Update to current session
+            expiresAt: sessionRes.expiresAt // Keep the longer expiry
+          }
+        });
+        
+        // Remove the session reservation
+        await client.db.cartReservation.delete({
+          where: { id: sessionRes.id }
+        });
+      } else {
+        // Transfer session reservation to user
+        await client.db.cartReservation.update({
+          where: { id: sessionRes.id },
+          data: {
+            userId: userId
+          }
+        });
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error transferring session cart to user:', error);
+    return false;
+  }
+}
+
+// Clear all reservations for a user
+export async function clearUserReservations(userId: string): Promise<boolean> {
+  try {
+    await client.db.cartReservation.deleteMany({
+      where: {
+        userId: userId
+      }
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error clearing user reservations:', error);
+    return false;
+  }
+}
+
+// Remove a specific reservation for a user
+export async function removeUserCartReservation(productId: number, userId: string): Promise<boolean> {
+  try {
+    await client.db.cartReservation.deleteMany({
+      where: {
+        productId: productId,
+        userId: userId
+      }
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error removing user cart reservation:', error);
     return false;
   }
 }
