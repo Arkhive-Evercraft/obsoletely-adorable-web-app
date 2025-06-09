@@ -16,7 +16,7 @@ export default function CheckoutSuccess() {
   }, [clearCart]);
   
   return (
-    <AppLayout>
+    <AppLayout requireAuth={false}>
       <Main pageHeading="Order Confirmed!">
         <div className={styles.successCard}>
           <div className={styles.iconContainer}>

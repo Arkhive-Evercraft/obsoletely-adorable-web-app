@@ -3,15 +3,18 @@ import React from "react";
 import { Header, Footer } from "@repo/ui/components";
 import { Content } from "@repo/ui/components";
 import { AuthWrapper } from "@/components/AuthWrapper";
+import { UserActions } from "./UserActions";
 
 interface AppLayoutProps {
     children?: ReactNode;
     query?: string;
+    requireAuth?: boolean;
 }
 
 export function AppLayout({
     children,
     query,
+    requireAuth = true,
 }: AppLayoutProps) {
     const navList = [
         { href: "/", label: "Home" },
@@ -20,15 +23,19 @@ export function AppLayout({
         { href: "/settings", label: "Settings" },
     ]
     return (
-        <AuthWrapper>
-            <div className="h-screen flex flex-col gap-4 overflow-hidden">
-                <MemoizedHeader className="flex-shrink-0" navItems={navList}/>
-                <Content className="flex-1 w-full overflow-auto">
+        <div className="h-screen flex flex-col gap-4 overflow-hidden">
+            <MemoizedHeader 
+                className="flex-shrink-0" 
+                navItems={navList}
+                renderUserActions={() => <UserActions />}
+            />
+            <Content className="flex-1 w-full overflow-auto">
+                <AuthWrapper requireAuth={requireAuth}>
                     {children}
-                </Content>
-                <MemoizedFooter className="flex-shrink-0" />
-            </div>
-        </AuthWrapper>
+                </AuthWrapper>
+            </Content>
+            <MemoizedFooter className="flex-shrink-0" />
+        </div>
     );
 }
 

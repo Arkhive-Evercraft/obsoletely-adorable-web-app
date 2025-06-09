@@ -8,7 +8,7 @@ import { Main } from '@/components/Main';
 
 export default function CartPage() {
   return (
-    <AppLayout>
+    <AppLayout requireAuth={false}>
       <Main pageHeading="Shopping Cart">
         <Cart />
       </Main>

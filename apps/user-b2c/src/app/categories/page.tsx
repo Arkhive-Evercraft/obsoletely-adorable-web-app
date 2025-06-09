@@ -12,7 +12,7 @@ export default function CategoryPage() {
   const categoryName = searchParams.get('name');
   
   return (
-    <AppLayout>
+    <AppLayout requireAuth={false}>
       <Main pageHeading={categoryName ? `${categoryName} Products` : 'Categories'}>
         <ProductGrid />
       </Main>

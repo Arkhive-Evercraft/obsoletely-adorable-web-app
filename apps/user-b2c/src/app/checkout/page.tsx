@@ -8,7 +8,7 @@ import { Main } from '@/components/Main';
 
 export default function CheckoutPage() {
   return (
-    <AppLayout>
+    <AppLayout requireAuth={false}>
       <Main pageHeading="Checkout">
         <CheckoutForm />
       </Main>

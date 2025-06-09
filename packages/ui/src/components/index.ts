@@ -9,4 +9,5 @@ export * from './Theme';
 export * from './Product';
 export * from './Table';
 export * from './Layout';
+export * from './UserActions';
 export * from './AuthProvider';

@@ -8,7 +8,7 @@ import { Main } from '@/components/Main';
 
 export default function ProductsPage() {
   return (
-    <AppLayout>
+    <AppLayout requireAuth={false}>
       <Main pageHeading='All Products'>
         <ProductGrid />
       </Main>

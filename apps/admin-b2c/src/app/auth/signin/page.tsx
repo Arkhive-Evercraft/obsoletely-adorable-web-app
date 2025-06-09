@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { AppLayout } from '@/components/Layout/AppLayout'
+import { Main } from '@/components/Main'
 
 export default function SignIn() {
   const router = useRouter();
@@ -29,7 +31,9 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <AppLayout requireAuth={false}>
+      <Main pageHeading='Login'>
+    <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -59,5 +63,8 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+    </Main>
+    </AppLayout>
+
   );
 }

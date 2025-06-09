@@ -6,7 +6,7 @@ import { Main } from "@/components/Main"
 
 export default function Home() {
     return (
-      <AppLayout>
+      <AppLayout requireAuth={true}>
         <Main pageHeading='Dashboard' />
       </AppLayout>
   );
