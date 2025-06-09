@@ -445,6 +445,38 @@
   border-color: #16a34a;
 }
 
+/* Address form specific styles */
+.addressRow {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.statePostcodeRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .addressRow,
+  .statePostcodeRow {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+/* Select dropdown styles */
+.formInput option {
+  background-color: white;
+  color: #374151;
+}
+
+:global(.dark) .formInput option {
+  background-color: #374151;
+  color: #f9fafb;
+}
+
 @media (max-width: 640px) {
   .formActions {
     flex-direction: column;

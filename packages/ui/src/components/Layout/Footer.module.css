@@ -1,5 +1,4 @@
 .footer {
-  position: sticky;
   bottom: 0;
   z-index: 50;
   background-color: var(--bs-warning);
