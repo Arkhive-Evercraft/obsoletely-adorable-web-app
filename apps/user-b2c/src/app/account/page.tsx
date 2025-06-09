@@ -1,14 +1,71 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import Link from 'next/link';
 import styles from './account.module.css';
 
+interface CustomerData {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+  memberSince: string;
+}
+
 export default function AccountPage() {
   const { data: session } = useSession();
+  const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCustomerData = async () => {
+      if (!session?.user?.email) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await fetch('/api/customer');
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Customer not found in database, use session data
+            setCustomerData({
+              id: 0,
+              name: session.user.name || 'User',
+              email: session.user.email,
+              memberSince: new Date().toISOString()
+            });
+          } else {
+            throw new Error(`Failed to fetch customer data: ${response.statusText}`);
+          }
+        } else {
+          const data = await response.json();
+          setCustomerData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+        setError('Failed to load account information');
+        // Fallback to session data
+        setCustomerData({
+          id: 0,
+          name: session.user.name || 'User',
+          email: session.user.email,
+          memberSince: new Date().toISOString()
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomerData();
+  }, [session]);
 
   if (!session?.user) {
     return (
@@ -25,17 +82,45 @@ export default function AccountPage() {
     );
   }
 
+  if (loading) {
+    return (
+      <AppLayout requireAuth={true}>
+        <Main pageHeading="My Account">
+          <div className={styles.accountContainer}>
+            <div className={styles.loadingContainer}>
+              <div className={styles.loadingSpinner}></div>
+              <p>Loading account information...</p>
+            </div>
+          </div>
+        </Main>
+      </AppLayout>
+    );
+  }
+
+  const displayData = customerData || {
+    id: 0,
+    name: session.user.name || 'User',
+    email: session.user.email,
+    memberSince: new Date().toISOString()
+  };
+
   return (
     <AppLayout requireAuth={true}>
       <Main pageHeading="My Account">
         <div className={styles.accountContainer}>
+          {error && (
+            <div className={styles.errorContainer}>
+              <p className={styles.errorText}>{error}</p>
+            </div>
+          )}
+          
           <div className={styles.accountCard}>
             <div className={styles.profileSection}>
               <div className={styles.avatar}>
                 {session.user.image ? (
                   <img 
                     src={session.user.image} 
-                    alt={session.user.name || 'User'} 
+                    alt={displayData.name || 'User'} 
                     className={styles.avatarImage}
                   />
                 ) : (
@@ -49,10 +134,10 @@ export default function AccountPage() {
               
               <div className={styles.userInfo}>
                 <h2 className={styles.userName}>
-                  {session.user.name || 'User'}
+                  {displayData.name}
                 </h2>
                 <p className={styles.userEmail}>
-                  {session.user.email}
+                  {displayData.email}
                 </p>
               </div>
             </div>
@@ -84,7 +169,7 @@ export default function AccountPage() {
               <div className={styles.stat}>
                 <span className={styles.statLabel}>Member Since</span>
                 <span className={styles.statValue}>
-                  {new Date().toLocaleDateString('en-US', { 
+                  {new Date(displayData.memberSince).toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'long' 
                   })}

@@ -170,31 +170,6 @@ export default function ProductDetail() {
               </div>
             </div>
           </div>
-
-          {relatedProducts.length > 0 && (
-            <div className={styles.relatedProductsSection}>
-              <h2 className={styles.relatedProductsTitle}>You May Also Like</h2>
-              <div className={styles.relatedProducts}>
-                {relatedProducts.map(relatedProduct => (
-                  <div key={relatedProduct.id} className={styles.relatedProductCard}>
-                    <Link href={`/products/${relatedProduct.id}`} className={styles.relatedProductLink}>
-                      <div className={styles.relatedProductImageContainer}>
-                        <img
-                          src={relatedProduct.imageUrl}
-                          alt={relatedProduct.name}
-                          className={styles.relatedProductImage}
-                        />
-                      </div>
-                      <div className={styles.relatedProductInfo}>
-                        <h3 className={styles.relatedProductName}>{relatedProduct.name}</h3>
-                        <p className={styles.relatedProductPrice}>${relatedProduct.price.toFixed(2)}</p>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </Main>
     </AppLayout>

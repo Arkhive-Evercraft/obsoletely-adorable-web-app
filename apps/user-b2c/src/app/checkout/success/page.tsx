@@ -13,7 +13,7 @@ export default function CheckoutSuccess() {
   // Clear the cart when the user reaches the success page
   useEffect(() => {
     clearCart();
-  }, [clearCart]);
+  }, []);
   
   return (
     <AppLayout requireAuth={false}>

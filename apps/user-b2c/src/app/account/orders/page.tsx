@@ -37,18 +37,15 @@ export default function OrderHistoryPage() {
       }
 
       try {
-        // In a real app, you would have an API endpoint to fetch user-specific orders
-        // For now, we'll simulate this by fetching all orders and filtering by email
+        // Fetch user-specific orders from the authenticated API endpoint
         const response = await fetch('/api/orders');
         if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Please sign in to view your orders');
+          }
           throw new Error('Failed to fetch orders');
         }
-        const allOrders = await response.json();
-        
-        // Filter orders by the current user's email
-        const userOrders = allOrders.filter((order: Order) => 
-          order.customerEmail === session.user?.email
-        );
+        const userOrders = await response.json();
         
         setOrders(userOrders);
       } catch (err) {

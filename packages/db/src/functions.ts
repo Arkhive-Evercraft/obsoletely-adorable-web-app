@@ -316,3 +316,92 @@ export async function createSale(data: {
     return null;
   }
 }
+
+// Customer related functions
+
+// Get a customer by email
+export async function getCustomerByEmail(email: string): Promise<Customer | null> {
+  try {
+    const customer = await client.db.customer.findUnique({
+      where: { email },
+    });
+    
+    return customer;
+  } catch (error) {
+    console.error(`Error fetching customer with email ${email}:`, error);
+    return null;
+  }
+}
+
+// Create a new customer
+export async function createCustomer(data: {
+  name: string;
+  email: string;
+  phone?: string;
+  address?: string;
+}): Promise<Customer | null> {
+  try {
+    const customer = await client.db.customer.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+      }
+    });
+    
+    return customer;
+  } catch (error) {
+    console.error("Error creating customer:", error);
+    return null;
+  }
+}
+
+// Get all customers
+export async function getCustomers(): Promise<Customer[]> {
+  try {
+    const customers = await client.db.customer.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    return customers;
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return [];
+  }
+}
+
+// Get sales for a specific customer by email
+export async function getSalesByCustomerEmail(email: string): Promise<Sale[]> {
+  try {
+    const sales = await client.db.sale.findMany({
+      where: {
+        customer: {
+          email: email
+        }
+      },
+      include: {
+        customer: true,
+        items: {
+          include: {
+            item: {
+              include: {
+                category: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        date: 'desc'
+      }
+    });
+    
+    return sales;
+  } catch (error) {
+    console.error(`Error fetching sales for customer with email ${email}:`, error);
+    return [];
+  }
+}
