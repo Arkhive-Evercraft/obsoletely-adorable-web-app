@@ -14,7 +14,7 @@ export const Main = React.memo(function Main({
   pageHeading, 
 }: MainProps) {
   return (
-    <main className={className || ''}>
+    <main className={`${styles.main} ${className || ''}`}>
       <h1 className={styles.pageHeading}>{pageHeading}</h1>
       {children}
     </main>

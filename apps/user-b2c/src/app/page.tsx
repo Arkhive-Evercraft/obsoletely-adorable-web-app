@@ -9,15 +9,13 @@ import { AppDataProvider } from '@/components/AppDataProvider';
 import { CartProvider } from '@/contexts/CartContext';
 
 export default function Home() {
-    return (
-      <AppDataProvider>
-        <CartProvider>
-          <AppLayout>
-            <Main pageHeading='Dashboard'>
-              <ProductGrid />
-            </Main>
-          </AppLayout>
-        </CartProvider>
-      </AppDataProvider>
+  return (
+    <AppLayout>
+      <CartProvider>
+        <Main pageHeading='Dashboard'>
+          <ProductGrid />
+        </Main>
+      </CartProvider>
+    </AppLayout>
   );
 }
