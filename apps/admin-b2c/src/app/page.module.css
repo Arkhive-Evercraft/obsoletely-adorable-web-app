@@ -13,8 +13,9 @@
   margin-bottom: 2rem;
   font-size: 2rem;
   font-weight: bold;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--retro-border);
   border-radius: 8px;
+  transition: border-color 0.3s ease;
 }
 
 .statsContainer {
@@ -54,11 +55,12 @@
 }
 
 .statCard {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--retro-border);
   border-radius: 8px;
   padding: 1.5rem;
   text-align: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .statsCard:hover {
@@ -81,7 +83,8 @@
 
 .statTitle {
   margin: 0 0 0.5rem 0;
-  color: #666;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .statsCardIcon {
@@ -188,10 +191,11 @@
 }
 
 .activityCard {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--retro-border);
   border-radius: 8px;
   padding: 2rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .activityTitle {
@@ -206,7 +210,8 @@
 
 .activityItem {
   padding-bottom: 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--retro-border);
+  transition: border-color 0.3s ease;
 }
 
 .activityDescription {
@@ -217,5 +222,6 @@
 .activityTime {
   margin: 0;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
