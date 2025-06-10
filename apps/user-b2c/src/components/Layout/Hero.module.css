@@ -1,4 +1,4 @@
-/* Kawaii Pet Tag Sanctuary Hero - Tamagotchi Style */
+/* 90s Soft Retro Hero - HTML Tag Adoption Shelter */
 .hero {
   display: flex;
   flex-direction: column-reverse;
@@ -7,14 +7,16 @@
   gap: 3rem;
   padding: 3rem 2rem;
   margin-bottom: 4rem;
-  background: linear-gradient(135deg, #FFF8DC, #F0FFF0, #F0F8FF);
-  border-radius: 25px;
-  border: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 30%, #fefce8 70%, #f8fafc 100%);
+  border-radius: 16px;
+  border: 2px solid #0ea5e9;
   box-shadow: 
-    6px 6px 20px rgba(255, 182, 193, 0.3),
-    inset 1px 1px 0px #FFFFFF;
+    0 8px 24px rgba(14, 165, 233, 0.15),
+    0 4px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0px rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(8px);
 }
 
 .hero::before {
@@ -25,10 +27,10 @@
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255, 182, 193, 0.1) 2px, transparent 2px),
-    radial-gradient(circle at 80% 20%, rgba(230, 230, 250, 0.1) 2px, transparent 2px),
-    radial-gradient(circle at 40% 40%, rgba(240, 248, 255, 0.1) 2px, transparent 2px);
-  background-size: 40px 40px, 50px 50px, 60px 60px;
+    radial-gradient(circle at 20% 80%, rgba(14, 165, 233, 0.05) 2px, transparent 2px),
+    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.05) 2px, transparent 2px),
+    radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.05) 2px, transparent 2px);
+  background-size: 50px 50px, 60px 60px, 70px 70px;
   pointer-events: none;
 }
 
@@ -47,32 +49,35 @@
 .title {
   font-size: 2.5rem;
   line-height: 1.2;
-  font-weight: 800;
-  color: #FF69B4;
+  font-weight: 600;
+  color: #0ea5e9;
+  font-family: 'Quicksand', 'Inter', sans-serif;
+  text-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
   margin-bottom: 1rem;
-  font-family: 'Share Tech Mono', monospace;
-  text-shadow: 
-    2px 2px 0px #FFFFFF,
-    4px 4px 0px #FFB6C1;
+  margin-bottom: 1rem;
   position: relative;
 }
 
 .title::before {
-  content: '🏷️💕';
+  content: '<>';
   position: absolute;
-  left: -4rem;
+  left: -3rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 2rem;
+  color: #10b981;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .title::after {
-  content: '💕🏷️';
+  content: '</>';
   position: absolute;
-  right: -4rem;
+  right: -3rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 2rem;
+  color: #f59e0b;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 @media (min-width: 640px) {
@@ -88,10 +93,8 @@
 }
 
 :global(.dark) .title {
-  color: #FFB6C1;
-  text-shadow: 
-    2px 2px 0px #2F1B69,
-    4px 4px 0px #4B0082;
+  color: #0ea5e9;
+  text-shadow: 0 2px 4px rgba(14, 165, 233, 0.4);
 }
 
 .subtitle {

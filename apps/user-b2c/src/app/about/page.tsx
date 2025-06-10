@@ -35,8 +35,8 @@ export default function AboutPage() {
               <div className="retro-panel">
                 <h3 className="text-vapor-mint font-bold mb-3 font-retro text-lg">The Great Deprecation Event</h3>
                 <p className="mb-4 leading-relaxed">
-                  As web standards evolved, these charming tags were marked as <strong className="text-vapor-coral">deprecated</strong> 
-                  or declared <strong className="text-vapor-peach">obsolete</strong>. They were told to pack their bags and 
+                  As web standards evolved, these charming tags were marked as <strong className="text-vapor-coral">deprecated</strong> or 
+                  declared <strong className="text-vapor-peach">obsolete</strong>. They were told to pack their bags and 
                   stop showing up to work. Modern browsers gave them the cold shoulder.
                 </p>
                 <p className="mb-4 leading-relaxed font-retro text-vapor-lavender">

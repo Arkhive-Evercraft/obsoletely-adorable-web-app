@@ -23,18 +23,18 @@ export function AppLayout({
         { href: "/checkout", label: "Adopt" },
     ]
     return (
-        <div className="h-screen flex flex-col gap-4 overflow-hidden bg-gradient-to-br from-vapor-pink/5 via-vapor-purple/5 to-vapor-cyan/5">
+        <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden box-border bg-gradient-to-br from-blue-50/30 via-emerald-50/30 to-amber-50/30">
             <MemoizedHeader 
-                className="flex-shrink-0 retro-window" 
+                className="flex-shrink-0 retro-window w-full" 
                 navItems={navList}
                 renderUserActions={() => <UserActions />}
             />
-            <Content className="flex-1 w-full overflow-auto">
+            <Content className="flex-1 w-full max-w-full overflow-auto px-4 py-2">
                 <AuthWrapper requireAuth={requireAuth}>
                     {children}
                 </AuthWrapper>
             </Content>
-            <MemoizedFooter className="flex-shrink-0 retro-panel" />
+            <MemoizedFooter className="flex-shrink-0 retro-panel w-full" />
         </div>
     );
 }

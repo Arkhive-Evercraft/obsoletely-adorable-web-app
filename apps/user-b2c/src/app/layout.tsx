@@ -17,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "StyleStore Admin",
-  description: "Admin Dashboard for StyleStore",
+  title: "HTML Tag Adoption Shelter",
+  description: "Find loving homes for orphaned HTML tags - A safe haven for semantic elements",
 };
 
 export default function RootLayout({

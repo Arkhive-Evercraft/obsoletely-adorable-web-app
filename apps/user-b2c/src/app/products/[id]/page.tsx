@@ -18,6 +18,7 @@ export default function ProductDetail() {
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [showPopup, setShowPopup] = useState(false);
 
 
   useEffect(() => {
@@ -89,6 +90,14 @@ export default function ProductDetail() {
       for (let i = 0; i < quantity; i++) {
         addToCart(product);
       }
+      
+      // Show popup notification
+      setShowPopup(true);
+      
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     }
   };
 
@@ -116,23 +125,40 @@ export default function ProductDetail() {
             </div>
 
             <div className={styles.productInfo}>
-              <span className={styles.category}>{product.category}</span>
-              <h1 className={styles.productName}>{product.name}</h1>
-              <div className={styles.price}>${product.price.toFixed(2)}</div>
+              <div className={styles.tagBadge}>{product.category}</div>
+              <h1 className={styles.tagName}>{product.name}</h1>
+              <div className={styles.adoptionFee}>Adoption Fee: ${product.price.toFixed(2)}</div>
 
-              <div className={styles.stock}>
+              <div className={styles.availability}>
                 {product.inStock ? (
-                  <span className={styles.inStock}>In Stock</span>
+                  <span className={styles.available}>💚 Available for Adoption</span>
                 ) : (
-                  <span className={styles.outOfStock}>Out of Stock</span>
+                  <span className={styles.adopted}>💙 Already Adopted</span>
                 )}
               </div>
 
-              <p className={styles.description}>{product.description}</p>
+              <div className={styles.personality}>
+                <h3>🌟 Personality</h3>
+                <p>This wonderful tag has a {product.description || 'charming and friendly personality. They love to play and are great with other tags!'}</p>
+              </div>
+
+              <div className={styles.quirks}>
+                <h3>✨ Special Quirks</h3>
+                <ul>
+                  <li>Loves to collect digital memories</li>
+                  <li>Gets excited when meeting new users</li>
+                  <li>Has a knack for organizing data perfectly</li>
+                </ul>
+              </div>
+
+              <div className={styles.story}>
+                <h3>📖 My Story</h3>
+                <p>Hello! I'm {product.name}, and I'm looking for my forever digital home. I was created with love and designed to help organize and bring joy to any collection. I promise to be a loyal companion and help keep your digital life beautifully arranged!</p>
+              </div>
 
               <div className={styles.actions}>
-                <div className={styles.quantityControl}>
-                  <label htmlFor="quantity" className={styles.quantityLabel}>Quantity:</label>
+                <div className={styles.adoptionControls}>
+                  <label htmlFor="quantity" className={styles.adoptionLabel}>Quantity:</label>
                   <div className={styles.quantityWrapper}>
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -162,12 +188,19 @@ export default function ProductDetail() {
 
                 <button
                   onClick={handleAddToCart}
-                  className={styles.addToCartButton}
+                  className={styles.adoptButton}
                   disabled={!product.inStock}
                 >
-                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                  {product.inStock ? '🛒 Add to Cart' : '💙 Out of Stock'}
                 </button>
               </div>
+              
+              {/* Add to Cart Popup */}
+              {showPopup && (
+                <div className={styles.addToCartPopup}>
+                  {quantity} item{quantity > 1 ? 's' : ''} added to cart!
+                </div>
+              )}
             </div>
           </div>
         </div>

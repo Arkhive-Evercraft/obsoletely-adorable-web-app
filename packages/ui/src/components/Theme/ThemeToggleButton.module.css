@@ -1,4 +1,4 @@
-/* Kawaii Pet Store Theme Toggle */
+/* 90s Soft Retro Theme Toggle - HTML Tag Adoption Shelter */
 .themeToggle {
   background: none;
   border: none;
@@ -6,18 +6,19 @@
   padding: 0;
   display: inline-block;
   vertical-align: middle;
-  transition: opacity 200ms ease;
+  transition: all 200ms ease;
   position: relative;
 }
 
 .themeToggle::before {
-  content: '🌙';
+  content: '<>';
   position: absolute;
   top: -25px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.8rem;
-  color: #FF69B4;
+  color: #0ea5e9;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .themeToggle:hover {
@@ -30,32 +31,33 @@
 }
 
 .themeToggle:focus-visible {
-  box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.4);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.4);
   border-radius: 1rem;
 }
 
 .toggleTrack {
   width: 45px;
   height: 24px;
-  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  border: 2px solid #FFFFFF;
+  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+  border: 1px solid #cbd5e0;
   border-radius: 12px;
   position: relative;
   transition: all 300ms ease;
   box-shadow: 
-    2px 2px 6px rgba(255, 182, 193, 0.4),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.3);
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
 }
 
 
 .light .toggleTrack {
-  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
-  border-color: #FFB6C1;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  border-color: #0ea5e9;
 }
 
 .dark .toggleTrack {
-  background: linear-gradient(135deg, #4B0082, #2F1B69);
-  border-color: #DDA0DD;
+  background: linear-gradient(145deg, #334155, #1e293b);
+  border-color: #0ea5e9;
 }
 
 .toggleThumb {
@@ -64,24 +66,24 @@
   left: 2px;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #FFFFFF, #FFB6C1);
-  border: 1px solid #FF69B4;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  border: 1px solid #0ea5e9;
   border-radius: 50%;
   transition: all 300ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8B008B;
+  color: #0ea5e9;
   box-shadow: 
-    2px 2px 4px rgba(255, 182, 193, 0.3),
-    inset 1px 1px 0px #FFFFFF;
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0px rgba(255, 255, 255, 0.8);
 }
 
 .thumbDark {
   transform: translateX(21px);
-  background: linear-gradient(135deg, #DDA0DD, #8B008B);
-  color: #FFB6C1;
-  border-color: #FFFFFF;
+  background: linear-gradient(145deg, #0ea5e9, #0284c7);
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .icon {

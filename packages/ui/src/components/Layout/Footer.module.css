@@ -1,27 +1,32 @@
-/* Kawaii Pet Store Footer */
+/* 90s Soft Retro Footer - HTML Tag Adoption Shelter */
 .footer {
   bottom: 0;
   z-index: 50;
-  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-  border-top: 3px solid #FFFFFF;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 30%, #fefce8 70%, #f8fafc 100%);
+  border-top: 2px solid #0ea5e9;
   box-shadow: 
-    0 -4px 12px rgba(255, 182, 193, 0.4),
-    inset 0 1px 0px #FFFFFF;
+    0 -4px 12px rgba(14, 165, 233, 0.15),
+    inset 0 1px 0px rgba(255, 255, 255, 0.8);
   transition: all 300ms ease;
+  backdrop-filter: blur(8px);
+  position: relative;
 }
 
 .footer::before {
-  content: '🏪';
+  content: '</>';
   position: absolute;
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
+  color: #0ea5e9;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
 }
 
 :global(.dark) .footer {
-  background: linear-gradient(135deg, #4B0082, #2F1B69);
-  border-top-color: #DDA0DD;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #1e293b 100%);
+  border-top-color: #0ea5e9;
 }
 
 .container {
@@ -62,34 +67,34 @@
 
 .navLink {
   text-decoration: none;
-  color: #FFFFFF;
-  font-weight: 600;
-  font-family: 'Share Tech Mono', monospace;
+  color: #1e293b;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
   padding: 0.5rem 1rem;
-  border-radius: 15px;
-  border: 2px solid transparent;
+  border-radius: 8px;
+  border: 1px solid transparent;
   transition: all 300ms ease;
   font-size: 0.875rem;
-  text-shadow: 1px 1px 0px #8B008B;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
 }
 
 :global(.dark) .navLink {
-  color: #FFB6C1;
-  text-shadow: 1px 1px 0px #2F1B69;
+  color: #f1f5f9;
+  background: rgba(30, 41, 59, 0.7);
 }
 
 .navLink:hover {
-  color: #8B008B;
-  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
-  border-color: #FFFFFF;
-  text-shadow: 1px 1px 0px #FFFFFF;
+  color: #0ea5e9;
+  background: rgba(14, 165, 233, 0.1);
+  border-color: rgba(14, 165, 233, 0.2);
   transform: translateY(-2px);
-  box-shadow: 2px 2px 6px rgba(255, 182, 193, 0.4);
+  box-shadow: 0 4px 8px rgba(14, 165, 233, 0.2);
 }
 
 :global(.dark) .navLink:hover {
-  color: #e5e7eb;
-  background-color: rgba(255, 255, 255, 0.1);
+  color: #0ea5e9;
+  background: rgba(14, 165, 233, 0.1);
 }
 
 @media (max-width: 768px) {
