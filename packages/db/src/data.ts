@@ -89,7 +89,7 @@ export const categories: Category[] = [
   },
 ];
 
-export const Products = [
+export const products = [
   {
     id: 1,
     name: "<marquee>",
