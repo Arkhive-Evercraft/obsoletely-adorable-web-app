@@ -176,13 +176,6 @@ ul {
   list-style: none;
 }
 
-ul li::before {
-  content: '→';
-  color: var(--accent-primary);
-  margin-right: 12px;
-  font-weight: bold;
-}
-
 /* Additional theme classes for variety */
 .theme-mint {
   color: var(--accent-mint);

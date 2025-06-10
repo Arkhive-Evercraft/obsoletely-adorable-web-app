@@ -8,7 +8,13 @@ import { Main } from '@/components/Main';
 export default function CheckoutPage() {
   return (
     <AppLayout requireAuth={false}>
-      <Main pageHeading="Checkout">
+      <Main 
+        pageHeading="Checkout"
+        breadcrumbs={[
+          { label: 'Cart', href: '/cart' },
+          { label: 'Checkout' }
+        ]}
+      >
         <CheckoutForm />
       </Main>
     </AppLayout>

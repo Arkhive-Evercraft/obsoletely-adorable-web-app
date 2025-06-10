@@ -10,17 +10,6 @@
   position: relative;
 }
 
-.themeToggle::before {
-  content: '<>';
-  position: absolute;
-  top: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.8rem;
-  color: #0ea5e9;
-  font-family: 'JetBrains Mono', monospace;
-}
-
 .themeToggle:hover {
   opacity: 0.9;
   transform: scale(1.05);

@@ -73,6 +73,7 @@ export async function seed() {
           name: product.name,
           price: product.price,
           description: product.description || "",
+          story: product.story || "",
           imageUrl: product.imageUrl,
           categoryName: product.categoryName,
           inventory: product.inventory || 0,

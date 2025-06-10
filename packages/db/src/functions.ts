@@ -45,6 +45,7 @@ export async function createProduct(data: {
   name: string;
   price: number;
   description: string;
+  story: string;
   imageUrl: string;
   categoryName: string;
   inventory: number;
@@ -55,6 +56,7 @@ export async function createProduct(data: {
         name: data.name,
         price: data.price,
         description: data.description,
+        story: data.story,
         imageUrl: data.imageUrl,
         categoryName: data.categoryName,
         inventory: data.inventory ?? 0,
@@ -75,6 +77,7 @@ export async function updateProduct(
     name: string;
     price: number;
     description: string;
+    story: string;
     imageUrl: string;
     categoryName: string;
     inventory: number;

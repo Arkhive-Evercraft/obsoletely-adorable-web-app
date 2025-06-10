@@ -18,9 +18,8 @@ export function AppLayout({
     const navList = [
         { href: "/", label: "Home" },
         { href: "/about", label: "About" },
-        { href: "/products", label: "Tags" },
-        { href: "/categories", label: "Categories" },
-        { href: "/checkout", label: "Adopt" },
+        { href: "/products", label: "Products" },
+        { href: "/checkout", label: "Checkout" },
     ]
     return (
         <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden box-border bg-gradient-to-br from-blue-50/30 via-emerald-50/30 to-amber-50/30">

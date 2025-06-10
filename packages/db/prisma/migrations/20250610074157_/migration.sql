@@ -26,6 +26,7 @@ CREATE TABLE "Product" (
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
+    "story" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "categoryName" TEXT NOT NULL,
     "inventory" INTEGER NOT NULL DEFAULT 0,
@@ -55,8 +56,30 @@ CREATE TABLE "ProductSale" (
     CONSTRAINT "ProductSale_pkey" PRIMARY KEY ("saleId","itemId")
 );
 
+-- CreateTable
+CREATE TABLE "CartReservation" (
+    "id" TEXT NOT NULL,
+    "productId" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL,
+    "sessionId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT,
+
+    CONSTRAINT "CartReservation_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Customer_email_key" ON "Customer"("email");
+
+-- CreateIndex
+CREATE INDEX "CartReservation_sessionId_idx" ON "CartReservation"("sessionId");
+
+-- CreateIndex
+CREATE INDEX "CartReservation_userId_idx" ON "CartReservation"("userId");
+
+-- CreateIndex
+CREATE INDEX "CartReservation_expiresAt_idx" ON "CartReservation"("expiresAt");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryName_fkey" FOREIGN KEY ("categoryName") REFERENCES "Category"("name") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -65,7 +88,10 @@ ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryName_fkey" FOREIGN KEY ("c
 ALTER TABLE "Sale" ADD CONSTRAINT "Sale_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "ProductSale" ADD CONSTRAINT "ProductSale_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ProductSale" ADD CONSTRAINT "ProductSale_saleId_fkey" FOREIGN KEY ("saleId") REFERENCES "Sale"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductSale" ADD CONSTRAINT "ProductSale_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CartReservation" ADD CONSTRAINT "CartReservation_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -16,10 +16,7 @@ export interface FooterProps {
 export function Footer({ 
   className = '', 
   navItems = [
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact Support' },
-    { href: '/help', label: 'Help' },
-    { href: '/privacy', label: 'Privacy' }
+   
   ],
   renderCustomContent
 }: FooterProps) {

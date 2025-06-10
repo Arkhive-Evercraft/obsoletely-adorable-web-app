@@ -7,12 +7,6 @@
   width: 100%;
 }
 
-.userActions::before {
-  content: '👤';
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  color: #FF69B4;
-}
 
 .loading {
   display: flex;

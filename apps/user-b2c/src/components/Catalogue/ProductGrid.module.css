@@ -16,23 +16,6 @@
   position: relative;
 }
 
-.filters::before {
-  content: '🔍 Find Your Perfect Tag Pet! 🔍';
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
-  padding: 0.5rem 1rem;
-  border-radius: 15px;
-  border: 2px solid #FF69B4;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #8B008B;
-  font-family: 'Share Tech Mono', monospace;
-  text-shadow: 1px 1px 0px #FFFFFF;
-}
-
 @media (min-width: 768px) {
   .filters {
     flex-direction: row;
@@ -130,11 +113,6 @@
   text-shadow: 1px 1px 0px #FFFFFF;
 }
 
-.filterLabel::before {
-  content: '♥ ';
-  color: #FF69B4;
-}
-
 .searchLabel {
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
@@ -142,10 +120,6 @@
   font-weight: bold;
   font-family: 'Share Tech Mono', monospace;
   text-shadow: 1px 1px 0px #FFFFFF;
-}
-
-.searchLabel::before {
-  content: '🏷️ ';
 }
 
 :global(.dark) .filterLabel {
@@ -303,11 +277,6 @@
   display: inline-block;
 }
 
-.productCount::before {
-  content: '🏷️ ';
-  color: #FF69B4;
-}
-
 :global(.dark) .productCount {
   color: #FFB6C1;
   background: linear-gradient(135deg, #2F1B69, #4B0082);
@@ -336,16 +305,6 @@
   border-radius: 50%;
   border-top: 4px solid #FF69B4;
   position: relative;
-}
-
-.spinner::before {
-  content: '♥';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #FF69B4;
-  font-size: 1.2rem;
 }
 
 :global(.dark) .spinner {

@@ -42,7 +42,6 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
     "@prisma/client": "^6.3.1",
-    "@repo/env": "workspace:*",
     "react": "^19.0.0"
   },
   "devDependencies": {

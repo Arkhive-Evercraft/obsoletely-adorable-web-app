@@ -30,6 +30,7 @@ model Product {
   name         String
   price        Int
   description  String
+  story        String
   imageUrl     String
   categoryName String
   inventory    Int               @default(0)

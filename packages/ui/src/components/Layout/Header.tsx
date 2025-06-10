@@ -28,7 +28,7 @@ export function Header({
       <div className={styles.container}>
         <h1 className={styles.logo}>
           <Link href="/">
-            &lt;Tag Shelter&gt;
+            &lt;Obsoletely/Adorable&gt;
           </Link>
         </h1>
         
