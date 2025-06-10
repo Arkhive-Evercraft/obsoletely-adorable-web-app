@@ -8,12 +8,33 @@
 @media (min-width: 768px) {
   .filters {
     flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.allFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .allFilters {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 1.5rem;
+    width: 75%;
+    max-width: 1200px;
   }
 }
 
 .searchContainer {
   position: relative;
-  flex: 1;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .searchInput {
@@ -26,6 +47,9 @@
   color: #1f2937;
   transition-property: color, background-color, border-color;
   transition-duration: 200ms;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+  line-height: 1.25;
 }
 
 :global(.dark) .searchInput {
@@ -50,18 +74,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: #9ca3af;
-}
-
-.dropdownFilters {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .dropdownFilters {
-    flex-direction: row;
-  }
+  pointer-events: none;
 }
 
 .filterGroup {
@@ -75,7 +88,17 @@
   color: #4b5563;
 }
 
+.searchLabel {
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
 :global(.dark) .filterLabel {
+  color: #d1d5db;
+}
+
+:global(.dark) .searchLabel {
   color: #d1d5db;
 }
 
@@ -88,11 +111,14 @@
   color: #1f2937;
   transition-property: color, background-color, border-color;
   transition-duration: 200ms;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+  line-height: 1.25;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .select {
-    width: 10rem;
+    width: 12rem;
   }
 }
 
