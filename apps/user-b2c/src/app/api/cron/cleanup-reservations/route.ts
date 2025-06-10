@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cleanupExpiredReservations } from '@repo/db/functions';
-import { env } from "@repo/env/web"
 
 export async function GET(request: NextRequest) {
   try {
     const apiKey = request.nextUrl.searchParams.get('apiKey');
-    const expectedApiKey = env.CRON_API_KEY || 'default-cron-api-key';
+    const expectedApiKey = process.env.CRON_API_KEY || 'default-cron-api-key';
     
     if (apiKey !== expectedApiKey) {
       return NextResponse.json(

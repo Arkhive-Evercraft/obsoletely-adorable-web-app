@@ -1,15 +1,13 @@
-import NextAuth from "next-auth"
 import { NextAuthOptions } from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
-import { env } from "@repo/env/web"
 import { getServerSession } from "next-auth/next";
 import { getCustomerByEmail, createCustomer } from "@repo/db/functions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_SECRET || '',
     }),
   ],
   pages: {
@@ -58,9 +56,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: env.NEXTAUTH_SECRET,
-  // Add debug logging in development
-  debug: process.env.NODE_ENV === 'development',
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 export async function isLoggedIn() {

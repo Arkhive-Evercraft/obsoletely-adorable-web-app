@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SquareClient, SquareEnvironment } from 'square';
 import { randomUUID } from 'crypto';
-import { env } from "@repo/env/web"
 import { cookies } from 'next/headers';
 import { clearSessionReservations } from '@repo/db/functions';
 

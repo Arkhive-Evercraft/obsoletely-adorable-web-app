@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { SquareClient, SquareEnvironment, SquareError } from "square"
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
-import { env } from "@repo/env/web"; // Import the env object
 
 interface CheckoutFormData {
   firstName: string;
@@ -28,9 +27,8 @@ export function CheckoutForm() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // Replace direct process.env access with env object
-  const appId = env.NEXT_PUBLIC_SQUARE_APP_ID;
-  const locationId = env.NEXT_PUBLIC_SQUARE_LOCATION_ID;
+  const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID || '';
+  const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID || '';
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = totalPrice * 0.1;

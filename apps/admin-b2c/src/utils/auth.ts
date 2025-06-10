@@ -1,14 +1,12 @@
-import NextAuth from "next-auth"
 import { NextAuthOptions } from "next-auth"
 import GitHubProvider from "next-auth/providers/github"
-import { env } from "@repo/env/admin"
 import { getServerSession } from "next-auth/next";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_SECRET || '',
     }),
   ],
   pages: {
@@ -32,7 +30,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || '',
 }
 
 export async function isLoggedIn() {
