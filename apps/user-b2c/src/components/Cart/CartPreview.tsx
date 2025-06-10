@@ -3,12 +3,10 @@
 import React, { useState } from 'react';
 import styles from './CartPreview.module.css';
 import { useCart } from '@/contexts/CartContext';
-import { useToast } from '@/contexts/ToastContext';
 import Link from 'next/link';
 
 export function CartPreview() {
   const { cartItems, cartItemCount, removeFromCart } = useCart();
-  const { showToast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -76,7 +74,6 @@ export function CartPreview() {
                         className={styles.removeButton}
                         onClick={() => {
                           removeFromCart(item.id);
-                          showToast(`Removed ${item.name} from cart`, 'info');
                         }}
                         aria-label={`Remove ${item.name} from cart`}
                       >

@@ -7,6 +7,9 @@ import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import styles from './categories.module.css';
 
+// Disable static generation for this auth-dependent page
+export const dynamic = 'force-dynamic';
+
 export default function CategoriesPage() {
   const {
     categories,

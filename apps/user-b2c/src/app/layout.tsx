@@ -1,7 +1,11 @@
+import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Providers } from "@/components/Layout/Providers";
+import { ThemeProvider, AuthProvider } from "@repo/ui/components"
+import { AppDataProvider } from "@/components/AppDataProvider";
+import { CartProvider } from "@/contexts/CartContext";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -13,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "StyleStore",
-  description: "Your one-stop shop for trendy and stylish products",
+  title: "HTML Tag Adoption Shelter",
+  description: "Find loving homes for orphaned HTML tags - A safe haven for semantic elements",
 };
 
 export default function RootLayout({
@@ -25,10 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Providers>
-          {children}
-        </Providers>
+        <AuthProvider>
+          <CartProvider>
+          <ThemeProvider>
+            <AppDataProvider>
+              {children}
+            </AppDataProvider>
+          </ThemeProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
-  );
-}
+  )}

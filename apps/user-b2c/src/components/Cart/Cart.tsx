@@ -1,11 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Cart.module.css';
 import { useCart } from '@/contexts/CartContext';
 import Link from 'next/link';
 
 export function Cart() {
-  const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart, lastError, clearError, isLoading } = useCart();
+  const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // Show loading state while cart is being loaded from database
+  if (isLoading) {
+    return (
+      <div className={styles.cart}>
+        <h1 className={styles.title}>Shopping Cart</h1>
+        <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p className={styles.loadingText}>Loading your cart...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleQuantityUpdate = async (itemId: string, newQuantity: number) => {
+    setLoadingItems(prev => new Set(prev).add(itemId));
+    await updateQuantity(itemId, newQuantity);
+    setLoadingItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(itemId);
+      return newSet;
+    });
+  };
+
+  const handleRemoveItem = async (itemId: string) => {
+    setLoadingItems(prev => new Set(prev).add(itemId));
+    await removeFromCart(itemId);
+    setLoadingItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(itemId);
+      return newSet;
+    });
+  };
   
   if (cartItems.length === 0) {
     return (
@@ -26,6 +60,19 @@ export function Cart() {
     <div className={styles.cart}>
       <h1 className={styles.title}>Shopping Cart</h1>
       
+      {/* Error display */}
+      {lastError && (
+        <div className={styles.errorMessage}>
+          <div className={styles.errorContent}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <span>{lastError}</span>
+            <button onClick={clearError} className={styles.errorClose}>×</button>
+          </div>
+        </div>
+      )}
+      
       <div className={styles.cartContent}>
         <div className={styles.cartItemsContainer}>
           <div className={styles.cartHeader}>
@@ -36,15 +83,29 @@ export function Cart() {
             <div className={styles.actionsHeader}></div>
           </div>
           
-          {cartItems.map((item) => (
-            <div key={item.id} className={styles.cartItem}>
+          {cartItems.map((item) => {
+            const isLoading = loadingItems.has(item.id);
+            const isOutOfStock = !item.inStock;
+            
+            return (
+            <div key={item.id} className={`${styles.cartItem} ${isLoading ? styles.loading : ''} ${isOutOfStock ? styles.outOfStock : ''}`}>
               <div className={styles.product}>
                 <div className={styles.productImage}>
                   <img src={item.imageUrl} alt={item.name} />
+                  {isOutOfStock && (
+                    <div className={styles.outOfStockOverlay}>
+                      <span>Out of Stock</span>
+                    </div>
+                  )}
                 </div>
                 <div className={styles.productInfo}>
                   <h3 className={styles.productName}>{item.name}</h3>
                   <p className={styles.productCategory}>{item.category}</p>
+                  {isOutOfStock && (
+                    <p className={styles.stockWarning}>
+                      This item is no longer available. Please remove it to continue.
+                    </p>
+                  )}
                 </div>
               </div>
               
@@ -52,16 +113,20 @@ export function Cart() {
               
               <div className={styles.quantity}>
                 <button
-                  onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                  onClick={() => handleQuantityUpdate(item.id, Math.max(1, item.quantity - 1))}
                   className={styles.quantityButton}
+                  disabled={isLoading || isOutOfStock}
                   aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className={styles.quantityValue}>{item.quantity}</span>
+                <span className={styles.quantityValue}>
+                  {isLoading ? '...' : item.quantity}
+                </span>
                 <button
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  onClick={() => handleQuantityUpdate(item.id, item.quantity + 1)}
                   className={styles.quantityButton}
+                  disabled={isLoading || isOutOfStock}
                   aria-label="Increase quantity"
                 >
                   +
@@ -74,18 +139,24 @@ export function Cart() {
               
               <div className={styles.actions}>
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => handleRemoveItem(item.id)}
                   className={styles.removeButton}
+                  disabled={isLoading}
                   aria-label="Remove item"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                    <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                  </svg>
+                  {isLoading ? (
+                    <div className={styles.spinner}></div>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                      <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         
         <div className={styles.cartSummary}>

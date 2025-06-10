@@ -1,30 +1,25 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import { 
-  OrderDetailHeader, 
-  OrderDetailItems, 
+import {
+  OrderDetailHeader,
+  OrderDetailItems,
   OrderActionsPanel,
   OrderLoadingState,
-  OrderErrorState 
+  OrderErrorState
 } from '@/components/Orders';
 import { OrderDetailPDF } from '@/components/Orders/OrderReport';
+import { Order, OrderItem } from "@repo/db/data"
 
-interface Order {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  totalAmount: number;
-  orderDate: string;
-  items: Array<{ name: string; quantity: number; price: number }>;
-  shippingAddress: string;
-}
 
 export default function OrderDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
+
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,17 +27,17 @@ export default function OrderDetailPage() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch('/api/orders');
+        const response = await fetch(`/api/orders/${params.id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
-        const orders: Order[] = await response.json();
-        const foundOrder = orders.find(o => o.id === params.id);
-        
-        if (!foundOrder) {
+        const order = await response.json();
+
+        console.log(order)
+        if (!order) {
           setError('Order not found');
         } else {
-          setOrder(foundOrder);
+          setOrder(order);
         }
       } catch (err) {
         setError('Failed to load order details');
@@ -89,8 +84,8 @@ export default function OrderDetailPage() {
         rightColumnTitle="Actions"
         leftColumn={<OrderDetailHeader order={order} />}
         rightColumn={
-          <OrderActionsPanel 
-            order={order} 
+          <OrderActionsPanel
+            order={order}
             onExportPDF={exportOrderToPDF}
           />
         }

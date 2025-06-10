@@ -1,28 +1,105 @@
+/* Kawaii Pet Adoption Form - Tamagotchi Style */
 .checkoutContainer {
   width: 100%;
   max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 25px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+}
+
+.checkoutContainer::before {
+  content: '💕 Tag Adoption Application 💕';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  border: 3px solid #FF69B4;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+.loadingMessage {
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #8B008B;
+  font-size: 0.875rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  position: relative;
+}
+
+.loadingMessage::before {
+  content: '🐾 ';
+  font-size: 1.2rem;
+}
+
+:global(.dark) .checkoutContainer {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .loadingMessage {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+  color: #FFB6C1;
 }
 
 .title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1f2937;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #FF69B4;
   margin-bottom: 2rem;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 
+    2px 2px 0px #FFFFFF,
+    4px 4px 0px #FFB6C1;
+  position: relative;
+}
+
+.title::before {
+  content: '♥';
+  position: absolute;
+  left: -3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FF1493;
+}
+
+.title::after {
+  content: '♥';
+  position: absolute;
+  right: -3rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FF1493;
 }
 
 @media (min-width: 768px) {
   .title {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+    font-size: 2.5rem;
   }
 }
 
 :global(.dark) .title {
-  color: white;
+  color: #FFB6C1;
 }
 
 .checkoutContent {
@@ -48,10 +125,13 @@
 }
 
 .section {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 1.5rem;
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border-radius: 20px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  padding: 2rem;
   margin-bottom: 1.5rem;
   transition-property: background-color;
   transition-duration: 200ms;
@@ -66,6 +146,8 @@
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
 :global(.dark) .sectionTitle {
@@ -147,18 +229,22 @@
   background-color: var(--accent-secondary);
   color: white;
   border-radius: 0.375rem;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition-property: background-color;
-  transition-duration: 200ms;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .submitButton:hover {
   background-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .submitButton:focus {
@@ -170,10 +256,14 @@
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .submitButton:disabled:hover {
   background-color: var(--accent-secondary);
+  transform: none;
+  box-shadow: none;
 }
 
 .spinner {
@@ -465,4 +555,66 @@
 
 .dark .productsButton:focus {
   box-shadow: 0 0 0 2px #6b7280;
+}
+
+.paymentError {
+  background-color: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.paymentSection {
+  position: relative;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition-property: background-color;
+  transition-duration: 200ms;
+}
+
+:global(.dark) .paymentSection {
+  background-color: #1f2937;
+}
+
+.paymentFormWrapper {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.paymentFormWrapper:focus-within {
+  border-color: var(--accent-secondary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-secondary-rgb), 0.25);
+}
+
+:global(.dark) .paymentFormWrapper {
+  background-color: #2d3748;
+  border-color: #4a5568;
+}
+
+.paymentSuccess {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #10b981;
+  font-size: 0.875rem;
+}
+
+.paymentSuccessIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #10b981;
+}
+
+.orderActions {
+  margin-top: 1.5rem;
 }

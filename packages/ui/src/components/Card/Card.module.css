@@ -1,33 +1,67 @@
+/* Kawaii Pet Store Card */
 .card {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
   overflow: hidden;
-  transition-property: background-color;
-  transition-duration: 300ms;
+  transition: all 300ms ease;
+}
+
+.card:hover {
+  border-color: #FF69B4;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.5),
+    inset 1px 1px 0px #FFFFFF;
+  transform: translateY(-2px);
 }
 
 .dark .card {
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
 }
 
 .cardHeader {
   padding: 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  font-weight: 500;
+  border-bottom: 2px solid #FFB6C1;
+  font-weight: 600;
+  font-family: 'Share Tech Mono', monospace;
+  color: #8B008B;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+}
+
+.cardHeader::before {
+  content: '📋 ';
+  margin-right: 0.5rem;
 }
 
 .dark .cardHeader {
-  border-color: #374151;
+  border-color: #DDA0DD;
+  color: #FFB6C1;
+  background: linear-gradient(135deg, #4B0082, #663399);
 }
 
 .cardBody {
-  padding: 1rem;
+  padding: 1.5rem;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.dark .cardBody {
+  color: #FFB6C1;
 }
 
 .cardFooter {
   padding: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 2px solid #FFB6C1;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+}
+
+.dark .cardFooter {
+  border-top-color: #DDA0DD;
+  background: linear-gradient(135deg, #4B0082, #663399);
 }
 
 .dark .cardFooter {

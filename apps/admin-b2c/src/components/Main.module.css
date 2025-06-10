@@ -7,9 +7,7 @@
   grid-template-rows: auto 1fr;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--bg-primary);
   transition: background-color 0.3s ease;
-  border: 1px solid var(--bg-primary);
   border-radius: 0.5rem; /* Adjusted for rounded borders */
 }
 
@@ -18,11 +16,8 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: var(--text-primary);
-  padding: 1rem;
-  border-bottom: 1px solid var(--accent-primary);
+  padding: 1rem 0;
   margin: 0;
-  background-color: var(--bg-secondary);
-  border-radius: 0.5rem;
   transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 

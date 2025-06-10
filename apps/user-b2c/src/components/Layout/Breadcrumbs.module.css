@@ -1,0 +1,96 @@
+/* Kawaii Pet Store Breadcrumbs */
+.breadcrumbs {
+  width: fit-content;
+  margin-bottom: 0;
+}
+
+.breadcrumbList {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  border-radius: 15px;
+  border: 2px solid #FFB6C1;
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .breadcrumbList {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+  color: #FFB6C1;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbLink {
+  color: #8B008B;
+  text-decoration: none;
+  position: relative;
+  transition: color 300ms ease;
+}
+.breadcrumbLink:not(:first-child)::before {
+  content: '';
+}
+
+.breadcrumbLink:hover {
+  color: #FF1493;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .breadcrumbLink {
+  color: #FFB6C1;
+}
+
+:global(.dark) .breadcrumbLink:hover {
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.breadcrumbSeparator {
+  margin: 0 0.75rem;
+  color: #FF69B4;
+  font-weight: bold;
+}
+
+:global(.dark) .breadcrumbSeparator {
+  color: #FFB6C1;
+}
+
+.breadcrumbCurrent {
+  font-weight: 700;
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .breadcrumbCurrent {
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .breadcrumbList {
+    font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .breadcrumbSeparator {
+    margin: 0 0.5rem;
+  }
+  
+  .breadcrumbLink::before,
+  .breadcrumbCurrent::before {
+    display: none;
+  }
+}

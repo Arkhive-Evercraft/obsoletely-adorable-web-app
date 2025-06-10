@@ -8,6 +8,7 @@ import {
   ProductDetailHeader, 
   ProductMetaGrid, 
   ProductDescription, 
+  ProductStory,
   NewProductActionsPanel 
 } from '@/components/Products';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
@@ -18,7 +19,8 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  description: string;
+  description?: string;
+  story?: string;
   imageUrl: string;
   categoryName: string;
   featured: boolean;
@@ -41,6 +43,7 @@ function AddNewProductPageContent() {
     name: '',
     price: 0,
     description: '',
+    story: '',
     imageUrl: '',
     categoryName: '',
     featured: false,
@@ -187,6 +190,12 @@ function AddNewProductPageContent() {
           description={newProduct.description}
           isEditing={true} // Always in editing mode for new products
           onDescriptionChange={(description) => handleFieldChange('description', description)}
+          productId={newProduct.id}
+        />
+        <ProductStory
+          story={newProduct.story}
+          isEditing={true} // Always in editing mode for new products
+          onStoryChange={(story) => handleFieldChange('story', story)}
           productId={newProduct.id}
         />
       </ProductDetailHeader>

@@ -1,29 +1,38 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import React from "react";
-import { Header, Footer } from "@/components/Layout";
-import { Content } from "@/components/Content";
+import { Header, Footer } from "@repo/ui/components";
+import { Content } from "@repo/ui/components";
 import { AuthWrapper } from "@/components/AuthWrapper";
+import { UserActions } from "./UserActions";
 
 interface AppLayoutProps {
     children?: ReactNode;
-    query?: string;
+    requireAuth?: boolean;
 }
 
-// Remove memo from AppLayout since children always change
 export function AppLayout({
     children,
-    query,
+    requireAuth = true,
 }: AppLayoutProps) {
+    const navList = [
+        { href: "/", label: "Home" },
+        { href: "/products", label: "Products" },
+        { href: "/orders", label: "Orders" },
+    ]
     return (
-        <AuthWrapper>
-            <div className="h-screen flex flex-col gap-4 overflow-hidden">
-                <MemoizedHeader className="flex-shrink-0"/>
-                <Content className="flex-1 w-full overflow-auto">
+        <div className="h-screen flex flex-col gap-4 overflow-hidden">
+            <MemoizedHeader 
+                className="flex-shrink-0" 
+                navItems={navList}
+                renderUserActions={() => <UserActions />}
+            />
+            <Content className="flex-1 w-full overflow-auto">
+                <AuthWrapper requireAuth={requireAuth}>
                     {children}
-                </Content>
-                <MemoizedFooter className="flex-shrink-0" />
-            </div>
-        </AuthWrapper>
+                </AuthWrapper>
+            </Content>
+            <MemoizedFooter className="flex-shrink-0" />
+        </div>
     );
 }
 

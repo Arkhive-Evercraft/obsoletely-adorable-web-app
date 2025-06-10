@@ -1,0 +1,296 @@
+/* Kawaii Pet Store About Page - Tamagotchi Style */
+
+.aboutContainer {
+  max-width: 56rem; /* 4xl equivalent */
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Hero section with kawaii styling */
+.heroSection {
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+:global(.dark) .heroSection {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+}
+
+.heroTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #8B008B;
+  margin-bottom: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 
+    1px 1px 0px #FFFFFF,
+    2px 2px 0px #FFB6C1;
+}
+
+:global(.dark) .heroTitle {
+  color: #FFB6C1;
+  text-shadow: 
+    1px 1px 0px #2F1B69,
+    2px 2px 0px #DDA0DD;
+}
+
+.heroSubtitle {
+  font-size: 1.125rem;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .heroSubtitle {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+/* Content sections with kawaii styling */
+.contentSection {
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .contentSection {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FF69B4;
+  margin-bottom: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .sectionTitle {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.sectionContent {
+  color: #8B008B;
+  line-height: 1.6;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 500;
+}
+
+:global(.dark) .sectionContent {
+  color: #FFB6C1;
+}
+
+.sectionContent p {
+  margin-bottom: 1rem;
+}
+
+.sectionContent p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code styling within content */
+.sectionContent code {
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  color: #8B008B;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  border: 1px solid #FFB6C1;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .sectionContent code {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  color: #FFB6C1;
+  border-color: #DDA0DD;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.sectionContent strong {
+  color: #FF1493;
+  font-weight: 700;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .sectionContent strong {
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+/* Grid section for "Perfect For" */
+.gridSection {
+  background: linear-gradient(135deg, rgba(240, 248, 255, 0.5), rgba(240, 255, 240, 0.5));
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .gridSection {
+  background: linear-gradient(135deg, rgba(75, 0, 130, 0.3), rgba(102, 51, 153, 0.3));
+  border-color: #DDA0DD;
+}
+
+.gridTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FF69B4;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .gridTitle {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.perfectForGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.gridItem {
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border: 2px solid #FFB6C1;
+  border-radius: 15px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 2px 2px 6px rgba(255, 182, 193, 0.3);
+}
+
+:global(.dark) .gridItem {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+.gridItemTitle {
+  font-weight: 700;
+  color: #8B008B;
+  margin-bottom: 0.5rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .gridItemTitle {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.gridItemDescription {
+  font-size: 0.875rem;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+:global(.dark) .gridItemDescription {
+  color: #FFB6C1;
+}
+
+/* Footer section */
+.footerSection {
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+}
+
+.footerSection::before {
+  content: '💕✨💕';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  border: 2px solid #FF69B4;
+  font-size: 0.75rem;
+}
+
+:global(.dark) .footerSection {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+}
+
+.footerMessage {
+  font-size: 1.125rem;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  margin-bottom: 0.5rem;
+}
+
+:global(.dark) .footerMessage {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+.footerSubMessage {
+  font-size: 1rem;
+  color: #FF69B4;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+:global(.dark) .footerSubMessage {
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .aboutContainer {
+    padding: 1rem;
+  }
+  
+  .heroSection {
+    padding: 1.5rem;
+  }
+  
+  .heroTitle {
+    font-size: 1.5rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1rem;
+  }
+  
+  .perfectForGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .contentSection {
+    padding: 1.25rem;
+  }
+}

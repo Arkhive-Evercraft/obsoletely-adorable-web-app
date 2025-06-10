@@ -17,36 +17,29 @@ interface NextProductCardProps {
 }
 
 export function NextProductCard({ product, onAddToCart, className = '' }: NextProductCardProps) {
-  // Custom quick actions renderer that uses Next.js Link component
-  const renderQuickActions = (product: Product) => (
-    <>
-      <Link href={`/products/${product.id}`} className={styles.viewButton}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-          <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-        </svg>
-        <span>View</span>
-      </Link>
-    </>
-  );
+  // Handle add to cart - this will be called by the ProductCard's button
+  const handleAddToCart = () => {
+    if (onAddToCart) {
+      onAddToCart();
+    }
+  };
   
-  // Custom rendering for product name using Next.js Link
+  // Custom rendering for product name - no link needed since whole card is clickable
   const renderProductName = (product: Product) => (
     <h3 className={styles.name}>
-      <Link href={`/products/${product.id}`} className={styles.nameLink}>
-        {product.name}
-      </Link>
+      {product.name}
     </h3>
   );
   
   return (
-    <ProductCard
-      product={product}
-      onAddToCart={onAddToCart}
-      className={`${styles.nextProductCard} ${className}`}
-      renderQuickActions={renderQuickActions}
-      renderProductName={renderProductName}
-    />
+    <Link href={`/products/${product.id}`} className={styles.cardLink}>
+      <ProductCard
+        product={product}
+        onAddToCart={handleAddToCart}
+        className={`${styles.nextProductCard} ${className}`}
+        renderProductName={renderProductName}
+      />
+    </Link>
   );
 }
 

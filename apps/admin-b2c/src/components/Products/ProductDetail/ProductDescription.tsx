@@ -5,14 +5,14 @@ import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductDetail.module.css';
 
 interface ProductDescriptionProps {
-  description: string;
+  description?: string;
   isEditing: boolean;
   onDescriptionChange: (description: string) => void;
   productId?: number | string;
 }
 
 export function ProductDescription({ 
-  description, 
+  description = '', 
   isEditing, 
   onDescriptionChange,
   productId = '0'

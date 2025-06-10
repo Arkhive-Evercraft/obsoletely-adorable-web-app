@@ -36,9 +36,17 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
   }, []);
 
   useEffect(() => {
-    // Update data-theme attribute on document when theme changes
+    // Update data-theme attribute and class on document when theme changes
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme);
+      
+      // Also add/remove dark class for CSS selector compatibility
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      
       localStorage.setItem('theme', theme);
     }
   }, [theme]);

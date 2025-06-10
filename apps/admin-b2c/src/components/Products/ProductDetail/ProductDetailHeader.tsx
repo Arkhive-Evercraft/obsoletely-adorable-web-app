@@ -10,9 +10,9 @@ interface Product {
   id: number;
   name: string;
   imageUrl: string;
-  createdAt: string;
-  updatedAt: string;
-  inventory: number; // Remove inStock, use inventory to compute stock status
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  inventory: number;
 }
 
 interface ProductDetailHeaderProps {

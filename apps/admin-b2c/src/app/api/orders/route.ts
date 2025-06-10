@@ -1,38 +1,22 @@
 import { NextResponse } from 'next/server';
-import { client } from '@repo/db/client';
+import { getSales } from '@repo/db/functions'
 
 export async function GET() {
   try {
-    const sales = await client.db.sale.findMany({
-      include: {
-        customer: true,
-        items: {
-          include: {
-            item: {
-              include: {
-                category: true
-              }
-            }
-          }
-        }
-      },
-      orderBy: {
-        date: 'desc'
-      }
-    });
+    const sales = await getSales();
 
     // Transform the data to match the orders interface
-    const orders = sales.map((sale: { id: { toString: () => string; }; customer: { name: any; email: any; address: any; }; total: number; date: { toISOString: () => string; }; items: any[]; }) => ({
-      id: `ORD-${sale.id.toString().padStart(3, '0')}`,
+    const orders = sales.map((sale: any) => ({
+      id: sale.id,
       customerName: sale.customer.name,
       customerEmail: sale.customer.email,
       totalAmount: sale.total / 100, // Convert from cents to dollars
       orderDate: sale.date.toISOString().split('T')[0],
       lastUpdated: sale.date.toISOString().split('T')[0],
-      items: sale.items.map(item => ({
+      items: sale.items.map((item: { item: { name: any; }; quantity: any; price: number; }) => ({
         name: item.item.name,
         quantity: item.quantity,
-        price: item.priceAtSale / 100 // Convert from cents to dollars
+        price: item.price / 100 // Convert from cents to dollars
       })),
       shippingAddress: sale.customer.address || 'Address not provided'
     }));

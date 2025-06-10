@@ -1,8 +1,19 @@
-import styles from "./page.module.css";
+"use client";
+
+import React from 'react';
+import { AppLayout } from '@/components/Layout/AppLayout';
+import { Hero } from "@/components/Layout/Hero"
 import { Main } from "@/components/Main"
-// Mock data for the homepage
-import { mockFeaturedProducts, mockCategories } from "@/mocks/products";
+import { ProductGrid } from '@/components/Catalogue/ProductGrid';
+import { AppDataProvider } from '@/components/AppDataProvider';
+import { CartProvider } from '@/contexts/CartContext';
 
 export default function Home() {
-  return <Main className={styles.main} />;
+  return (
+    <AppLayout requireAuth={false}>
+        <Main pageHeading='Dashboard'>
+          <ProductGrid />
+        </Main>
+    </AppLayout>
+  );
 }

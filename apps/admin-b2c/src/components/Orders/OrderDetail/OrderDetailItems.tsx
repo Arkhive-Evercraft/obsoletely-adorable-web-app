@@ -2,21 +2,14 @@
 
 import React from 'react';
 import styles from './OrderDetail.module.css';
-import type { OrderItem, Order } from '@repo/db/data';
+import type { Order } from '@repo/db/data';
 import { OrderDetailMetadata } from './OrderDetailMetadata';
 
-interface OrderDetailItemsProps {
-  items: OrderItem[];
-  order: Order;
-}
-
-export const OrderDetailItems = React.memo(function OrderDetailItems({ 
-  items, 
-  order 
-}: OrderDetailItemsProps) {
+export const OrderDetailItems = React.memo(function OrderDetailItems(order: Order) {
+ 
   // Memoize the rendered items to prevent unnecessary re-renders
   const renderedItems = React.useMemo(() => 
-    items.map((item, index) => (
+    order.items.map((item, index) => (
       <div key={`${item.name}-${item.price}-${index}`} className={styles.orderItem}>
         <div className={styles.itemInfo}>
           <span className={styles.itemName}>{item.name}</span>
@@ -29,7 +22,7 @@ export const OrderDetailItems = React.memo(function OrderDetailItems({
           ${(item.quantity * item.price).toFixed(2)}
         </div>
       </div>
-    )), [items]);
+    )), [order.items]);
 
   return (
     <>

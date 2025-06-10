@@ -1,65 +1,98 @@
+/* Kawaii Pet Tag Adoption Detail Page - Tamagotchi Style */
 .productDetail {
   width: 100%;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 25px;
+  border: 3px solid #FFB6C1;
+  padding: 2rem;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
 }
 
-.breadcrumbs {
+/* Product Header Section */
+.productHeader {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
   margin-bottom: 2rem;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
+  position: relative;
+  text-align: left;
 }
 
-.breadcrumbLink {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.2s;
+/* Move availability to top right corner */
+.productHeader .availability {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 3px solid #FFFFFF;
+  box-shadow: 
+    4px 4px 12px rgba(0, 0, 0, 0.2),
+    inset 1px 1px 0px #FFFFFF;
+  z-index: 10;
 }
 
-.breadcrumbLink:hover {
-  color: var(--accent-secondary);
+:global(.dark) .productHeader {
+  background: none;
+  border: none;
 }
 
-.breadcrumbSeparator {
-  margin: 0 0.5rem;
+:global(.dark) .productHeader .availability {
+  border-color: #FFFFFF;
 }
 
-.breadcrumbCurrent {
-  font-weight: 500;
-  color: var(--text-primary);
+:global(.dark) .productHeader .availability .available {
+  background: #2F5F2F;
+  border: 2px solid #90EE90;
+  color: #90EE90;
+}
+
+:global(.dark) .productHeader .availability .adopted {
+  background: linear-gradient(135deg, #696969, #2F2F2F);
 }
 
 /* Related Products Section */
 .relatedProductsSection {
   margin-top: 4rem;
   padding-top: 2rem;
-  border-top: 1px solid var(--accent-secondary);
+  border-top: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, rgba(240, 248, 255, 0.3), rgba(240, 255, 240, 0.3));
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
 }
 
 .relatedProductsTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 800;
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: #FF69B4;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 
+    1px 1px 0px #FFFFFF,
+    2px 2px 0px #FFB6C1;
 }
 
 .relatedProducts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
 .relatedProductCard {
-  border-radius: 0.5rem;
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: var(--bg-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.relatedProductCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
 }
 
 .relatedProductLink {
@@ -70,8 +103,9 @@
 
 .relatedProductImageContainer {
   position: relative;
-  padding-bottom: 75%; /* 4:3 aspect ratio */
+  padding-bottom: 75%;
   overflow: hidden;
+  border-bottom: 2px solid #FFB6C1;
 }
 
 .relatedProductImage {
@@ -81,11 +115,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.relatedProductCard:hover .relatedProductImage {
-  transform: scale(1.05);
 }
 
 .relatedProductInfo {
@@ -123,151 +152,736 @@
   }
 }
 
-.productContent {
+/* Top Row Layout - Two Columns: Image | What's Included + Payment */
+.topRow {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  align-items: stretch; /* Make columns match each other's height */
+  margin-bottom: 2rem;
 }
 
-@media (min-width: 768px) {
-  .productContent {
-    grid-template-columns: 1fr 1fr;
+/* Right Column - What's Included + Payment */
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Match image height */
+  gap: 1rem;
+}
+
+/* What's Included Section - Takes remaining height */
+.rightColumn .whatsIncludedSection {
+  flex: 1;
+  background: linear-gradient(135deg, #F0FFF0, #E0FFE0);
+  padding: 1.25rem;
+  border-radius: 15px;
+  border: 3px solid #98FB98;
+  box-shadow: 
+    4px 4px 12px rgba(152, 251, 152, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Purchase Container - Fixed height at bottom */
+.rightColumn .purchaseContainer {
+  background: linear-gradient(135deg, #FFF8DC, #F0F8FF);
+  padding: 1.25rem;
+  border-radius: 15px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  height: fit-content;
+}
+
+/* Inline Controls - Quantity on left, Price on right */
+.inlineControls {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+/* Updated Quantity Section for inline layout */
+.inlineControls .quantitySection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+/* Updated Price Display for inline layout */
+.inlineControls .priceDisplay {
+  text-align: right;
+  margin-bottom: 0;
+  padding: 0.75rem 1rem;
+}
+
+.inlineControls .priceDisplay .adoptionFee {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FF1493;
+  font-family: 'Share Tech Mono', monospace;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+
+/* Compact quantity wrapper for inline layout */
+.inlineControls .quantityWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 2.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  width: fit-content;
+}
+
+/* Compact quantity buttons for inline layout */
+.inlineControls .quantityButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #FFFFFF;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #8B008B;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+/* Compact quantity input for inline layout */
+.inlineControls .quantityInput {
+  width: 3rem;
+  height: 2.5rem;
+  border: none;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #8B008B;
+  background: transparent;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Compact adoption label for inline layout */
+.inlineControls .adoptionLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+/* Bottom Row Layout - About Section (Full Width) */
+.bottomRow {
+  width: 100%;
+}
+
+/* Updated About Section for full width */
+.bottomRow .aboutSection {
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  padding: 1.25rem;
+  border-radius: 15px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  width: 100%;
+}
+
+/* Responsive adjustments for top row */
+@media (max-width: 1024px) {
+  .topRow {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .rightColumn {
+    height: auto; /* Allow natural height on mobile */
   }
 }
 
+@media (max-width: 768px) {
+  .topRow {
+    gap: 1rem;
+  }
+  
+  .inlineControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .inlineControls .priceDisplay {
+    text-align: center;
+    order: -1; /* Move price above quantity on mobile */
+    padding: 1rem;
+  }
+  
+  .inlineControls .priceDisplay .adoptionFee {
+    font-size: 1.8rem;
+    justify-content: center;
+  }
+  
+  .inlineControls .quantitySection {
+    align-items: center;
+  }
+  
+  .inlineControls .quantityWrapper {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .rightColumn .purchaseContainer {
+    padding: 1rem;
+  }
+  
+  .inlineControls .priceDisplay .adoptionFee {
+    font-size: 1.3rem;
+  }
+  
+  .inlineControls .adoptionLabel {
+    font-size: 0.85rem;
+  }
+  
+  .adoptButton {
+    font-size: 1.1rem;
+    height: 3.5rem;
+  }
+}
+
+.petDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* About Section */
+.aboutSection {
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  padding: 1.25rem;
+  border-radius: 15px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  height: fit-content;
+  margin-bottom: 1rem;
+}
+
+/* Image and text content wrapper */
+.aboutContent {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.textContent {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .aboutContent {
+    flex-direction: column;
+  }
+  
+  .textContent {
+    min-width: unset;
+  }
+}
+
+:global(.dark) .aboutSection {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+/* What's Included Section */
+.whatsIncludedSection {
+  background: linear-gradient(135deg, #F0FFF0, #E0FFE0);
+  padding: 1.25rem;
+  border-radius: 15px;
+  border: 3px solid #98FB98;
+  box-shadow: 
+    4px 4px 12px rgba(152, 251, 152, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  height: fit-content;
+  margin-bottom: 1rem;
+}
+
+:global(.dark) .whatsIncludedSection {
+  background: linear-gradient(135deg, #2F4F2F, #228B22);
+  border-color: #90EE90;
+}
+
+/* Order Section (Price + Actions) */
+.orderSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderSection .priceSection {
+  background: linear-gradient(135deg, #FFF8DC, #F0F8FF);
+  padding: 1rem;
+  border-radius: 15px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  text-align: center;
+}
+
+:global(.dark) .orderSection .priceSection {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .whatsIncludedSection {
+  background: linear-gradient(135deg, #2F4F2F, #228B22);
+  border-color: #90EE90;
+}
+
+.aboutTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  margin: 0 0 1rem 0;
+  text-align: left;
+}
+
+.whatsIncludedTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #228B22;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+
+:global(.dark) .aboutTitle {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .whatsIncludedTitle {
+  color: #90EE90;
+  text-shadow: 1px 1px 0px #1F3F1F;
+}
+
+/* Image Container - Updated for new layout */
 .imageContainer {
-  background-color: var(--bg-secondary);
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #F0F8FF, #F0FFF0);
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
-  padding-top: 100%; /* 1:1 Aspect Ratio */
+  width: 100%;
+  max-height: 500px;
+  aspect-ratio: 1; /* Make it square */
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .imageContainer {
+    max-width: 200px;
+    margin: 0 auto;
+  }
 }
 
 .productImage {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   padding: 1rem;
 }
 
 .productInfo {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
-.category {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+/* Kawaii Pet Adoption Themed Styling */
+.tagBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FF69B4, #FF1493);
+  padding: 0.3rem 0.75rem;
+  border-radius: 12px;
+  border: 2px solid #FFFFFF;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #8B008B;
+  box-shadow: 2px 2px 6px rgba(255, 182, 193, 0.4);
+  margin-top: 0.5rem;
 }
 
-.productName {
+.tagName {
   font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
+  font-weight: 300;
+  margin: 0;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  line-height: 1.2;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
-.price {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--accent-secondary);
-  margin-bottom: 0.5rem;
+/* Purchase Container - Vertically Stacked Elements */
+.purchaseContainer {
+  background: linear-gradient(135deg, #FFF8DC, #F0F8FF);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  height: fit-content;
 }
 
-.stock {
+.priceDisplay {
+  text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.inStock {
-  color: #22c55e;
-  font-weight: 500;
+.priceDisplay .adoptionFee {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #FF1493;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
-.outOfStock {
-  color: #ef4444;
-  font-weight: 500;
-}
-
-.description {
-  margin-bottom: 2rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.actions {
+.purchaseControls {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-@media (min-width: 640px) {
-  .actions {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-}
-
-.quantityControl {
+.quantitySection {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.quantityLabel {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-primary);
+/* Force vertical stacking in all screen sizes for purchase container */
+.purchaseControls {
+  flex-direction: column !important;
+}
+
+.quantitySection {
+  flex: none !important;
+  min-width: unset !important;
+}
+
+.adoptButton {
+  flex: none !important;
+  min-width: unset !important;
+  width: 100%;
+}
+
+.adoptionLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+  text-align: center;
+  margin-bottom: 0.5rem;
 }
 
 .quantityWrapper {
   display: flex;
   align-items: center;
-  height: 2.75rem;
+  justify-content: center;
+  height: 3.5rem;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.adoptButton {
+  width: 100%;
+  height: 4rem;
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 1.2rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #8B008B;
+  border: 2px solid #FF1493;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 300ms ease;
+  box-shadow: 2px 2px 6px rgba(255, 182, 193, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.adoptButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #FF69B4, #FF1493);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 4px 4px 12px rgba(255, 182, 193, 0.6);
+}
+
+.adoptButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #E6E6FA, #D3D3D3);
+  color: #8B008B;
+  transform: none;
+  box-shadow: 2px 2px 6px rgba(211, 211, 211, 0.4);
+}
+
+/* Responsive Design for Purchase Container */
+@media (max-width: 480px) {
+  .purchaseContainer {
+    padding: 1rem;
+  }
+  
+  .priceDisplay .adoptionFee {
+    font-size: 1.4rem;
+  }
+  
+  .quantitySection {
+    align-items: center;
+  }
+  
+  .quantityWrapper {
+    max-width: 180px;
+  }
+  
+  .adoptionLabel {
+    font-size: 0.95rem;
+  }
+  
+  .adoptButton {
+    font-size: 1.1rem;
+    height: 3.5rem;
+  }
+}
+
+/* Dark mode for purchase container */
+:global(.dark) .purchaseContainer {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .priceDisplay .adoptionFee {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .adoptionLabel {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .quantityWrapper {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+/* Dark mode for inline price display */
+:global(.dark) .inlineControls .priceDisplay {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .inlineControls .priceDisplay .adoptionFee {
+  color: #FFB6C1;
+  text-shadow: 
+    1px 1px 0px #2F1B69,
+    2px 2px 4px rgba(221, 160, 221, 0.3);
+}
+
+.availability {
+  margin: 0;
+}
+
+.available {
+  color: #228B22;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
+}
+
+
+/* Update parent availability container for available items */
+.productHeader .availability .available {
+  background: #90EE90;
+  border: 2px solid #228B22;
+}
+
+.adopted {
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #404040;
+}
+
+
+/* Update parent availability container for unavailable items */
+.productHeader .availability .adopted {
+  background: linear-gradient(135deg, #808080, #696969);
+}
+
+/* Kawaii Pet Information Sections */
+.personality, .story, .includedItems, .features {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(240, 248, 255, 0.5));
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid #FFB6C1;
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  margin-bottom: 0.75rem;
+}
+
+.aboutSection .personality,
+.aboutSection .story {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(240, 248, 255, 0.3));
+  border-color: rgba(255, 182, 193, 0.6);
+}
+
+.whatsIncludedSection .includedItems,
+.whatsIncludedSection .features {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(240, 255, 240, 0.3));
+  border-color: rgba(152, 251, 152, 0.6);
+}
+
+.personality h3, .story h3, .includedItems h3, .features h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+.personality p, .story p {
+  color: #8B008B;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.includedItems ul, .features ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.includedItems ul li, .features ul li {
+  color: #228B22;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.whatsIncludedSection .includedItems h3,
+.whatsIncludedSection .features h3 {
+  color: #228B22;
 }
 
 .quantityButton {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.5rem;
+  height: 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-secondary);
-  border: 1px solid #e5e7eb;
-  font-size: 1.25rem;
-  transition: all 0.2s;
-}
-
-.quantityButton:first-child {
-  border-radius: 0.375rem 0 0 0.375rem;
-}
-
-.quantityButton:last-child {
-  border-radius: 0 0.375rem 0.375rem 0;
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #FFFFFF;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #8B008B;
+  cursor: pointer;
+  transition: all 300ms ease;
 }
 
 .quantityButton:hover:not(:disabled) {
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #FF69B4, #FF1493);
+  transform: scale(1.05);
 }
 
 .quantityButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  background: linear-gradient(135deg, #E6E6FA, #D3D3D3);
+  color: #8B008B;
 }
 
 .quantityInput {
-  width: 3rem;
-  height: 2.75rem;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
-  border-left: none;
-  border-right: none;
+  width: 5rem;
+  height: 3.5rem;
+  border: none;
   text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #8B008B;
+  background: transparent;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
   -moz-appearance: textfield;
-  background-color: white;
+  appearance: textfield;
 }
 
 .quantityInput::-webkit-outer-spin-button,
@@ -277,27 +891,130 @@
 }
 
 .quantityInput:disabled {
-  background-color: #f3f4f6;
+  background: transparent;
   opacity: 0.5;
 }
 
-.addToCartButton {
-  flex: 1;
-  height: 2.75rem;
-  background-color: var(--accent-secondary);
-  color: white;
-  font-weight: 500;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s;
+/* Dark mode adjustments */
+:global(.dark) .productDetail {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
 }
 
-.addToCartButton:hover:not(:disabled) {
-  background-color: var(--accent-primary);
+:global(.dark) .breadcrumbs {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+  color: #FFB6C1;
 }
 
-.addToCartButton:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+:global(.dark) .tagName {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .adoptionFee {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .personality, 
+:global(.dark) .story,
+:global(.dark) .includedItems,
+:global(.dark) .features {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .aboutSection .personality,
+:global(.dark) .aboutSection .story {
+  background: linear-gradient(135deg, rgba(75, 0, 130, 0.3), rgba(102, 51, 153, 0.3));
+  border-color: rgba(221, 160, 221, 0.6);
+}
+
+:global(.dark) .whatsIncludedSection .includedItems,
+:global(.dark) .whatsIncludedSection .features {
+  background: linear-gradient(135deg, rgba(47, 79, 47, 0.3), rgba(34, 139, 34, 0.3));
+  border-color: rgba(144, 238, 144, 0.6);
+}
+
+:global(.dark) .personality h3, 
+:global(.dark) .story h3,
+:global(.dark) .personality p, 
+:global(.dark) .story p {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .includedItems h3,
+:global(.dark) .features h3,
+:global(.dark) .includedItems ul li,
+:global(.dark) .features ul li {
+  color: #90EE90;
+  text-shadow: 1px 1px 0px #1F3F1F;
+}
+
+:global(.dark) .adoptionLabel {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .quantityWrapper {
+  background: linear-gradient(135deg, #4B0082, #663399);
+  border-color: #DDA0DD;
+}
+
+:global(.dark) .quantityInput {
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
+}
+
+:global(.dark) .available,
+:global(.dark) .adopted {
+  color: #FFFFFF;
+}
+
+/* Add to Cart Popup Notification */
+.addToCartPopup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #FFFFFF;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  border: 3px solid #FF1493;
+  box-shadow: 4px 4px 12px rgba(255, 182, 193, 0.6);
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px #8B008B;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  animation-fill-mode: both;
+}
+
+.addToCartPopup::before {
+  content: '🛒 ';
+  margin-right: 0.5rem;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* Not Found Styling */

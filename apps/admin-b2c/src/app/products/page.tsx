@@ -8,7 +8,10 @@ import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState }
 import { useProductManagement } from '@/hooks/useProductManagement';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 
-function ProductsPageContent() {
+// Disable static generation for this auth-dependent page
+export const dynamic = 'force-dynamic';
+
+export function ProductsPageContent() {
   const router = useRouter();
   const {
     products,
@@ -45,9 +48,9 @@ function ProductsPageContent() {
   return (
     <AppLayout>
       <Main
-        pageHeading="Products Management"
+        pageHeading="Products"
         rightColumnTitle="Actions"
-        leftColumnTitle="Products"
+        leftColumnTitle="Product List"
         leftColumn={
           <ProductsTable 
             products={products}

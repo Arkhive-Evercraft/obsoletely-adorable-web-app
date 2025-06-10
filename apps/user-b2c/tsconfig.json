@@ -9,7 +9,8 @@
     "paths": {
       "@/components/*": ["src/components/*"],
       "@/contexts/*": ["src/contexts/*"],
-      "@/mocks/*": ["src/mocks/*"]
+      "@/mocks/*": ["src/mocks/*"],
+      "@/utils/*": ["src/utils/*"]
     },
     "baseUrl": "."
   },
@@ -19,7 +20,7 @@
     "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts"
-  ],
+, "../../packages/ui/src/components/AuthProvider.tsx"  ],
   "exclude": [
     "node_modules"
   ]

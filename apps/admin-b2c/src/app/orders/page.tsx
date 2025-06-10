@@ -8,6 +8,9 @@ import { OrderActions } from '@/components/Orders/OrderActions';
 import { OrderLoadingState, OrderErrorState } from '@/components/Orders/OrderStates';
 import type { Order } from '@repo/db/data';
 
+// Disable static generation for this auth-dependent page
+export const dynamic = 'force-dynamic';
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
