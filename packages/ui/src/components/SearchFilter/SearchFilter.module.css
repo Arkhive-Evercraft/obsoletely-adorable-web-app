@@ -12,16 +12,6 @@
     inset 1px 1px 0px #FFFFFF;
 }
 
-.searchFilterContainer::before {
-  content: '🔍 Find Your Tag Pet!';
-  font-family: 'Share Tech Mono', monospace;
-  font-weight: 700;
-  color: #8B008B;
-  font-size: 1.1rem;
-  text-shadow: 1px 1px 0px #FFFFFF;
-  margin-bottom: 0.5rem;
-  display: block;
-}
 
 @media (min-width: 768px) {
   .searchFilterContainer {

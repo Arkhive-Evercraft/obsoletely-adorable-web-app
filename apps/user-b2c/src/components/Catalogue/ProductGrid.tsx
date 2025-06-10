@@ -134,7 +134,7 @@ export function ProductGrid({ className = '' }: ProductGridProps) {
   }
   
   return (
-    <div className={className}>
+    <article className={className}>
       <div className={styles.filters}>
         <div className={styles.allFilters}>
           <div className={styles.searchContainer}>
@@ -220,6 +220,6 @@ export function ProductGrid({ className = '' }: ProductGridProps) {
       <div className={styles.productCount}>
         {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
       </div>
-    </div>
+    </article>
   );
 }
