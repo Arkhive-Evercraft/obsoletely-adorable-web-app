@@ -1,67 +1,148 @@
+/* Kawaii Pet Owner Account - Tamagotchi Style */
 .accountContainer {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 25px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+}
+
+.accountContainer::before {
+  content: '👤 Pet Owner Profile 🏷️';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  border: 3px solid #FF69B4;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
 .accountCard {
-  background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border-radius: 20px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
   padding: 2rem;
   margin-bottom: 2rem;
-  transition: background-color 0.2s;
+  transition: all 300ms ease;
+  position: relative;
+}
+
+.accountCard:hover {
+  border-color: #FF69B4;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.5),
+    inset 1px 1px 0px #FFFFFF;
+  transform: translateY(-2px);
+}
+
+:global(.dark) .accountContainer {
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
 }
 
 :global(.dark) .accountCard {
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
 }
 
 .profileSection {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 3px solid #FFB6C1;
   margin-bottom: 2rem;
+  position: relative;
+}
+
+.profileSection::after {
+  content: '♥♥♥';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  color: #FF69B4;
+  font-size: 0.8rem;
 }
 
 :global(.dark) .profileSection {
-  border-color: #374151;
+  border-color: #DDA0DD;
 }
 
 .avatar {
   flex-shrink: 0;
+  position: relative;
 }
 
 .avatarImage {
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #e5e7eb;
+  border: 4px solid #FFB6C1;
+  box-shadow: 
+    3px 3px 10px rgba(255, 182, 193, 0.4),
+    inset 1px 1px 0px #FFFFFF;
+  transition: all 300ms ease;
+}
+
+.avatarImage:hover {
+  border-color: #FF69B4;
+  transform: scale(1.05);
+  box-shadow: 
+    5px 5px 15px rgba(255, 182, 193, 0.6),
+    inset 1px 1px 0px #FFFFFF;
 }
 
 :global(.dark) .avatarImage {
-  border-color: #374151;
+  border-color: #DDA0DD;
 }
 
 .avatarPlaceholder {
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6b7280;
-  border: 3px solid #e5e7eb;
+  color: #8B008B;
+  border: 4px solid #FFB6C1;
+  font-size: 1.5rem;
+  transition: all 300ms ease;
+  box-shadow: 
+    3px 3px 10px rgba(255, 182, 193, 0.4),
+    inset 1px 1px 0px #FFFFFF;
+}
+
+.avatarPlaceholder:hover {
+  border-color: #FF69B4;
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #E6E6FA, #DDA0DD);
 }
 
 :global(.dark) .avatarPlaceholder {
-  background-color: #374151;
-  color: #9ca3af;
-  border-color: #4b5563;
+  background: linear-gradient(135deg, #4B0082, #663399);
+  color: #FFB6C1;
+  border-color: #DDA0DD;
 }
 
 .userInfo {
@@ -69,14 +150,28 @@
 }
 
 .userName {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #FF69B4;
   margin: 0 0 0.5rem 0;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 
+    1px 1px 0px #FFFFFF,
+    2px 2px 0px #FFB6C1;
+  position: relative;
+}
+
+.userName::before {
+  content: '🌟 ';
+  color: #FF1493;
+  font-size: 1.5rem;
 }
 
 :global(.dark) .userName {
-  color: #f9fafb;
+  color: #FFB6C1;
+  text-shadow: 
+    1px 1px 0px #2F1B69,
+    2px 2px 0px #4B0082;
 }
 
 .userEmail {

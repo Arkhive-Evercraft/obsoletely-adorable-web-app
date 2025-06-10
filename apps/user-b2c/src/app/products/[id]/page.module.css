@@ -1,5 +1,31 @@
+/* Kawaii Pet Tag Detail Page - Tamagotchi Style */
 .productDetail {
   width: 100%;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 25px;
+  border: 3px solid #FFB6C1;
+  padding: 2rem;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+}
+
+.productDetail::before {
+  content: '🏷️ Tag Pet Profile 💕';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  border: 3px solid #FF69B4;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
 .breadcrumbs {
@@ -7,59 +33,137 @@
   align-items: center;
   margin-bottom: 2rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  background: linear-gradient(135deg, #F0F8FF, #E6E6FA);
+  padding: 0.75rem 1rem;
+  border-radius: 15px;
+  border: 2px solid #FFB6C1;
 }
 
 .breadcrumbLink {
-  color: var(--text-secondary);
+  color: #8B008B;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 300ms ease;
+  position: relative;
+}
+
+.breadcrumbLink::before {
+  content: '🏠 ';
+  color: #FF69B4;
 }
 
 .breadcrumbLink:hover {
-  color: var(--accent-secondary);
+  color: #FF1493;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
 .breadcrumbSeparator {
-  margin: 0 0.5rem;
+  margin: 0 0.75rem;
+  color: #FF69B4;
+  font-weight: bold;
+}
+
+.breadcrumbSeparator::before {
+  content: '→';
 }
 
 .breadcrumbCurrent {
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: #FF69B4;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+.breadcrumbCurrent::before {
+  content: '🏷️ ';
 }
 
 /* Related Products Section */
 .relatedProductsSection {
   margin-top: 4rem;
   padding-top: 2rem;
-  border-top: 1px solid var(--accent-secondary);
+  border-top: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, rgba(240, 248, 255, 0.3), rgba(240, 255, 240, 0.3));
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+}
+
+.relatedProductsSection::before {
+  content: '💕 Friends of This Tag Pet 💕';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.25rem 1rem;
+  border-radius: 15px;
+  border: 2px solid #FF69B4;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
 .relatedProductsTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 800;
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: #FF69B4;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 
+    1px 1px 0px #FFFFFF,
+    2px 2px 0px #FFB6C1;
+}
+
+.relatedProductsTitle::before {
+  content: '🌟 ';
+  color: #FF1493;
+}
+
+.relatedProductsTitle::after {
+  content: ' 🌟';
+  color: #FF1493;
 }
 
 .relatedProducts {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
 .relatedProductCard {
-  border-radius: 0.5rem;
+  border-radius: 20px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: var(--bg-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease;
+  background: linear-gradient(135deg, #FFFFFF, #F0F8FF);
+  border: 3px solid #FFB6C1;
+  box-shadow: 
+    4px 4px 12px rgba(255, 182, 193, 0.3),
+    inset 1px 1px 0px #FFFFFF;
+  position: relative;
+}
+
+.relatedProductCard::before {
+  content: '♥';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #FF69B4;
+  font-size: 1.2rem;
+  z-index: 2;
+  animation: heartFloat 3s ease-in-out infinite;
 }
 
 .relatedProductCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px) scale(1.02);
+  border-color: #FF69B4;
+  box-shadow: 
+    6px 6px 20px rgba(255, 182, 193, 0.5),
+    inset 1px 1px 0px #FFFFFF;
 }
 
 .relatedProductLink {
@@ -70,8 +174,9 @@
 
 .relatedProductImageContainer {
   position: relative;
-  padding-bottom: 75%; /* 4:3 aspect ratio */
+  padding-bottom: 75%;
   overflow: hidden;
+  border-bottom: 2px solid #FFB6C1;
 }
 
 .relatedProductImage {

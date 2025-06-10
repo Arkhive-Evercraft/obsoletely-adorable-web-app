@@ -7,13 +7,11 @@ import { UserActions } from "./UserActions";
 
 interface AppLayoutProps {
     children?: ReactNode;
-    query?: string;
     requireAuth?: boolean;
 }
 
 export function AppLayout({
     children,
-    query,
     requireAuth = true,
 }: AppLayoutProps) {
     const navList = [

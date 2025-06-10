@@ -1,8 +1,36 @@
+/* Kawaii Pet Store Product Grid - Tamagotchi Style */
+
+/* Filter Section */
 .filters {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border: 3px solid #FFB6C1;
+  border-radius: 20px;
+  box-shadow: 
+    inset 1px 1px 0px #FFFFFF,
+    4px 4px 12px rgba(255, 182, 193, 0.3);
+  position: relative;
+}
+
+.filters::before {
+  content: '🔍 Find Your Perfect Tag Pet! 🔍';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  border: 2px solid #FF69B4;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #8B008B;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
 }
 
 @media (min-width: 768px) {
@@ -39,81 +67,113 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem;
-  padding-left: 2.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background-color: white;
-  color: #1f2937;
-  transition-property: color, background-color, border-color;
-  transition-duration: 200ms;
-  min-height: 2.75rem;
+  padding: 0.875rem 1rem;
+  padding-left: 3rem;
+  border-radius: 25px;
+  border: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, #FFFFFF, #FFF8DC);
+  color: #8B008B;
+  transition: all 300ms ease;
+  min-height: 3rem;
   box-sizing: border-box;
   line-height: 1.25;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 182, 193, 0.3),
+    2px 2px 6px rgba(255, 182, 193, 0.2);
 }
 
 :global(.dark) .searchInput {
-  border-color: #374151;
-  background-color: #1f2937;
-  color: white;
+  border-color: #DDA0DD;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  color: #FFB6C1;
 }
 
 .searchInput::placeholder {
-  color: #9ca3af;
+  color: #DDA0DD;
+  font-style: italic;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--accent-secondary);
-  box-shadow: 0 0 0 2px var(--accent-secondary);
+  border-color: #FF69B4;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 182, 193, 0.3),
+    0 0 0 4px rgba(255, 105, 180, 0.3),
+    2px 2px 12px rgba(255, 105, 180, 0.4);
+  transform: scale(1.02);
 }
 
 .searchIcon {
   position: absolute;
-  left: 0.75rem;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: #FF69B4;
   pointer-events: none;
+  font-size: 1.2rem;
 }
 
 .filterGroup {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .filterLabel {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #8B008B;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+.filterLabel::before {
+  content: '♥ ';
+  color: #FF69B4;
 }
 
 .searchLabel {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #8B008B;
+  font-weight: bold;
+  font-family: 'Share Tech Mono', monospace;
+  text-shadow: 1px 1px 0px #FFFFFF;
+}
+
+.searchLabel::before {
+  content: '🏷️ ';
 }
 
 :global(.dark) .filterLabel {
-  color: #d1d5db;
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
 }
 
 :global(.dark) .searchLabel {
-  color: #d1d5db;
+  color: #FFB6C1;
+  text-shadow: 1px 1px 0px #2F1B69;
 }
 
 .select {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background-color: white;
-  color: #1f2937;
-  transition-property: color, background-color, border-color;
-  transition-duration: 200ms;
-  min-height: 2.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 20px;
+  border: 3px solid #FFB6C1;
+  background: linear-gradient(135deg, #FFFFFF, #FFF8DC);
+  color: #8B008B;
+  transition: all 300ms ease;
+  min-height: 3rem;
   box-sizing: border-box;
   line-height: 1.25;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 182, 193, 0.3),
+    2px 2px 6px rgba(255, 182, 193, 0.2);
 }
 
 @media (min-width: 768px) {
@@ -123,21 +183,30 @@
 }
 
 :global(.dark) .select {
-  border-color: #374151;
-  background-color: #1f2937;
-  color: white;
+  border-color: #DDA0DD;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  color: #FFB6C1;
 }
 
 .select:focus {
   outline: none;
-  border-color: var(--accent-secondary);
-  box-shadow: 0 0 0 2px var(--accent-secondary);
+  border-color: #FF69B4;
+  box-shadow: 
+    inset 1px 1px 3px rgba(255, 182, 193, 0.3),
+    0 0 0 4px rgba(255, 105, 180, 0.3),
+    2px 2px 12px rgba(255, 105, 180, 0.4);
+  transform: scale(1.02);
 }
 
+/* Product Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(240, 248, 255, 0.3), rgba(240, 255, 240, 0.3));
+  border-radius: 20px;
+  border: 2px solid #FFB6C1;
 }
 
 @media (min-width: 640px) {
@@ -158,100 +227,128 @@
   }
 }
 
+/* No Results State */
 .noResults {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  color: #6b7280;
+  padding: 4rem 2rem;
+  color: #8B008B;
   text-align: center;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 20px;
+  border: 3px solid #FFB6C1;
+  box-shadow: 4px 4px 12px rgba(255, 182, 193, 0.3);
+}
+
+.noResults::before {
+  content: '💔';
+  font-size: 4rem;
+  margin-bottom: 1rem;
 }
 
 :global(.dark) .noResults {
-  color: #9ca3af;
-}
-
-.noResults svg {
-  margin-bottom: 1rem;
-  color: #9ca3af;
-}
-
-:global(.dark) .noResults svg {
-  color: #4b5563;
+  color: #FFB6C1;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
 }
 
 .noResults p {
   margin-bottom: 1rem;
   font-size: 1.125rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: 600;
 }
 
 .resetButton {
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-secondary);
-  color: white;
-  border-radius: 0.375rem;
-  transition-property: background-color;
-  transition-duration: 200ms;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+  color: #FFFFFF;
+  border: 2px solid #FF1493;
+  border-radius: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  transition: all 300ms ease;
+  cursor: pointer;
+  text-shadow: 1px 1px 0px #8B008B;
+  box-shadow: 2px 2px 6px rgba(255, 182, 193, 0.4);
 }
 
 .resetButton:hover {
-  background-color: var(--accent-primary);
+  background: linear-gradient(135deg, #FF69B4, #FF1493);
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 12px rgba(255, 182, 193, 0.6);
 }
 
 .resetButton:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-secondary);
-  box-shadow: 0 0 0 2px rgba(var(--accent-secondary-rgb), 0.5);
+  box-shadow: 
+    2px 2px 6px rgba(255, 182, 193, 0.4),
+    0 0 0 4px rgba(255, 105, 180, 0.4);
 }
 
+/* Product Count */
 .productCount {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #8B008B;
   margin-top: 1rem;
-  text-align: right;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  border: 2px solid #FFB6C1;
+  display: inline-block;
 }
 
-.dark .productCount {
-  color: #9ca3af;
+.productCount::before {
+  content: '🏷️ ';
+  color: #FF69B4;
 }
 
+:global(.dark) .productCount {
+  color: #FFB6C1;
+  background: linear-gradient(135deg, #2F1B69, #4B0082);
+  border-color: #DDA0DD;
+}
+
+/* Loading State */
 .loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  color: #6b7280;
+  padding: 4rem 2rem;
+  color: #8B008B;
   text-align: center;
+  background: linear-gradient(135deg, #FFF8DC, #F0FFF0);
+  border-radius: 20px;
+  border: 3px solid #FFB6C1;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   margin-bottom: 1rem;
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  border: 4px solid rgba(255, 182, 193, 0.3);
   border-radius: 50%;
-  border-left-color: #3b82f6;
-  animation: spin 1s linear infinite;
+  border-top: 4px solid #FF69B4;
+  position: relative;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-:global(.dark) .loading {
-  color: #9ca3af;
+.spinner::before {
+  content: '♥';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FF69B4;
+  font-size: 1.2rem;
 }
 
 :global(.dark) .spinner {
-  border-color: rgba(255, 255, 255, 0.1);
-  border-left-color: #3b82f6;
+  border-color: rgba(221, 160, 221, 0.3);
+  border-top-color: #DDA0DD;
 }

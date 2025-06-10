@@ -5,13 +5,11 @@ import { Content } from "@repo/ui/components";
 
 interface AppLayoutProps {
     children?: ReactNode;
-    query?: string;
 }
 
 // Remove memo from AppLayout since children always change
 export function AppLayout({
     children,
-    query,
 }: AppLayoutProps) {
     return (
         <div className="h-screen flex flex-col gap-4 overflow-hidden">

@@ -1,15 +1,36 @@
+/* Kawaii Pet Store Header - UI Package */
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--bs-warning);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition-property: background-color;
-  transition-duration: 200ms;
+  background: linear-gradient(135deg, #FFB6C1, #FFC0CB, #E6E6FA);
+  border-bottom: 3px solid #FF69B4;
+  box-shadow: 
+    0 4px 12px rgba(255, 182, 193, 0.3),
+    inset 0 1px 0px #FFFFFF;
+  transition: all 300ms ease;
+  position: relative;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    #FF69B4 0px,
+    #FF69B4 10px,
+    #FF1493 10px,
+    #FF1493 20px
+  );
 }
 
 :global(.dark) .header {
-  background-color: #1f2937;
+  background: linear-gradient(135deg, #2F1B69, #4B0082, #663399);
+  border-bottom-color: #DDA0DD;
 }
 
 .container {

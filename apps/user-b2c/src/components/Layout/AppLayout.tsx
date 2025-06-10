@@ -7,27 +7,25 @@ import { UserActions } from "./UserActions";
 
 interface AppLayoutProps {
     children?: ReactNode;
-    query?: string;
     requireAuth?: boolean;
 }
 
 // Remove memo from AppLayout since children always change
 export function AppLayout({
     children,
-    query,
     requireAuth = true,
 }: AppLayoutProps) {
     const navList = [
         { href: "/", label: "Home" },
         { href: "/about", label: "About" },
-        { href: "/products", label: "Products" },
+        { href: "/products", label: "Tags" },
         { href: "/categories", label: "Categories" },
-        { href: "/checkout", label: "Checkout" },
+        { href: "/checkout", label: "Adopt" },
     ]
     return (
-        <div className="h-screen flex flex-col gap-4 overflow-hidden">
+        <div className="h-screen flex flex-col gap-4 overflow-hidden bg-gradient-to-br from-vapor-pink/5 via-vapor-purple/5 to-vapor-cyan/5">
             <MemoizedHeader 
-                className="flex-shrink-0" 
+                className="flex-shrink-0 retro-window" 
                 navItems={navList}
                 renderUserActions={() => <UserActions />}
             />
@@ -36,7 +34,7 @@ export function AppLayout({
                     {children}
                 </AuthWrapper>
             </Content>
-            <MemoizedFooter className="flex-shrink-0" />
+            <MemoizedFooter className="flex-shrink-0 retro-panel" />
         </div>
     );
 }
