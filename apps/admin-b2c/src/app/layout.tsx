@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "StyleStore Admin",
-  description: "Admin Dashboard for StyleStore",
+  title: "Obsoletely Adorable Admin",
+  description: "Admin Dashboard for Obsoletely Adorable",
 };
 
 export default function RootLayout({

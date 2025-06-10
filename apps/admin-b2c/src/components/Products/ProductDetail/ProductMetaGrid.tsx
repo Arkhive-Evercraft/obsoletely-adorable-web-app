@@ -8,7 +8,7 @@ interface Product {
   id?: number;
   price: number;
   categoryName: string;
-  inventory: number; // Remove inStock since it's computed from inventory
+  inventory: number;
 }
 
 interface ProductMetaGridProps {

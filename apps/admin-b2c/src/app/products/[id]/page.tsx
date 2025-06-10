@@ -10,6 +10,7 @@ import {
   ProductDetailHeader, 
   ProductMetaGrid, 
   ProductDescription, 
+  ProductStory,
   ActionsPanel 
 } from '@/components/Products';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
@@ -20,13 +21,13 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  description: string;
+  description?: string;
+  story?: string;
   imageUrl: string;
   categoryName: string;
-  featured: boolean;
   inventory: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 function ProductDetailPageContent() {
@@ -328,6 +329,12 @@ function ProductDetailPageContent() {
           description={currentProduct.description}
           isEditing={isEditing}
           onDescriptionChange={(description) => handleFieldChange('description', description)}
+          productId={currentProduct.id}
+        />
+        <ProductStory
+          story={currentProduct.story}
+          isEditing={isEditing}
+          onStoryChange={(story) => handleFieldChange('story', story)}
           productId={currentProduct.id}
         />
       </ProductDetailHeader>

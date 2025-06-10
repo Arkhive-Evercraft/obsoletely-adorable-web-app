@@ -18,7 +18,6 @@ export function AppLayout({
         { href: "/", label: "Home" },
         { href: "/products", label: "Products" },
         { href: "/orders", label: "Orders" },
-        { href: "/settings", label: "Settings" },
     ]
     return (
         <div className="h-screen flex flex-col gap-4 overflow-hidden">
