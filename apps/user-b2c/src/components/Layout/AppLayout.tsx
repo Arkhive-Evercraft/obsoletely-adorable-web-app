@@ -19,6 +19,7 @@ export function AppLayout({
 }: AppLayoutProps) {
     const navList = [
         { href: "/", label: "Home" },
+        { href: "/about", label: "About" },
         { href: "/products", label: "Products" },
         { href: "/categories", label: "Categories" },
         { href: "/checkout", label: "Checkout" },
