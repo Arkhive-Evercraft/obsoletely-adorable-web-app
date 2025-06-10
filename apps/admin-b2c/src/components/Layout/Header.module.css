@@ -1,0 +1,185 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--bs-warning);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition-property: background-color;
+  transition-duration: 200ms;
+}
+
+:global(.dark) .header {
+  background-color: #1f2937;
+}
+
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  transition-property: color;
+  transition-duration: 200ms;
+  margin: 0;
+}
+
+:global(.dark) .logo {
+  color: white;
+}
+
+.menuToggle {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: #6b7280;
+  transition-property: color;
+  transition-duration: 200ms;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .menuToggle {
+    display: none;
+  }
+}
+
+.menuToggle:hover {
+  color: #374151;
+}
+
+:global(.dark) .menuToggle {
+  color: #9ca3af;
+}
+
+:global(.dark) .menuToggle:hover {
+  color: #e5e7eb;
+}
+
+.menuToggle:focus {
+  outline: none;
+}
+
+.hamburger {
+  display: block;
+  position: relative;
+  width: 1.5rem;
+  height: 1px;
+  background-color: currentColor;
+  transition-property: all;
+  transition-duration: 200ms;
+}
+
+.hamburger::before, 
+.hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 1.5rem;
+  height: 1px;
+  background-color: currentColor;
+  transition-property: all;
+  transition-duration: 200ms;
+}
+
+.hamburger::before {
+  top: 0.375rem;
+}
+
+.hamburger::after {
+  top: -0.375rem;
+}
+
+.nav {
+  display: none;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  background-color: white;
+  transition-property: background-color;
+  transition-duration: 200ms;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: block;
+    position: static;
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+:global(.dark) .nav {
+  background-color: #1f2937;
+}
+
+@media (min-width: 768px) {
+  :global(.dark) .nav {
+    background-color: transparent;
+  }
+}
+
+.nav.active {
+  display: block;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.themeToggleWrapper {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .themeToggleWrapper {
+    display: block;
+  }
+}
+
+.accountLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  color: #374151;
+  transition-property: background-color, color;
+  transition-duration: 200ms;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+:global(.dark) .accountLink {
+  color: #d1d5db;
+}
+
+.accountLink:hover {
+  background-color: #f3f4f6;
+}
+
+:global(.dark) .accountLink:hover {
+  background-color: #374151;
+}
+
+.accountLink:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+}

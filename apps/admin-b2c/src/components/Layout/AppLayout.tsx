@@ -1,0 +1,32 @@
+import type { PropsWithChildren, ReactNode } from "react";
+import React from "react";
+import { Header, Footer } from "@/components/Layout";
+import { Content } from "@/components/Content";
+import { AuthWrapper } from "@/components/AuthWrapper";
+
+interface AppLayoutProps {
+    children?: ReactNode;
+    query?: string;
+}
+
+// Remove memo from AppLayout since children always change
+export function AppLayout({
+    children,
+    query,
+}: AppLayoutProps) {
+    return (
+        <AuthWrapper>
+            <div className="h-screen flex flex-col gap-4 overflow-hidden">
+                <MemoizedHeader className="flex-shrink-0"/>
+                <Content className="flex-1 w-full overflow-auto">
+                    {children}
+                </Content>
+                <MemoizedFooter className="flex-shrink-0" />
+            </div>
+        </AuthWrapper>
+    );
+}
+
+// Memoize the stable parts instead
+const MemoizedHeader = React.memo(Header);
+const MemoizedFooter = React.memo(Footer);

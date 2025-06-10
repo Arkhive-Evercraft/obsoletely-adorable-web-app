@@ -2,6 +2,10 @@ import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "@repo/ui/components"
+import { AppDataProvider } from "@/components/AppDataProvider";
+import { AuthProvider } from "@/components/AuthProvider";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -13,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Admin",
-  description: "Admin Dashboard",
+  title: "StyleStore Admin",
+  description: "Admin Dashboard for StyleStore",
 };
 
 export default function RootLayout({
@@ -25,8 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        <AuthProvider>
+          <ThemeProvider>
+            <AppDataProvider>
+              {children}
+            </AppDataProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
-  );
-}
+  )}

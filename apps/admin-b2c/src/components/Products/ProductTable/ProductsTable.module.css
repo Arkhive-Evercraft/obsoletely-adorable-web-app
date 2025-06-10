@@ -1,0 +1,94 @@
+.imageButton {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageButton:hover {
+  background-color: #f3f4f6;
+  transform: scale(1.05);
+}
+
+.imageButton:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.imageButton:hover .thumbnail {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ProductsTable specific styles */
+.productsTable {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Validation error styles for table cells */
+.tableErrorMessage {
+  color: #dc2626;
+  font-size: 0.625rem;
+  margin-top: 0.125rem;
+  display: block;
+  line-height: 1.2;
+}
+
+.tableInput {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tableInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.tableInput.error {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+.tableInput.error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+.tableCellWithError {
+  position: relative;
+}
+
+.tableCellWithError .tableErrorMessage {
+  animation: slideInError 0.2s ease-out;
+}
+
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

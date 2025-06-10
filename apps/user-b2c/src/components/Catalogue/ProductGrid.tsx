@@ -1,0 +1,157 @@
+import React, { useState, useEffect } from 'react';
+import { NextProductCard as ProductCard, Product } from '@/components/Product/NextProductCard';
+import styles from './ProductGrid.module.css';
+import { useCart } from '@/contexts/CartContext';
+
+interface ProductGridProps {
+  initialProducts: Product[];
+  className?: string;
+}
+
+export function ProductGrid({ initialProducts, className = '' }: ProductGridProps) {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [sortBy, setSortBy] = useState('latest');
+  const { addToCart } = useCart();
+  
+  // Get unique categories from products
+  const categories = [...new Set(initialProducts.map(product => product.category))];
+  
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+  
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+  };
+  
+  const handleSortChange = (sort: string) => {
+    setSortBy(sort);
+  };
+  
+  // Filter and sort products based on search, category, and sort criteria
+  useEffect(() => {
+    let filteredProducts = [...initialProducts];
+    
+    // Apply search filter
+    if (searchTerm) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      filteredProducts = filteredProducts.filter(product => 
+        product.name.toLowerCase().includes(lowerCaseSearchTerm) || 
+        product.description.toLowerCase().includes(lowerCaseSearchTerm) ||
+        product.category.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    }
+    
+    // Apply category filter
+    if (selectedCategory) {
+      filteredProducts = filteredProducts.filter(product => product.category === selectedCategory);
+    }
+    
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-low':
+        filteredProducts.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filteredProducts.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'latest':
+      default:
+        // Assuming products are already sorted by latest
+        break;
+    }
+    
+    setProducts(filteredProducts);
+  }, [initialProducts, searchTerm, selectedCategory, sortBy]);
+  
+  return (
+    <div className={className}>
+      <div className={styles.filters}>
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            placeholder="Search products..."
+            className={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className={styles.searchIcon} viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg>
+        </div>
+        
+        <div className={styles.dropdownFilters}>
+          <div className={styles.filterGroup}>
+            <label htmlFor="category-filter" className={styles.filterLabel}>Category</label>
+            <select
+              id="category-filter"
+              className={styles.select}
+              value={selectedCategory}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div className={styles.filterGroup}>
+            <label htmlFor="sort-filter" className={styles.filterLabel}>Sort By</label>
+            <select
+              id="sort-filter"
+              className={styles.select}
+              value={sortBy}
+              onChange={(e) => handleSortChange(e.target.value)}
+            >
+              <option value="latest">Latest</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name A-Z</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      {products.length === 0 ? (
+        <div className={styles.noResults}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm-2.715 5.933a.5.5 0 0 1-.183-.683A4.498 4.498 0 0 1 8 9.5a4.5 4.5 0 0 1 3.898 2.25.5.5 0 0 1-.866.5A3.498 3.498 0 0 0 8 10.5a3.498 3.498 0 0 0-3.032 1.75.5.5 0 0 1-.683.183zM10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8z"/>
+          </svg>
+          <p>No products found matching your criteria</p>
+          <button 
+            onClick={() => {
+              setSearchTerm('');
+              setSelectedCategory('');
+              setSortBy('latest');
+            }}
+            className={styles.resetButton}
+          >
+            Reset Filters
+          </button>
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={() => addToCart(product)}
+            />
+          ))}
+        </div>
+      )}
+      
+      <div className={styles.productCount}>
+        {products.length} product{products.length !== 1 ? 's' : ''} found
+      </div>
+    </div>
+  );
+}

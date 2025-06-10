@@ -9,6 +9,10 @@ export const env = createEnv({
   server: {
     PASSWORD: z.string(),
     JWT_SECRET: z.string(),
+    NEXTAUTH_SECRET: z.string(),
+    GITHUB_CLIENT_ID: z.string(),
+    GITHUB_SECRET: z.string(),
+    NEXTAUTH_URL: z.string().url().optional(),
   },
 
   /**
@@ -28,6 +32,10 @@ export const env = createEnv({
     // E2E: process.env.E2E,
     PASSWORD: process.env.PASSWORD,
     JWT_SECRET: process.env.JWT_SECRET,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    GITHUB_SECRET: process.env.GITHUB_SECRET,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

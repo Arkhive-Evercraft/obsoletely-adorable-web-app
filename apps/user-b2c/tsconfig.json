@@ -6,10 +6,12 @@
         "name": "next"
       }
     ],
-    "types": ["@vitest/browser/providers/playwright"],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/components/*": ["src/components/*"],
+      "@/contexts/*": ["src/contexts/*"],
+      "@/mocks/*": ["src/mocks/*"]
+    },
+    "baseUrl": "."
   },
   "include": [
     "**/*.ts",
@@ -18,5 +20,7 @@
     "next.config.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

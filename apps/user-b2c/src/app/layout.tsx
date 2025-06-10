@@ -1,8 +1,7 @@
-// import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { cookies } from "next/headers";
 import "./globals.css";
+import { Providers } from "@/components/Layout/Providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -14,22 +13,21 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "The store",
+  title: "StyleStore",
+  description: "Your one-stop shop for trendy and stylish products",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const serverCookies = await cookies();
-  const theme = serverCookies.get("theme")?.value || "light";
-
   return (
-    <html lang="en" data-theme={theme}>
+    <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Providers>
           {children}
+        </Providers>
       </body>
     </html>
   );

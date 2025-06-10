@@ -1,12 +1,6 @@
-.main {
-  color: blue;
-}
-
-.selected {
-    color: black;
-    font-weight: bold;
-    text-decoration: underline;
-    background: lightcoral;
+.home {
+  display: flex;
+  flex-direction: column;
 }
 
 .selectedItem {

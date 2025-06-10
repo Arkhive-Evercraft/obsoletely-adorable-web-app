@@ -1,0 +1,17 @@
+.productsPage {
+  width: 100%;
+}
+
+.title {
+  font-size: 2.25rem; /* text-4xl */
+  font-weight: 700; /* font-bold */
+  margin-bottom: 2rem; /* mb-8 */
+  color: #111827; /* text-gray-900 */
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #ffffff; /* dark:text-white */
+  }
+}

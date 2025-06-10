@@ -5,35 +5,55 @@
 @config "../../tailwind.config.ts";
 
 :root {
-  --background: white;
-  --foreground: #0a0a0a;
-  --text: theme("colors.gray.900");
-  --textHover: theme("colors.gray.700");
-  --text-secondary: theme("colors.gray.600");
-  --text-secondaryHover: theme("colors.gray.400");
-  --wsu: #a31631;
-  --wsu-light: #853846;
+  --background: #e8eaeb; 
+  --foreground: #383838;
+  --text-primary: #2c2c2c; 
+  --text-secondary: #6b6b6b; 
+  --bg-primary: #c9c9c9; 
+  --bg-secondary: #ffffff; 
+  --accent-primary: #b68a60; 
+  --accent-secondary: #e72872; 
+
+  /* Bootstrap overrides */
+  --bs-primary: #d4c8b8;
+  --bs-secondary: #e8e2d4;
+  --bs-success: #8fae8f; 
+  --bs-info: #a8c4d6; 
+  --bs-warning: #e6d08a; 
+  --bs-danger: #d4a5a5; 
 }
 
 html[data-theme="dark"] {
-  --background: theme("colors.gray.900");
-  --foreground: #ededed;
-  --text: theme("colors.gray.50");
-  --textHover: theme("colors.gray.300");
-  --text-secondary: theme("colors.gray.400");
-  --text-secondaryHover: theme("colors.gray.500");
+  /* Dark Mode: Dark Warm Grey and Beige Theme */
+  --background: #2a2620; 
+  --foreground: #f5f2ed;
+  --text-primary: #f5f2ed;
+  --text-secondary: #c4b8a6;
+  --bg-primary: #2a2620;
+  --bg-secondary: #342e26;
+  --accent-primary: #4a4036;
+  --accent-secondary: #5c5145;
+  
+  /* Bootstrap overrides */
+  --bs-primary: #5c5145;
+  --bs-secondary: #4a4036;
+  --bs-success: #6b8f6b;
+  --bs-info: #7a9bb0;
+  --bs-warning: #c4ad70;
+  --bs-danger: #b88888;
 }
 
 html {
   background: var(--background);
-  color: var(--text);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @theme inline {
-  --color-primary: var(--text);
-  --color-primaryHover: var(--textHover);
+  --color-primary: var(--foreground);
+  --color-primaryHover: var(--text-secondary);
   --color-secondary: var(--text-secondary);
-  --color-secondaryHover: var(--text-secondaryHover);
-  --color-wsu: var(--wsu);
-  --color-wsu-light: var(--wsu-light);
+  --color-secondaryHover: var(--text-primary);
+  --color-wsu: var(--accent-secondary);
+  --color-wsu-light: var(--accent-primary);
 }

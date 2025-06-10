@@ -1,0 +1,91 @@
+/* AppLayout styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main {
+  flex-grow: 1;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Content area optimization to prevent flickering */
+.content {
+  position: relative;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
+  /* Prevent layout shift during navigation */
+  contain: layout style;
+  /* Optimize rendering performance */
+  will-change: contents;
+}
+
+/* Header styles */
+.header {
+  padding: 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--accent-primary);
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  /* Optimize header rendering */
+  contain: layout style;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+
+/* PageHeader styles */
+.pageHeaderContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+}
+
+.pageHeaderTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+/* Dark mode user name text fix */
+html[data-theme="dark"] .headerContainer span {
+  color: var(--text-secondary) !important;
+}
+
+/* Button theming for dark mode */
+html[data-theme="dark"] .headerContainer button {
+  background-color: var(--accent-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-primary);
+}
+
+html[data-theme="dark"] .headerContainer button:hover {
+  background-color: var(--accent-primary);
+}
+

@@ -8,6 +8,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:push": "prisma db push",
+    "db:seed": "node --loader ts-node/esm src/seed.ts",
     "lint": "eslint . --max-warnings 0",
     "prebuild": "pnpm db:generate",
     "predev": "pnpm db:generate",
@@ -28,9 +29,14 @@
     "./seed": {
       "types": "./src/seed.ts",
       "default": "./dist/seed.js"
+    },
+    "./functions": {
+      "types": "./src/functions.ts",
+      "default": "./dist/functions.js"
     }
   },
   "dependencies": {
+    "@prisma/client": "^6.3.1",
     "@repo/env": "workspace:*"
   },
   "devDependencies": {
@@ -38,6 +44,9 @@
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/node": "^22.13.1",
+    "prisma": "^6.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
     "vitest": "^3.0.4"
   }
 }

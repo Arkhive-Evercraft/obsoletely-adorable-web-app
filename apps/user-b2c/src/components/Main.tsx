@@ -1,4 +1,4 @@
-import { Post } from "@repo/db/data";
+import { Hero } from "@/components/Layout/Hero"
 
 export function Main({
   className,
@@ -7,7 +7,7 @@ export function Main({
 }) {
   return (
     <main className={className}>
-        <p>Hi :)</p>
+      <Hero />
     </main>
   );
 }

@@ -1,12 +1,8 @@
-import { posts } from "@repo/db/data";
-import { AppLayout } from "@/components/Layout/AppLayout";
-import { Main } from "@/components/Main";
 import styles from "./page.module.css";
+import { Main } from "@/components/Main"
+// Mock data for the homepage
+import { mockFeaturedProducts, mockCategories } from "@/mocks/products";
 
 export default function Home() {
-  return (
-    <AppLayout>
-      <Main className={styles.main} />
-    </AppLayout>
-  );
+  return <Main className={styles.main} />;
 }

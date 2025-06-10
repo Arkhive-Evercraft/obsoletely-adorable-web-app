@@ -1,0 +1,89 @@
+.actionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: fit-content;
+}
+
+.summaryCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summaryLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.summaryValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.exportSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.statusBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.statusLabel {
+  color: #6b7280;
+}
+
+.statusStats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusCount {
+  font-weight: 600;
+  color: #111827;
+}
+
+.statusPercentage {
+  color: #6b7280;
+}
+
+.disabledText {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
