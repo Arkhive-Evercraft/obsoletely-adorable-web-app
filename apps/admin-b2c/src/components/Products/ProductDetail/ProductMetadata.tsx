@@ -2,12 +2,7 @@
 
 import React from 'react';
 import styles from './ProductDetail.module.css';
-
-interface Product {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Product } from '@repo/db/data';
 
 interface ProductMetadataProps {
   product: Product;

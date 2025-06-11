@@ -11,6 +11,7 @@ export async function GET() {
       name: product.name,
       price: product.price / 100, // Convert from cents to dollars
       description: product.description,
+      story: product.story,
       imageUrl: product.imageUrl,
       categoryName: product.categoryName,
       inventory: product.inventory,
@@ -32,7 +33,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, price, description, imageUrl, categoryName, inventory } = body;
+    const { name, price, description, story, imageUrl, categoryName, inventory } = body;
 
     // Validation
     if (!name) {
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
       name,
       price: Math.round(price * 100), // Convert to cents
       description: description || '',
+      story: story || '',
       imageUrl,
       categoryName,
       inventory: inventory || 0
@@ -86,6 +88,7 @@ export async function POST(request: Request) {
       name: newProduct.name,
       price: newProduct.price / 100, // Convert back to dollars
       description: newProduct.description,
+      story: newProduct.story,
       imageUrl: newProduct.imageUrl,
       categoryName: newProduct.categoryName,
       inventory: newProduct.inventory,

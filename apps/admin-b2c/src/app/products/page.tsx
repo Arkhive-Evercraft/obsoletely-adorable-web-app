@@ -11,7 +11,7 @@ import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 // Disable static generation for this auth-dependent page
 export const dynamic = 'force-dynamic';
 
-export function ProductsPageContent() {
+function ProductsPageContent() {
   const router = useRouter();
   const {
     products,
