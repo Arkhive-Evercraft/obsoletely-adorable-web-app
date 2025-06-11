@@ -71,8 +71,6 @@ export const productSchema = z.object({
       }
       return Boolean(val);
     }),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
 });
 
 // Type for the product form data
