@@ -4,15 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import { 
-  LoadingState, 
-  NotFoundState, 
-  ProductDetailHeader, 
-  ProductMetaGrid, 
-  ProductDescription, 
-  ProductStory,
-  ActionsPanel 
-} from '@/components/Products';
+import { ProductDetail } from '@/components/domains/products';
+import { LoadingState, ErrorState, EmptyState } from '@/components/ui/DataStates';
+import { ActionPanel } from '@/components/ui/Actions';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 import { useAppData } from '@/components/AppDataProvider';

@@ -120,7 +120,7 @@ export const products = [
     price: 10.00,
     description: "Middle child. Peacemaker. Slightly insecure.",
     story: "Can't stand being left-justified.",
-    imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
+    imageUrl: "s3://obsoletely-adorable-images/center-square-svgrepo-com.png",
     categoryName: "Style",
     inventory: 100,
     createdAt: new Date('2025-03-18T14:30:00Z'),

@@ -4,14 +4,14 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import {
+import { 
+  OrderLoadingState, 
+  OrderErrorState, 
+  OrderNotFoundState,
   OrderDetailHeader,
-  OrderDetailItems,
   OrderActionsPanel,
-  OrderLoadingState,
-  OrderErrorState
-} from '@/components/Orders';
-import { OrderDetailPDF } from '@/components/Orders/OrderReport';
+  OrderPDFExport
+} from '@/components/domains/orders';
 import { Order, OrderItem } from "@repo/db/data"
 
 
@@ -54,7 +54,7 @@ export default function OrderDetailPage() {
 
   const exportOrderToPDF = useCallback(() => {
     if (!order) return;
-    OrderDetailPDF.exportToPDF(order);
+    OrderPDFExport.exportToPDF(order);
   }, [order]);
 
   // Memoize the main content to prevent unnecessary re-renders
@@ -72,7 +72,7 @@ export default function OrderDetailPage() {
       return (
         <Main
           pageHeading="Order Management"
-          leftColumn={<OrderErrorState error={error ?? undefined} />}
+          leftColumn={<OrderNotFoundState id={id} error={error ?? undefined} />}
         />
       );
     }

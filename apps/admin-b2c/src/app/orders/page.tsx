@@ -3,9 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import { OrdersTable } from '@/components/Orders/OrdersTable';
-import { OrderActions } from '@/components/Orders/OrderActions';
-import { OrderLoadingState, OrderErrorState } from '@/components/Orders/OrderStates';
+import { OrdersTable, OrderLoadingState, OrderErrorState, OrderActions } from '@/components/domains/orders';
 import type { Order } from '@repo/db/data';
 
 // Disable static generation for this auth-dependent page
@@ -64,7 +62,7 @@ export default function OrdersPage() {
 
   // Render error state for left column
   const renderErrorState = () => (
-    <OrderErrorState error={error ?? undefined} onRetry={handleRetry} />
+    <OrderErrorState error={error ?? ""} onRetry={handleRetry} />
   );
 
   // Render orders table for left column

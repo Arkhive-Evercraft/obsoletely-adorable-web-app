@@ -2,16 +2,15 @@
 
 import React, { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { AppLayout } from '@/components/Layout/AppLayout';
-import { Main } from '@/components/Main';
-import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState } from '@/components/Products';
+import { ProductsTable, ProductActions, ProductLoadingState, ProductErrorState } from '@/components/domains/products';
 import { useProductManagement } from '@/hooks/useProductManagement';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
-
+import { AppLayout } from '@/components/Layout/AppLayout';
+import { Main } from '@/components/Main';
 // Disable static generation for this auth-dependent page
 export const dynamic = 'force-dynamic';
 
-export function ProductsPageContent() {
+function ProductsPageContent() {
   const router = useRouter();
   const {
     products,

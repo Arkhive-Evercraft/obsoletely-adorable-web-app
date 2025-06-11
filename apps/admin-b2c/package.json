@@ -17,6 +17,7 @@
     "@repo/db": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
+    "cookie": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
     "marked": "^15.0.6",
     "next": "^15.1.6",

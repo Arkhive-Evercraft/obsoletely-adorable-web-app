@@ -4,13 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
+import { LoadingState } from '@/components/ui/DataStates';
 import { 
-  CategoryDetailHeader, 
-  CategoryDetailDescription, 
-  CategoryActionsPanel 
-} from '@/components/Categories';
-import { LoadingState } from '@/components/Products';
-import { NotFoundState } from '@/components/Products';
+  CategoryNotFoundState,
+  CategoryDetailHeader,
+  CategoryDetailDescription,
+  CategoryDetailMetadata,
+  CategoryActionsPanel,
+  DeleteConfirmationDialog
+} from '@/components/domains/categories';
 import { CategoryValidationProvider, useCategoryValidationContext } from '@/contexts/CategoryValidationContext';
 
 interface Category {
@@ -255,7 +257,7 @@ function CategoryDetailPageContent() {
           pageHeading="Categories Management"
           leftColumnTitle="Categories"
           rightColumnTitle="Actions"
-          leftColumn={<LoadingState />}
+          leftColumn={<LoadingState message="Loading category details..." />}
           rightColumn={renderActionsPanel()}
         />
       </AppLayout>
@@ -267,7 +269,7 @@ function CategoryDetailPageContent() {
       <AppLayout>
         <Main
           pageHeading="Category Not Found"
-          leftColumn={<NotFoundState error={error || undefined} />}
+          leftColumn={<CategoryNotFoundState id={categoryName} error={error || undefined} />}
           rightColumn={renderActionsPanel()}
         />
       </AppLayout>
@@ -293,36 +295,13 @@ function CategoryDetailPageContent() {
 
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirmation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-            <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
-            <p className="mb-6">
-              Are you sure you want to delete the <strong>{category.name}</strong> category? This action cannot be undone.
-            </p>
-            {category.productCount && category.productCount > 0 ? (
-              <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded">
-                <strong>Warning:</strong> This category has {category.productCount} associated products.
-                You cannot delete a category with products. Please reassign or delete the products first.
-              </div>
-            ) : null}
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={cancelDelete}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                disabled={isDeleting || (!!category.productCount && category.productCount > 0)}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteConfirmationDialog
+          categoryName={category.name}
+          productCount={category.productCount}
+          isDeleting={isDeleting}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
       )}
     </div>
   );

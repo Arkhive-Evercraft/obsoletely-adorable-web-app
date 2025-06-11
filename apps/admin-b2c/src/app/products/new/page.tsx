@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
 import { 
+  ProductDetail,
   ProductDetailHeader, 
   ProductMetaGrid, 
   ProductDescription, 
   ProductStory,
   NewProductActionsPanel 
-} from '@/components/Products';
+} from '@/components/domains/products';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 import { useAppData } from '@/components/AppDataProvider';
@@ -189,13 +190,13 @@ function AddNewProductPageContent() {
         <ProductDescription
           description={newProduct.description}
           isEditing={true} // Always in editing mode for new products
-          onDescriptionChange={(description) => handleFieldChange('description', description)}
+          onDescriptionChange={(description: string) => handleFieldChange('description', description)}
           productId={newProduct.id}
         />
         <ProductStory
           story={newProduct.story}
           isEditing={true} // Always in editing mode for new products
-          onStoryChange={(story) => handleFieldChange('story', story)}
+          onStoryChange={(story: string) => handleFieldChange('story', story)}
           productId={newProduct.id}
         />
       </ProductDetailHeader>

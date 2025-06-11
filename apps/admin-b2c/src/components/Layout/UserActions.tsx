@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { UserActions as BaseUserActions } from '@repo/ui/components';
-import { UserIcon, LogoutIcon } from '@/components/Buttons/Icons';
+import { UserIcon, LogoutIcon } from '../ui/Icons';
 
 export function UserActions() {
   return (

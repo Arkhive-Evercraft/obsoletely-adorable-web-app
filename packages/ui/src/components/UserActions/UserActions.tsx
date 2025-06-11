@@ -82,7 +82,7 @@ export function UserActions({
 
   if (status === "authenticated" && session?.user) {
     return (
-      <div className={`${styles.userActions} ${className}`}>
+      <div className={`${styles.userActions} ${className}`}  data-testid="user-menu">
         <div className={styles.userDropdown} ref={dropdownRef}>
           <button 
             onClick={toggleDropdown}

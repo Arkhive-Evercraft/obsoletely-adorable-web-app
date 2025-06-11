@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { CategoriesTable, CategoryActions } from '@/components/Categories';
+import { CategoriesTable, CategoryActions, CategoryLoadingState, CategoryErrorState } from '@/components/domains/categories';
 import { useCategoryManagement } from '@/hooks/useCategoryManagement';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
@@ -33,29 +33,18 @@ export default function CategoriesPage() {
 
   // Loading state component
   const renderLoadingState = () => (
-    <div className={styles.loading}>
-      <div className={styles.spinner}></div>
-      <p>Loading categories...</p>
-    </div>
+    <CategoryLoadingState />
   );
 
-  // Error alert component
-  const renderErrorAlert = () => error ? (
-    <div className={styles.errorAlert}>
-      <span>{error}</span>
-      <button 
-        onClick={() => setError(null)}
-        className={styles.errorClose}
-      >
-        ×
-      </button>
-    </div>
-  ) : null;
+  // Error state component
+  const renderErrorState = () => (
+    <CategoryErrorState error={error ?? ""} onRetry={() => setError(null)} />
+  );
 
   // Categories table content for left column
   const renderCategoriesContent = () => (
     <div className={styles.leftColumnContent}>
-      {renderErrorAlert()}
+      {error && <CategoryErrorState error={error} onRetry={() => setError(null)} />}
       <div className={styles.tableContainer}>
         <CategoriesTable
           categories={categories}
@@ -81,13 +70,19 @@ export default function CategoriesPage() {
 
   return (
     <AppLayout>
-      <Main
-        pageHeading="Categories Management"
-        leftColumnTitle="Categories"
-        rightColumnTitle="Actions"
-        leftColumn={loading ? renderLoadingState() : renderCategoriesContent()}
-        rightColumn={renderActionsPanel()}
-      />
+      {loading ? (
+        <CategoryLoadingState />
+      ) : error && !categories?.length ? (
+        <CategoryErrorState error={error} onRetry={() => setError(null)} />
+      ) : (
+        <Main
+          pageHeading="Categories Management"
+          leftColumnTitle="Categories"
+          rightColumnTitle="Actions"
+          leftColumn={renderCategoriesContent()}
+          rightColumn={renderActionsPanel()}
+        />
+      )}
     </AppLayout>
   );
 }

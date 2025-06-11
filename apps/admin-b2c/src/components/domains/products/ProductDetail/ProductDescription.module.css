@@ -1,0 +1,54 @@
+.descriptionSection {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.descriptionContent {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.emptyDescription {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.editableDescription {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.descriptionTextarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 120px;
+  font-family: inherit;
+}
+
+.descriptionTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.inputError {
+  border-color: #ef4444;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.75rem;
+}
