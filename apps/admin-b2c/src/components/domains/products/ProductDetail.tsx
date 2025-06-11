@@ -74,6 +74,9 @@ export function ProductDetail({ productId, isNewProduct = false }: ProductDetail
   }
 
   const product = data[0];
+  if (!product) {
+    return <NotFoundState id={productId} />;
+  }
   
   // Handler for saving changes
   const saveChanges = async () => {

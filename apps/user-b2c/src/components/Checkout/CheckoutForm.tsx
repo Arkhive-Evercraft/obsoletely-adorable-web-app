@@ -24,7 +24,8 @@ interface FormErrors {
 
 export function CheckoutForm() {
   const { cartItems, clearCart } = useCart();
-  const { data: session } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data;
   const router = useRouter();
 
   const appId = process.env.NEXT_PUBLIC_SQUARE_APP_ID || '';

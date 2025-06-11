@@ -6,7 +6,7 @@ import styles from './ProductStory.module.css';
 
 interface ProductProps {
   story?: string;
-  id: number | string;
+  id: number;
 }
 
 interface ProductStoryProps {

@@ -4,25 +4,38 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/Layout/AppLayout';
 import { Main } from '@/components/Main';
-import { ProductDetail } from '@/components/domains/products';
+import { 
+  ProductDetail, 
+  ProductDetailHeader, 
+  ProductMetadata, 
+  ProductDescription, 
+  ProductStory 
+} from '@/components/domains/products';
 import { LoadingState, ErrorState, EmptyState } from '@/components/ui/DataStates';
 import { ActionPanel } from '@/components/ui/Actions';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 import { useAppData } from '@/components/AppDataProvider';
+import { Product } from '@repo/db/data';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description?: string;
-  story?: string;
-  imageUrl: string;
-  categoryName: string;
-  inventory: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+const NotFoundState = ({ error }: { error?: string }) => {
+  const router = useRouter();
+  
+  return (
+    <EmptyState
+      title="Product Not Found"
+      message={error || "The product you're looking for could not be found."}
+      actionButton={
+        <button
+          onClick={() => router.push('/products')}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Back to Products
+        </button>
+      }
+    />
+  );
+};
 
 function ProductDetailPageContent() {
   const params = useParams();
@@ -170,7 +183,9 @@ function ProductDetailPageContent() {
       setIsEditing(false);
 
       // Refresh product data in the context
-      await refreshProducts();
+      if (refreshProducts) {
+        await refreshProducts();
+      }
     } catch (error) {
       console.error('Error saving product:', error);
       setError('Failed to save product. Please try again.');
@@ -221,7 +236,9 @@ function ProductDetailPageContent() {
       }
       
       // Refresh product data in the context before navigating
-      await refreshProducts();
+      if (refreshProducts) {
+        await refreshProducts();
+      }
       
       // Navigate back to products list
       router.push('/products');
@@ -238,18 +255,65 @@ function ProductDetailPageContent() {
   };
 
   // Create a function to render the ActionsPanel that's always available
-  const renderActionsPanel = () => (
-    <ActionsPanel
-      isEditing={isEditing}
-      isSaving={isSaving}
-      isLoading={isLoading || !product || isDeleting}
-      onEdit={handleEdit}
-      onSave={handleSave}
-      onCancel={handleCancel}
-      onDelete={handleDelete}
-    />
-  );
-
+  const renderActionsPanel = () => {
+    // Define action buttons based on state
+    const primaryActions = [];
+    const secondaryActions = [];
+    
+    if (!isEditing) {
+      primaryActions.push(
+        <button 
+          key="edit"
+          onClick={handleEdit}
+          disabled={isLoading || !product || isDeleting}
+          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        >
+          Edit Product
+        </button>
+      );
+      
+      secondaryActions.push(
+        <button
+          key="delete"
+          onClick={handleDelete}
+          disabled={isLoading || !product || isDeleting}
+          className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+        >
+          Delete Product
+        </button>
+      );
+    } else {
+      primaryActions.push(
+        <button
+          key="save"
+          onClick={handleSave}
+          disabled={isSaving || isLoading}
+          className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+        >
+          {isSaving ? 'Saving...' : 'Save Changes'}
+        </button>
+      );
+      
+      primaryActions.push(
+        <button
+          key="cancel"
+          onClick={handleCancel}
+          disabled={isSaving || isLoading}
+          className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+        >
+          Cancel
+        </button>
+      );
+    }
+    
+    return (
+      <ActionPanel
+        primaryActions={primaryActions}
+        secondaryActions={secondaryActions}
+      />
+    );
+  };
+  
   if (isLoading) {
     return (
       <AppLayout>
@@ -292,16 +356,28 @@ function ProductDetailPageContent() {
   };
 
   const uploadImage = async (file: File): Promise<string> => {
-    // TODO: Implement actual image upload to your storage service
-    // For now, we'll simulate the upload and return a mock URL
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // In a real implementation, you would upload to a service like AWS S3, Cloudinary, etc.
-        // and return the actual URL
-        const mockUrl = `https://example.com/uploads/${Date.now()}-${file.name}`;
-        resolve(mockUrl);
-      }, 1000);
-    });
+    // This is a placeholder implementation for image upload
+    // In a production environment, replace with actual image upload functionality
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Image upload failed');
+      }
+      
+      const data = await response.json();
+      return data.url;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Fallback to a temporary URL if upload fails
+      return URL.createObjectURL(file);
+    }
   };
 
   // Move ProductDetailContent to be a stable component reference
@@ -310,26 +386,42 @@ function ProductDetailPageContent() {
       <ProductDetailHeader
         product={currentProduct}
         isEditing={isEditing}
-        onFieldChange={handleFieldChange}
+        onChange={(updates) => {
+          Object.entries(updates).forEach(([field, value]) => {
+            handleFieldChange(field, value);
+          });
+        }}
         onImageChange={handleImageChange}
       >
-        <ProductMetaGrid
+        <ProductMetadata
           product={currentProduct}
           isEditing={isEditing}
-          onFieldChange={handleFieldChange}
+          onChange={(updates) => {
+            if (typeof updates === 'object') {
+              Object.entries(updates).forEach(([key, value]) => {
+                handleFieldChange(key, value);
+              });
+            }
+          }}
           categories={categories}
         />
         <ProductDescription
-          description={currentProduct.description}
+          product={currentProduct}
           isEditing={isEditing}
-          onDescriptionChange={(description) => handleFieldChange('description', description)}
-          productId={currentProduct.id}
+          onChange={(updates) => {
+            if (typeof updates === 'object' && 'description' in updates) {
+              handleFieldChange('description', updates.description);
+            }
+          }}
         />
         <ProductStory
-          story={currentProduct.story}
+          product={currentProduct}
           isEditing={isEditing}
-          onStoryChange={(story) => handleFieldChange('story', story)}
-          productId={currentProduct.id}
+          onChange={(updates) => {
+            if (typeof updates === 'object' && 'story' in updates) {
+              handleFieldChange('story', updates.story);
+            }
+          }}
         />
       </ProductDetailHeader>
 

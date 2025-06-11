@@ -29,7 +29,9 @@ interface FormData {
 }
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
+  const session  = useSession();
+  const sessionData = session?.data;
+  
   const [customerData, setCustomerData] = useState<CustomerData | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -181,7 +183,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const fetchCustomerData = async () => {
-      if (!session?.user?.email) {
+      if (!sessionData?.user?.email) {
         setLoading(false);
         return;
       }
@@ -192,11 +194,11 @@ export default function SettingsPage() {
         
         if (!response.ok) {
           if (response.status === 404) {
-            // Customer not found in database, use session data
+            // Customer not found in database, use sessionData data
             const defaultData = {
               id: 0,
-              name: session.user.name || 'User',
-              email: session.user.email,
+              name: sessionData.user.name || 'User',
+              email: sessionData.user.email,
               memberSince: new Date().toISOString()
             };
             setCustomerData(defaultData);
@@ -246,7 +248,7 @@ export default function SettingsPage() {
     };
 
     fetchCustomerData();
-  }, [session]);
+  }, [sessionData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -262,7 +264,7 @@ export default function SettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!session?.user?.email) {
+    if (!sessionData?.user?.email) {
       setError('You must be signed in to update your profile');
       return;
     }
@@ -326,7 +328,22 @@ export default function SettingsPage() {
     }
   };
 
-  if (!session) {
+  // Handle the case where sessionData state is still loading
+  if (session?.status === "loading") {
+    return (
+      <AppLayout>
+        <Main pageHeading="Account Settings">
+          <div className={styles.accountContainer}>
+            <div className={styles.accountCard}>
+              <div className={styles.loadingSpinner}>Loading...</div>
+            </div>
+          </div>
+        </Main>
+      </AppLayout>
+    );
+  }
+
+  if (!sessionData) {
     return (
       <AppLayout>
         <Main pageHeading="Account Settings">

@@ -31,6 +31,7 @@ export async function GET(
       name: product.name,
       price: product.price / 100, // Convert from cents to dollars
       description: product.description,
+      story: product.story,
       imageUrl: product.imageUrl,
       categoryName: product.categoryName,
       inventory: product.inventory,
@@ -68,6 +69,7 @@ export async function PUT(
       name, 
       price, 
       description, 
+      story,
       imageUrl, 
       categoryName, 
       inventory 
@@ -107,6 +109,7 @@ export async function PUT(
       name,
       price, // Convert to cents for database
       description: description || '',
+      story: story || '',
       imageUrl,
       categoryName,
       inventory: inventory || 0

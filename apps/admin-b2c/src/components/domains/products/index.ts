@@ -7,10 +7,13 @@ export { ProductActions } from './ProductActions';
 export { ProductLoadingState, ProductErrorState } from './ProductStates';
 
 // Export product detail subcomponents
-export { 
-  ProductDetailHeader,
-  ProductMetadata as ProductMetaGrid,
-  ProductDescription,
-  ProductStory,
-  NewProductActionsPanel
-} from './ProductDetail';
+export {
+    ProductDetailHeader, 
+    ProductDescription, 
+    ProductStory
+} from "./ProductDetail/index"
+
+// Re-exporting components as per the suggested changes
+export { ProductMetadata } from './ProductDetail/ProductMetadata'; 
+export * from './ProductDetail';
+export * from './ProductStates';

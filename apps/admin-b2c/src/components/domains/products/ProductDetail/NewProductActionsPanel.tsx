@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ActionPanel } from '@/components/ui/Actions';
-import { Button } from '@/components/buttons/base';
+import { Button } from '@/components/Buttons/base';
 
 interface NewProductActionsPanelProps {
   isSaving: boolean;
@@ -15,31 +15,34 @@ export function NewProductActionsPanel({
   onSave, 
   onCancel 
 }: NewProductActionsPanelProps) {
+  // Create React elements for the primary actions
   const primaryActions = [
-    {
-      id: 'save',
-      label: isSaving ? 'Saving...' : 'Save Product',
-      onClick: onSave,
-      disabled: isSaving,
-      variant: 'primary',
-      icon: 'save'
-    }
+    <Button
+      key="save"
+      onClick={onSave}
+      disabled={isSaving}
+      variant="primary"
+      className="w-full"
+    >
+      {isSaving ? 'Saving...' : 'Save Product'}
+    </Button>
   ];
 
+  // Create React elements for the secondary actions
   const secondaryActions = [
-    {
-      id: 'cancel',
-      label: 'Cancel',
-      onClick: onCancel,
-      disabled: isSaving,
-      variant: 'secondary',
-      icon: 'cancel'
-    }
+    <Button
+      key="cancel"
+      onClick={onCancel}
+      disabled={isSaving}
+      variant="secondary"
+      className="w-full"
+    >
+      Cancel
+    </Button>
   ];
 
   return (
     <ActionPanel
-      title="Actions"
       primaryActions={primaryActions}
       secondaryActions={secondaryActions}
     />

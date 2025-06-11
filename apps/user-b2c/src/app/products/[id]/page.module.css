@@ -45,12 +45,6 @@
   border-color: #FFFFFF;
 }
 
-:global(.dark) .productHeader .availability .available {
-  background: #2F5F2F;
-  border: 2px solid #90EE90;
-  color: #90EE90;
-}
-
 :global(.dark) .productHeader .availability .adopted {
   background: linear-gradient(135deg, #696969, #2F2F2F);
 }
@@ -524,7 +518,7 @@
 .productImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   padding: 1rem;
 }
 
@@ -728,7 +722,6 @@
 
 /* Dark mode for inline price display */
 :global(.dark) .inlineControls .priceDisplay {
-  background: linear-gradient(135deg, #4B0082, #663399);
   border-color: #DDA0DD;
 }
 
@@ -741,10 +734,12 @@
 
 .availability {
   margin: 0;
+  background: #90EE90;
+  border: 2px solid #228B22;
 }
 
 .available {
-  color: #228B22;
+  color: #2F5F2F;
   font-weight: 700;
   font-size: 0.9rem;
   display: flex;
@@ -752,13 +747,6 @@
   gap: 0.25rem;
   font-family: 'Share Tech Mono', monospace;
   text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
-}
-
-
-/* Update parent availability container for available items */
-.productHeader .availability .available {
-  background: #90EE90;
-  border: 2px solid #228B22;
 }
 
 .adopted {
@@ -970,7 +958,7 @@
 
 :global(.dark) .available,
 :global(.dark) .adopted {
-  color: #FFFFFF;
+  color: #2F5F2F;
 }
 
 /* Add to Cart Popup Notification */

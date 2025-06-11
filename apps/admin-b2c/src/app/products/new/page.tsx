@@ -7,28 +7,15 @@ import { Main } from '@/components/Main';
 import { 
   ProductDetail,
   ProductDetailHeader, 
-  ProductMetaGrid, 
+  ProductMetadata, 
   ProductDescription, 
   ProductStory,
-  NewProductActionsPanel 
 } from '@/components/domains/products';
+import { NewProductActionsPanel } from '@/components/domains/products/ProductDetail/NewProductActionsPanel';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 import { useAppData } from '@/components/AppDataProvider';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description?: string;
-  story?: string;
-  imageUrl: string;
-  categoryName: string;
-  featured: boolean;
-  inventory: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Product } from '@repo/db/data';
 
 function AddNewProductPageContent() {
   const router = useRouter();
@@ -47,10 +34,9 @@ function AddNewProductPageContent() {
     story: '',
     imageUrl: '',
     categoryName: '',
-    featured: false,
     inventory: 0,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const handleFieldChange = (field: string, value: any) => {
@@ -112,9 +98,9 @@ function AddNewProductPageContent() {
           name: newProduct.name,
           price: newProduct.price,
           description: newProduct.description,
+          story: newProduct.story,
           imageUrl: finalImageUrl,
           categoryName: newProduct.categoryName,
-          featured: newProduct.featured,
           inventory: newProduct.inventory
         }),
       });
@@ -177,27 +163,37 @@ function AddNewProductPageContent() {
       <ProductDetailHeader
         product={newProduct}
         isEditing={true} // Always in editing mode for new products
-        onFieldChange={handleFieldChange}
+        onChange={(updates) => {
+          Object.entries(updates).forEach(([field, value]) => handleFieldChange(field, value));
+        }}
         onImageChange={handleImageChange}
       >
-        <ProductMetaGrid
+        <ProductMetadata
           product={newProduct}
           isEditing={true} // Always in editing mode for new products
-          onFieldChange={handleFieldChange}
+          onChange={(updates) => {
+            Object.entries(updates).forEach(([field, value]) => handleFieldChange(field, value));
+          }}
           categories={categories} // Pass categories from AppDataProvider
           categoriesLoading={categoriesLoading} // Pass loading state explicitly
         />
         <ProductDescription
-          description={newProduct.description}
-          isEditing={true} // Always in editing mode for new products
-          onDescriptionChange={(description: string) => handleFieldChange('description', description)}
-          productId={newProduct.id}
+          product={newProduct}
+          isEditing={true}
+          onChange={(updates) => {
+            if (typeof updates === 'object' && 'description' in updates) {
+              handleFieldChange('description', updates.description);
+            }
+          }}
         />
         <ProductStory
-          story={newProduct.story}
-          isEditing={true} // Always in editing mode for new products
-          onStoryChange={(story: string) => handleFieldChange('story', story)}
-          productId={newProduct.id}
+          product={newProduct}
+          isEditing={true}
+          onChange={(updates) => {
+            if (typeof updates === 'object' && 'story' in updates) {
+              handleFieldChange('story', updates.story);
+            }
+          }}
         />
       </ProductDetailHeader>
     </div>

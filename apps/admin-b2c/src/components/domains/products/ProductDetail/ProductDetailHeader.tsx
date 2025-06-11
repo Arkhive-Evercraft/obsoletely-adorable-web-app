@@ -10,6 +10,7 @@ interface ProductDetailHeaderProps {
   product: Product;
   isEditing: boolean;
   onChange: (updates: Partial<Product>) => void;
+  onImageChange?: (file: File) => void; // Optional separate handler for image changes
   children?: React.ReactNode;
 }
 
@@ -17,6 +18,7 @@ export function ProductDetailHeader({
   product, 
   isEditing, 
   onChange,
+  onImageChange,
   children
 }: ProductDetailHeaderProps) {
   const { validateField, clearFieldError, getFieldError } = useProductValidation();
@@ -35,6 +37,20 @@ export function ProductDetailHeader({
   const handleFieldFocus = (field: keyof Product) => {
     if (isEditing) {
       clearFieldError(entityId, field);
+    }
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // If there's a separate image change handler, use it
+      if (onImageChange) {
+        onImageChange(file);
+      } else {
+        // Otherwise, create a temporary URL and update through the main onChange
+        const imageUrl = URL.createObjectURL(file);
+        onChange({ imageUrl });
+      }
     }
   };
 
@@ -62,17 +78,7 @@ export function ProductDetailHeader({
           <input 
             type="file" 
             accept="image/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                // Create a temporary URL for preview
-                const imageUrl = URL.createObjectURL(file);
-                onChange({ imageUrl });
-                
-                // Notify parent about file change if needed
-                // This could trigger an actual upload
-              }
-            }}
+            onChange={handleImageFileChange}
             className={styles.imageInput}
           />
         )}

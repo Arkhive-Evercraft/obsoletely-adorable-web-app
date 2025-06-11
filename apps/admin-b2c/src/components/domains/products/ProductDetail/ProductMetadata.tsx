@@ -3,14 +3,7 @@
 import React, { useState } from 'react';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import styles from './ProductMetadata.module.css';
-
-interface Product {
-  id: number | string;
-  price: number;
-  categoryName: string;
-  inventory: number;
-  featured?: boolean;
-}
+import { Product } from '@repo/db/data';
 
 interface ProductMetadataProps {
   product: Product;
@@ -158,24 +151,6 @@ export function ProductMetadata({
           </div>
         ) : (
           <div className={styles.fieldValue}>{product.inventory || 0}</div>
-        )}
-      </div>
-
-      {/* Featured */}
-      <div className={styles.metadataField}>
-        <label className={styles.fieldLabel}>Featured</label>
-        {isEditing ? (
-          <div className={`${styles.editableField} ${styles.checkboxField}`}>
-            <input
-              type="checkbox"
-              checked={product.featured || false}
-              onChange={(e) => handleFieldChange('featured', e.target.checked)}
-              className={styles.checkbox}
-            />
-            <span className={styles.checkboxLabel}>Display as featured product</span>
-          </div>
-        ) : (
-          <div className={styles.fieldValue}>{product.featured ? 'Yes' : 'No'}</div>
         )}
       </div>
     </div>

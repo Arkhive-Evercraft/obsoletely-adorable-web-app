@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider, AuthProvider } from "@repo/ui/components"
 import { AppDataProvider } from "@/components/AppDataProvider";
 import { CartProvider } from "@/contexts/CartContext";
+import { SessionProvider } from '../providers/SessionProvider';
 
 
 const geistSans = localFont({
@@ -33,7 +34,9 @@ export default function RootLayout({
           <CartProvider>
           <ThemeProvider>
             <AppDataProvider>
-              {children}
+              <SessionProvider>
+                {children}
+              </SessionProvider>
             </AppDataProvider>
           </ThemeProvider>
           </CartProvider>

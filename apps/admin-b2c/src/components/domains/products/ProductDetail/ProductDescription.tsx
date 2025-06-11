@@ -6,7 +6,7 @@ import styles from './ProductDescription.module.css';
 
 interface ProductProps {
   description?: string;
-  id: number | string;
+  id: number;
 }
 
 interface ProductDescriptionProps {
