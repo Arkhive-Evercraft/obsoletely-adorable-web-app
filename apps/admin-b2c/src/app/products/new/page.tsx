@@ -14,20 +14,7 @@ import {
 import { useProductValidation } from '@/contexts/ProductValidationContext';
 import { ProductValidationProvider } from '@/contexts/ProductValidationContext';
 import { useAppData } from '@/components/AppDataProvider';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description?: string;
-  story?: string;
-  imageUrl: string;
-  categoryName: string;
-  featured: boolean;
-  inventory: number;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Product } from '@repo/db/data';
 
 function AddNewProductPageContent() {
   const router = useRouter();
@@ -46,10 +33,9 @@ function AddNewProductPageContent() {
     story: '',
     imageUrl: '',
     categoryName: '',
-    featured: false,
     inventory: 0,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const handleFieldChange = (field: string, value: any) => {
@@ -111,9 +97,9 @@ function AddNewProductPageContent() {
           name: newProduct.name,
           price: newProduct.price,
           description: newProduct.description,
+          story: newProduct.story,
           imageUrl: finalImageUrl,
           categoryName: newProduct.categoryName,
-          featured: newProduct.featured,
           inventory: newProduct.inventory
         }),
       });

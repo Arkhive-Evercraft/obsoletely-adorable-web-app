@@ -4,16 +4,8 @@ import React from 'react';
 import { EditableProductImage } from '../../ImageModal/EditableProductImage';
 import { ProductMetadata } from './ProductMetadata';
 import { useProductValidation } from '@/contexts/ProductValidationContext';
+import { Product } from "@repo/db/data"
 import styles from './ProductDetail.module.css';
-
-interface Product {
-  id: number;
-  name: string;
-  imageUrl: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  inventory: number;
-}
 
 interface ProductDetailHeaderProps {
   product: Product;
